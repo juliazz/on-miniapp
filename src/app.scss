@@ -1,0 +1,207 @@
+
+/* Black (Heavy) = 900 */
+@font-face {
+  font-family: "On Diatype Standard Black";
+  src:
+    url("https://oss.on-running.cn/common/font/OnDiatypeStandard-Black.woff2") format("woff2"), /* Chrome, Firefox, Opera, Safari, Android, iOS */
+    url("https://oss.on-running.cn/common/font/OnDiatypeStandard-Black.woff") format("woff"), /* Chrome, Firefox */
+    url("https://oss.on-running.cn/common/font/OnDiatypeStd-Black.ttf") format("truetype"); /* Chrome, Firefox, Opera, Safari, Android, iOS 4.2+ */
+}
+/* Extra Bold (Ultra Bold) = 800 */
+/* Bold = 700 */
+@font-face {
+  font-family: "On Diatype Standard Bold";
+  src:
+    url("https://oss.on-running.cn/common/font/OnDiatypeStandard-Bold.woff2") format("woff2"), /* Chrome, Firefox, Opera, Safari, Android, iOS */
+    url("https://oss.on-running.cn/common/font/OnDiatypeStandard-Bold.woff") format("woff"), /* Chrome, Firefox */
+    url("https://oss.on-running.cn/common/font/OnDiatypeStd-Bold.ttf") format("truetype"); /* Chrome, Firefox, Opera, Safari, Android, iOS 4.2+ */
+}
+@font-face {
+  font-family: "On Diatype Mono Bold";
+  src:
+    url("https://oss.on-running.cn/common/font/OnDiatypeMono-Bold.woff2") format("woff2"), /* Chrome, Firefox, Opera, Safari, Android, iOS */
+    url("https://oss.on-running.cn/common/font/OnDiatypeMono-Bold.woff") format("woff"), /* Chrome, Firefox */
+    url("https://oss.on-running.cn/common/font/OnDiatypeMono-Bold.ttf") format("truetype"); /* Chrome, Firefox, Opera, Safari, Android, iOS 4.2+ */
+}
+@font-face {
+  font-family: "On Diatype Semi Mono Bold";
+  src:
+    url("https://oss.on-running.cn/common/font/OnDiatypeSemi-Mono-Bold.woff2") format("woff2"), /* Chrome, Firefox, Opera, Safari, Android, iOS */
+    url("https://oss.on-running.cn/common/font/OnDiatypeSemi-Mono-Bold.woff") format("woff"), /* Chrome, Firefox */
+    url("https://oss.on-running.cn/common/font/OnDiatypeSemi-Mono-Bold.ttf") format("truetype"); /* Chrome, Firefox, Opera, Safari, Android, iOS 4.2+ */
+}
+/* Semi Bold (Demi Bold) = 600 */
+/* Medium = 500 */
+@font-face {
+  font-family: "On Diatype Standard Medium";
+  src:
+    url("https://oss.on-running.cn/common/font/OnDiatypeStandard-Medium.woff2") format("woff2"), /* Chrome, Firefox, Opera, Safari, Android, iOS */
+    url("https://oss.on-running.cn/common/font/OnDiatypeStandard-Medium.woff") format("woff"), /* Chrome, Firefox */
+    url("https://oss.on-running.cn/common/font/OnDiatypeStd-Med.ttf") format("truetype"); /* Chrome, Firefox, Opera, Safari, Android, iOS 4.2+ */
+}
+@font-face {
+  font-family: "On Diatype Mono Medium";
+  src:
+    url("https://oss.on-running.cn/common/font/OnDiatypeMono-Medium.woff2") format("woff2"), /* Chrome, Firefox, Opera, Safari, Android, iOS */
+    url("https://oss.on-running.cn/common/font/OnDiatypeMono-Medium.woff") format("woff"), /* Chrome, Firefox */
+    url("https://oss.on-running.cn/common/font/OnDiatypeMono-Med.ttf") format("truetype"); /* Chrome, Firefox, Opera, Safari, Android, iOS 4.2+ */
+}
+@font-face {
+  font-family: "On Diatype Semi Mono Medium";
+  src:
+    url("https://oss.on-running.cn/common/font/OnDiatypeSemi-Mono-Medium.woff2") format("woff2"), /* Chrome, Firefox, Opera, Safari, Android, iOS */
+    url("https://oss.on-running.cn/common/font/OnDiatypeSemi-Mono-Medium.woff") format("woff"), /* Chrome, Firefox */
+    url("https://oss.on-running.cn/common/font/OnDiatypeSemi-Mono-Med.ttf") format("truetype"); /* Chrome, Firefox, Opera, Safari, Android, iOS 4.2+ */
+}
+/* Regular (Normal、Book、Roman) = 400 */
+@font-face {
+  font-family: "On Diatype Standard";
+  src:
+    url("https://oss.on-running.cn/common/font/OnDiatypeStandard-Regular.woff2") format("woff2"), /* Chrome, Firefox, Opera, Safari, Android, iOS */
+    url("https://oss.on-running.cn/common/font/OnDiatypeStandard-Regular.woff") format("woff"), /* Chrome, Firefox */
+    url("https://oss.on-running.cn/common/font/OnDiatypeStd-Reg.ttf") format("truetype"); /* Chrome, Firefox, Opera, Safari, Android, iOS 4.2+ */
+}
+@font-face {
+  font-family: "On Diatype Mono";
+  src:
+    url("https://oss.on-running.cn/common/font/OnDiatypeMono-Regular.woff2") format("woff2"), /* Chrome, Firefox, Opera, Safari, Android, iOS */
+    url("https://oss.on-running.cn/common/font/OnDiatypeMono-Regular.woff") format("woff"), /* Chrome, Firefox */
+    url("https://oss.on-running.cn/common/font/OnDiatypeMono-Reg.ttf") format("truetype"); /* Chrome, Firefox, Opera, Safari, Android, iOS 4.2+ */
+}
+@font-face {
+  font-family: "On DiatypeSemi Mono";
+  src:
+    url("https://oss.on-running.cn/common/font/OnDiatypeSemi-Mono-Regular.woff2") format("woff2"), /* Chrome, Firefox, Opera, Safari, Android, iOS */
+    url("https://oss.on-running.cn/common/font/OnDiatypeSemi-Mono-Regular.woff") format("woff"), /* Chrome, Firefox */
+    url("https://oss.on-running.cn/common/font/OnDiatypeSemi-Mono-Reg.ttf") format("truetype"); /* Chrome, Firefox, Opera, Safari, Android, iOS 4.2+ */
+}
+@function rpx($px) { @return $px * 2rpx; }
+/* Light = 300 */
+/* Extra Light (Ultra Light) = 200 */
+/* Thin (Hairline) = 100 */
+
+@import url('./assets/css/animate.css');
+@import url('./assets/iconfont.css');
+
+view { box-sizing: border-box; }
+::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+  color: transparent;
+}
+scroll-view::-webkit-scrollbar { width: 0; height: 0; color: transparent; display: none;}
+// Flex
+.flex_hfs_vfs { display: flex; justify-content: flex-start; align-items: flex-start; }
+.flex_hfs_vc { display: flex; justify-content: flex-start; align-items: center; }
+.flex_hfs_vfe { display: flex; justify-content: flex-start; align-items: flex-end; }
+.flex_hfs_vs { display: flex; justify-content: flex-start; align-items: stretch; }
+.flex_hc_vfs { display: flex; justify-content: center; align-items: flex-start; }
+.flex_hc_vc, .flex_abs_center { display: flex; justify-content: center; align-items: center; }
+.flex_hc_vfe { display: flex; justify-content: center; align-items: flex-end; }
+.flex_hfe_vfs { display: flex; justify-content: flex-end; align-items: flex-start; }
+.flex_hfe_vc { display: flex; justify-content: flex-end; align-items: center; }
+.flex_hfe_vfe { display: flex; justify-content: flex-end; align-items: flex-end; }
+.flex_hsb_vfs { display: flex; justify-content: space-between; align-items: flex-start; }
+.flex_hsb_vc { display: flex; justify-content: space-between; align-items: center; }
+.flex_hsb_vfe { display: flex; justify-content: space-between; align-items: flex-end; }
+.flex_hsb_vfsg { display: flex; justify-content: space-between; align-items: stretch; }
+.flex_hsa_vfs { display: flex; justify-content: space-around; align-items: flex-start; }
+.flex_hsa_vc { display: flex; justify-content: space-around; align-items: center; }
+.flex_hsa_vfe { display: flex; justify-content: space-around; align-items: flex-end; }
+// theme-color
+$them-color-green:#C1DBC4;
+// Button
+.btn {
+  width: 272rpx; height: 96rpx; padding: 0; margin: 0; background-color: #FFF; border: 2rpx solid #000; border-radius: 48rpx;
+  font-size: 28rpx; color: #000; font-weight: 500; line-height: 92rpx; text-align: center;
+  &.disabled, &:disabled, &[disabled] { opacity: 0.3; }
+  &.btn-black, &.btn-primary {
+    color: #FFF; background-color: #000; border-color: #000;
+    &.disabled, &:disabled, &[disabled] {
+       opacity: 0.3;
+       background-color: #666;
+      }
+  }
+  &.btn-transparent { color: #FFF; background-color: transparent;  border-color: #FFF; }
+  &.theme-green{
+    background-color: $them-color-green;
+  }
+  &::after{
+    border-color: transparent !important;
+  }
+}
+.btn_group {
+  display: flex; justify-content: center; align-items: center;
+  .btn:first-child:last-child { width: 320rpx; }
+  .btn + .btn { margin-left: 32rpx; }
+
+}
+// race
+.btn-actions{
+  width: 100%;
+  position: absolute;
+  bottom: 128rpx;
+  left: 0;
+  padding: 0 64rpx;
+  display: flex;
+  .btn{
+    font-size: 32rpx;
+    flex: 1;
+    height: 96rpx;
+    line-height: 96rpx;
+  }
+  .btn-black{
+    border-color: #fff;
+    color: #fff;
+    background-color: #000;
+  }
+  .btn-white{
+    border-color: #fff;
+
+  }
+  .btn-green{
+    background-color: #C1DBC4;;
+  }
+}
+// Text
+.text-one_line { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.text-tow_line { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.ff_ods { font-family: 'On Diatype Standard'; }
+.placeholder-cls { color: #B2B2B2; }
+
+.rich_text_container{
+  padding: 16rpx 0 80rpx;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 32rpx;
+  line-height: 150%;
+  color: #000000;
+
+  .rich_text_title{
+    font-style: normal;
+    font-weight: 500;
+    font-size: 32rpx;
+    color:#000;
+  }
+  .rich_text_p{
+    margin-top: 16rpx;
+  }
+  .rich_text_li{
+    // color:#000;
+    // list-style: none;
+    // margin-top: 16rpx;
+    // position: relative;
+    // &::before{
+    //   display: block;
+    //   content: '';
+    //   width:14rpx;
+    //   height: 14rpx;
+    //   border: 2rpx solid #000000;
+    //   position: absolute;
+    //   top:17rpx;
+    //   left:-60rpx;
+    //   transform: rotate(45deg);
+    // }
+  }
+}

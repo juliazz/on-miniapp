@@ -1,0 +1,44 @@
+{
+  "id": 21,
+  "page_id": 1,
+  "component_id": 1,
+  "component_type": "Elevator",
+  "sort": 0,
+  "padding_top": 0,
+  "padding_bottom": 0,
+  "padding_left": 0,
+  "padding_right": 0,
+  "elevator_name": null,
+  "preview": 1,
+  "publish": 0,
+  "content": {
+    "name": "\u9996\u9875\u7535\u68af",
+    "items": [{
+      "id": 13,
+      "page_id": 1,
+      "component_id": 1,
+      "component_type": "Single Video",
+      "sort": 1,
+      "padding_top": 0,
+      "padding_bottom": 0,
+      "padding_left": 0,
+      "padding_right": 0,
+      "elevator_name": "\u7535\u68af-\u56fe\u7247",
+      "preview": 1,
+      "publish": 0
+    }, {
+      "id": 14,
+      "page_id": 1,
+      "component_id": 7,
+      "component_type": "Hot Word",
+      "sort": 1,
+      "padding_top": 0,
+      "padding_bottom": 0,
+      "padding_left": 0,
+      "padding_right": 0,
+      "elevator_name": "\u7535\u68af-\u54c1\u724c\u70ed\u8bcd",
+      "preview": 1,
+      "publish": 0
+    }]
+  }
+}

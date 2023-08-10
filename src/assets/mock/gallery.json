@@ -1,0 +1,36 @@
+{
+  "type": "pdp",
+  "code": null,
+  "product_style_id": 1,
+  "name": "PDP - Clud 70 | 30",
+  "share_title": "PDP - Clud 70 | 30",
+  "share_image": null,
+  "images": "[]",
+  "channel_id": 1,
+  "channels": "[\"1\"]",
+  "components": [{
+    "id": 13,
+    "page_id": 1,
+    "component_id": 1,
+    "component_type": "BlockGallery",
+    "sort": 0,
+    "padding_top": 0,
+    "padding_bottom": 0,
+    "padding_left": 0,
+    "padding_right": 0,
+    "preview": 1,
+    "publish": 0,
+    "content": {
+      "name": "图片视频墙",
+      "items": [{
+        "is_video":true,
+        "description":"Test Video",
+        "url": "cms_stage\/files\/108 00437-tank_T-ss22-denim_navy-m-video Graded.mp4"
+      },{
+        "is_video":false,
+        "description":"Test Video",
+        "url": "cms_stage\/images\/\u5fae\u4fe1\u56fe\u7247_20220509205831.jpg"
+      }]
+    }
+  }]
+}

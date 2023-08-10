@@ -1,0 +1,19 @@
+{
+  "id": 18,
+  "page_id": 1,
+  "component_id": 1,
+  "component_type": "Occupation",
+  "sort": 0,
+  "padding_top": 0,
+  "padding_bottom": 0,
+  "padding_left": 0,
+  "padding_right": 0,
+  "elevator_name": null,
+  "preview": 1,
+  "publish": 0,
+  "content": {
+    "name": "20px \u767d\u5e95\u5360\u4f4d\u56fe",
+    "height": 20,
+    "background_color": "#FFFFFF"
+  }
+}

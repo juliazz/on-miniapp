@@ -1,0 +1,30 @@
+{
+  "id": 14,
+  "page_id": 1,
+  "component_id": 7,
+  "component_type": "HotWord",
+  "sort": 1,
+  "padding_top": 0,
+  "padding_bottom": 0,
+  "padding_left": 0,
+  "padding_right": 0,
+  "elevator_name": "\u7535\u68af-\u54c1\u724c\u70ed\u8bcd",
+  "preview": 1,
+  "publish": 0,
+  "content": {
+    "name": "\u54c1\u724c\u70ed\u8bcd202205",
+    "items": [{
+      "id": 1,
+      "parent_id": 7,
+      "image": "cms_stage\/images\/d943339d91c38480d8f814664ccf1cad.jpg",
+      "text": "Cloud 5",
+      "link": "#"
+    }, {
+      "id": 2,
+      "parent_id": 7,
+      "image": "cms_stage\/images\/d9ab6aa01e0f741dd13bbdc0bfc8e455.jpg",
+      "text": "Cloudnova",
+      "link": "#"
+    }]
+  }
+}

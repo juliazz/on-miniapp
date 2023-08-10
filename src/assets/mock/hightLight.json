@@ -1,0 +1,52 @@
+{
+  "type": "pdp",
+  "code": null,
+  "product_style_id": 1,
+  "name": "PDP - Clud 70 | 30",
+  "share_title": "PDP - Clud 70 | 30",
+  "share_image": null,
+  "images": "[\"cms_stage\\\/images\\\/03 Banner.jpg\",\"cms_stage\\\/images\\\/02 TECH.jpg\",\"cms_stage\\\/images\\\/01 Design.jpg\",\"cms_stage\\\/images\\\/04 Materials.jpg\",\"cms_stage\\\/images\\\/05 Editorial01.jpg\",\"cms_stage\\\/images\\\/05 Editorial02.jpg\",\"cms_stage\\\/images\\\/05 Editorial03.jpg\",\"cms_stage\\\/images\\\/05 Editorial04.jpg\",\"cms_stage\\\/images\\\/05 Editorial05.jpg\",\"cms_stage\\\/images\\\/05 Editorial06.jpg\"]",
+  "channel_id": 1,
+  "channels": "[\"1\"]",
+  "components": [{
+    "id": 13,
+    "page_id": 1,
+    "component_id": 1,
+    "component_type": "HightLightCard",
+    "sort": 0,
+    "padding_top": 0,
+    "padding_bottom": 0,
+    "padding_left": 0,
+    "padding_right": 0,
+    "preview": 1,
+    "publish": 0,
+    "content": {
+      "name": "文本-走进昂跑",
+      "items": [{
+        "headline":"科技创新",
+        "sub_headline":"功能多面，反应灵敏。",
+        "background_image":"cms_stage\/images\/\u5fae\u4fe1\u56fe\u7247_20220509205831.jpg",
+        "active_text":"以Helion™ superfoam打造的CloudTec®科技鞋底，专为训练中不同方位的爆发性移动而设计，铸就灵活反馈、动态流畅体验。鞋跟内的精制足跟垫牢牢固定双足，提供柔软安全的体验；内置Speedboard®速度板更好地推进跑者向前的每一步。 两侧鞋帮的加高也令稳定敏捷更胜一筹。",
+        "style":0
+      },{
+        "headline":"科技创新",
+        "sub_headline":"功能多面，反应灵敏。",
+        "background_image":"cms_stage\/images\/\u5fae\u4fe1\u56fe\u7247_20220509205831.jpg",
+        "active_text":"以Helion™ superfoam打造的CloudTec®科技鞋底，专为训练中不同方位的爆发性移动而设计，铸就灵活反馈、动态流畅体验。鞋跟内的精制足跟垫牢牢固定双足，提供柔软安全的体验；内置Speedboard®速度板更好地推进跑者向前的每一步。 两侧鞋帮的加高也令稳定敏捷更胜一筹。",
+        "style":1
+      },{
+        "headline":"科技创新",
+        "sub_headline":"功能多面，反应灵敏。",
+        "background_image":"cms_stage\/images\/\u5fae\u4fe1\u56fe\u7247_20220509205831.jpg",
+        "active_text":"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.",
+        "style":2
+      },{
+        "headline":"科技创新",
+        "sub_headline":"功能多面，反应灵敏。",
+        "background_image":"cms_stage\/images\/\u5fae\u4fe1\u56fe\u7247_20220509205831.jpg",
+        "active_text":"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.",
+        "style":3
+      }]
+    }
+  }]
+}

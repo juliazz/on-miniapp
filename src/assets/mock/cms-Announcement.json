@@ -1,0 +1,19 @@
+{
+  "id": 18,
+  "page_id": 1,
+  "component_id": 1,
+  "component_type": "Announcement",
+  "elevator_name": null,
+  "padding_top": 0,
+  "padding_right": 0,
+  "padding_bottom": 0,
+  "padding_left": 0,
+  "preview": 1,
+  "publish": 0,
+  "sort": 0,
+  "content": {
+    "name": "公告 - 全场满200包邮",
+    "message": "全场满200包邮",
+    "link": "#"
+  }
+}

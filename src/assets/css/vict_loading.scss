@@ -1,0 +1,35 @@
+@import "var@function";
+$no-more-color: #F0F0F0;
+
+.vict-loading{
+  width:100%;
+  padding: rpx(20);
+  font-size: rpx(14);
+  line-height: rpx(16);
+  color: #888888;
+  text-align: center;
+  &:before{
+    content: "";
+    background-size: cover;
+    display: inline-block;
+    width: rpx(16);
+    height: rpx(16);
+    margin-right: rpx(8);
+    vertical-align: top;
+    animation: rotate 0.8s infinite linear;
+  }
+}
+.no-more-con {
+  padding: $tabBar-IPX-padding rpx(15);
+
+}
+.none-list-con {
+  width:100%; padding: rpx(17) rpx(15); margin: rpx(30) 0; background: $no-more-color;
+  .no-more-msg {
+    font-size: rpx(14); line-height: rpx(20); color: #000000;
+  }
+}
+
+@keyframes vict-loading-rotate  { from   {transform:rotate(0deg);} to {transform:rotate(360deg);}  }
+
+

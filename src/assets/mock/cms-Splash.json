@@ -1,0 +1,21 @@
+{
+  "id": 18,
+  "page_id": 1,
+  "component_id": 1,
+  "component_type": "Splash",
+  "elevator_name": null,
+  "padding_top": 0,
+  "padding_right": 0,
+  "padding_bottom": 0,
+  "padding_left": 0,
+  "preview": 1,
+  "publish": 0,
+  "sort": 0,
+  "content": {
+    "name": "Test",
+    "life": 3,
+    "component_type": "SingleImage",
+    "link": "",
+    "enable": true
+  }
+}

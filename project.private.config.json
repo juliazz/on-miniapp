@@ -1,0 +1,39 @@
+{
+  "projectname": "on-miniapp",
+  "appid": "wx2431275480358c4b",
+  "setting": {
+    "compileHotReLoad": true,
+    "enhance":true,
+    "urlCheck":false,
+    "minPixelValue":1
+  },
+  "condition": {
+    "miniprogram": {
+      "list": [
+        {
+          "name": "shop_order",
+          "pathName": "pages/landing/index",
+          "query": "key=shop_order",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "newrun",
+          "pathName": "onRunClubPackage/pages/landing/index",
+          "query": "key=newrunning&channel=channelArticle",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "videoDownLoad",
+          "pathName": "onRunClubPackage/pages/landing/index",
+          "query": "download=https://on-running.oss-cn-shanghai.aliyuncs.com/cms/videos/1080x1920_Cyclon_Hero__AdobeExpress.mp4",
+          "launchMode": "default",
+          "scene": null
+        }
+
+      ]
+    }
+  },
+  "description": "项目私有配置文件。此文件中的内容将覆盖 project.config.json 中的相同字段。项目的改动优先同步到此文件中。详见文档：https://developers.weixin.qq.com/miniprogram/dev/devtools/projectconfig.html"
+}

@@ -1,0 +1,25 @@
+{
+  "id": 10,
+  "page_id": 1,
+  "component_id": 1,
+  "component_type": "SingleText",
+  "sort": 10,
+  "padding_top": 0,
+  "padding_bottom": 0,
+  "padding_left": 0,
+  "padding_right": 0,
+  "elevator_name": null,
+  "preview": 1,
+  "publish": 0,
+  "content": {
+    "name": "\u6587\u672c-\u8d70\u8fdb\u6602\u8dd12",
+    "title": "\u8d70\u8fdb\u6602\u8dd1",
+    "font_size": 12,
+    "font_style": "normal",
+    "font_color": "#000000",
+    "background_color": "#FFFFFF",
+    "font_weight": "bold",
+    "text_align": "center",
+    "link": null
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": 1,
+  "name":"全场包邮",
+  "message": "全场包邮123",
+  "link": "#",
+  "enable": 1,
+  "component_id": 1,
+  "component_type": "Announcement"
+}

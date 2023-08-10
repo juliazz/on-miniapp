@@ -1,0 +1,65 @@
+{
+  "type": "pdp",
+  "code": null,
+  "product_style_id": 1,
+  "name": "PDP - Clud 70 | 30",
+  "share_title": "PDP - Clud 70 | 30",
+  "share_image": null,
+  "images": "[\"cms_stage\\\/images\\\/03 Banner.jpg\",\"cms_stage\\\/images\\\/02 TECH.jpg\",\"cms_stage\\\/images\\\/01 Design.jpg\",\"cms_stage\\\/images\\\/04 Materials.jpg\",\"cms_stage\\\/images\\\/05 Editorial01.jpg\",\"cms_stage\\\/images\\\/05 Editorial02.jpg\",\"cms_stage\\\/images\\\/05 Editorial03.jpg\",\"cms_stage\\\/images\\\/05 Editorial04.jpg\",\"cms_stage\\\/images\\\/05 Editorial05.jpg\",\"cms_stage\\\/images\\\/05 Editorial06.jpg\"]",
+  "channel_id": 1,
+  "channels": "[\"1\"]",
+  "components": [{
+    "id": 13,
+    "page_id": 1,
+    "component_id": 1,
+    "component_type": "QuickFacts",
+    "sort": 0,
+    "padding_top": 0,
+    "padding_bottom": 0,
+    "padding_left": 0,
+    "padding_right": 0,
+    "preview": 1,
+    "publish": 0,
+    "content": {
+      "name": "快速了解",
+      "type": 1,
+      "items": [{
+        "title":"Weight",
+        "content":"248.5",
+        "measure_unit":"g",
+        "image":"",
+        "information":"dfsdfgfhfgkljhd sdfad SADSFDHD HDFGHDFHF Sfhdfh dgfjdgfhdgfhdfghdfghdtrhdfg dfsfdgfhdfghdfgjfjktjhjgf sdfgsdfg"
+      },{
+        "title":"Heel-toe drop",
+        "content":"9",
+        "measure_unit":"mm",
+        "image":"",
+        "information":"dfsdfgfhfgkljhd sdfad SADSFDHD HDFGHDFHF Sfhdfh dgfjdgfhdgfhdfghdfghdtrhdfg dfsfdgfhdfghdfgjfjktjhjgf sdfgsdfg"
+      },{
+        "title":"Cushioning",
+        "content":"4",
+        "measure_unit":"",
+        "image":"",
+        "information":"dfsdfgfhfgkljhd sdfad SADSFDHD HDFGHDFHF Sfhdfh dgfjdgfhdgfhdfghdfghdtrhdfg dfsfdgfhdfghdfgjfjktjhjgf sdfgsdfg"
+      },{
+        "title":"Energy Return",
+        "content":"3",
+        "measure_unit":"",
+        "image":"",
+        "information":"dfsdfgfhfgkljhd sdfad SADSFDHD HDFGHDFHF Sfhdfh dgfjdgfhdgfhdfghdfghdtrhdfg dfsfdgfhdfghdfgjfjktjhjgf sdfgsdfg"
+      },{
+        "title":"Condition",
+        "content":"Rain",
+        "measure_unit":"",
+        "image":"",
+        "information":"dfsdfgfhfgkljhd sdfad SADSFDHD HDFGHDFHF Sfhdfh dgfjdgfhdgfhdfghdfghdtrhdfg dfsfdgfhdfghdfgjfjktjhjgf sdfgsdfg"
+      },{
+        "title":"Condition",
+        "content":"Rain",
+        "measure_unit":"",
+        "image":"",
+        "information":"dfsdfgfhfgkljhd sdfad SADSFDHD HDFGHDFHF Sfhdfh dgfjdgfhdgfhdfghdfghdtrhdfg dfsfdgfhdfghdfgjfjktjhjgf sdfgsdfg"
+      }]
+    }
+  }]
+}

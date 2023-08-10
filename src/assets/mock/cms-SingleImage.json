@@ -1,0 +1,66 @@
+{
+  "id": 11,
+  "page_id": 1,
+  "component_id": 1,
+  "component_type": "SingleImage",
+  "sort": 1,
+  "padding_top": 0,
+  "padding_bottom": 0,
+  "padding_left": 0,
+  "padding_right": 0,
+  "elevator_name": null,
+  "preview": 1,
+  "publish": 0,
+  "content": {
+    "name": "\u4e3a\u811a\u800c\u751f",
+    "image": "cms_stage\/images\/find store banner.JPG",
+    "image_link": null,
+    "image_border_radius": 0,
+    "title": "\u4e3a\u811a\u800c\u751f",
+    "sub_title": "\u8f7b\u677e\u8de8\u8d8a \u4e0d\u6b62\u5c71\u91ce",
+    "font_color": "#000000",
+    "title_bottom_space": 150,
+    "sub_title_bottom_space": 100,
+    "button_bottom_space": 50,
+    "buttons": [{
+      "id": 5,
+      "parent_id": 1,
+      "parent_type": "Single Image",
+      "text": "\u7537\u58eb",
+      "color": "#FFFFFF",
+      "background_color": "#000000",
+      "border_color": "#000000",
+      "link": "#",
+      "sort": 0
+    }, {
+      "id": 6,
+      "parent_id": 1,
+      "parent_type": "Single Image",
+      "text": "\u5973\u58eb",
+      "color": "#FFFFFF",
+      "background_color": "#000000",
+      "border_color": "#000000",
+      "link": "@",
+      "sort": 1
+    }],
+    "hotareas": [{
+      "id": 1,
+      "parent_id": 1,
+      "parent_type": "Single Image",
+      "link": "#",
+      "width": 100,
+      "height": 100,
+      "position_x": 50,
+      "position_y": 50
+    }, {
+      "id": 2,
+      "parent_id": 1,
+      "parent_type": "Single Image",
+      "link": "#",
+      "width": 100,
+      "height": 100,
+      "position_x": 10,
+      "position_y": 10
+    }]
+  }
+}

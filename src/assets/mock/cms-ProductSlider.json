@@ -1,0 +1,35 @@
+{
+  "id": 16,
+  "page_id": 1,
+  "component_id": 4,
+  "component_type": "ProductSlider",
+  "sort": 0,
+  "padding_top": 0,
+  "padding_bottom": 0,
+  "padding_left": 0,
+  "padding_right": 0,
+  "elevator_name": null,
+  "preview": 1,
+  "publish": 0,
+  "content": {
+    "name": "Test",
+    "title": "Title",
+    "sub_title": "Sub title",
+    "title_link": "0",
+    "top_banner": "cms_stage\/images\/25dd5dd35c6fac4d03c706ae3e800d37.JPG",
+    "top_banner_style": 0,
+    "display_style": "grid",
+    "product_category_id": 40,
+    "banners": [{
+      "id": 1,
+      "product_slider_id": 4,
+      "image": "cms_stage\/images\/\u6e05\u51c9\u900f\u6c14\u51cf\u9707\u56de\u5f39.JPG",
+      "position": 1
+    }, {
+      "id": 2,
+      "product_slider_id": 4,
+      "image": "cms_stage\/images\/7c27333a4798fec399df8d982e84e180.JPG",
+      "position": 5
+    }]
+  }
+}

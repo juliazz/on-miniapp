@@ -1,0 +1,33 @@
+{
+  "id": 18,
+  "page_id": 1,
+  "component_id": 1,
+  "component_type": "Accordion",
+  "elevator_name": null,
+  "padding_top": 0,
+  "padding_right": 0,
+  "padding_bottom": 0,
+  "padding_left": 0,
+  "preview": 1,
+  "publish": 0,
+  "sort": 0,
+  "content": {
+    "name": "Test",
+    "items": [{
+      "id": 1,
+      "parent_id": 1,
+      "title": "产品信息",
+      "content": "<p>满1299免运费，30天无理由退换货。以下情况不支持退换货：</p>\r\n<ul>\r\n<li>鞋面污染/损坏</li>\r\n<li>调换货品</li>\r\n</ul>"
+    }, {
+      "id": 1,
+      "parent_id": 1,
+      "title": "维护和保养",
+      "content": "<p>满1299免运费，30天无理由退换货。以下情况不支持退换货：</p>\r\n<ul>\r\n<li>鞋面污染/损坏</li>\r\n<li>调换货品</li>\r\n</ul>"
+    }, {
+      "id": 1,
+      "parent_id": 1,
+      "title": "科技专利",
+      "content": "<p>满1299免运费，30天无理由退换货。以下情况不支持退换货：</p>\r\n<ul>\r\n<li>鞋面污染/损坏</li>\r\n<li>调换货品</li>\r\n</ul>"
+    }]
+  }
+}

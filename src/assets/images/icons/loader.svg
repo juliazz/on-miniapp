@@ -1,0 +1,14 @@
+<svg preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true" viewBox="0 0 48 48" width="48" height="48" xmlns="http://www.w3.org/2000/svg" class="Spinner-svg">
+  <style>
+    @keyframes Spinner-indeterminate-spinner {
+      0% { stroke-dashoffset: var(--diameter-long, 120.6); }
+      50% { stroke-dashoffset: var(--diameter-short, 13.4); transform: rotate(135deg); }
+      100% { stroke-dashoffset: var(--diameter-long, 120.6); transform: rotate(360deg); }
+    }
+    .Spinner-circle {
+      fill: none; stroke: currentcolor; stroke-dashoffset: 0; stroke-linecap: square; stroke-linejoin: square; transform-origin: center;
+      animation: Spinner-indeterminate-spinner 1.5s ease-in-out infinite;
+    }
+  </style>
+  <circle cx="50%" cy="50%" r="22.5" vector-effect="non-scaling-stroke" class="Spinner-circle" style="--diameter-long:127.235; --diameter-short:14.1372; stroke-width: 3; stroke-dasharray: 141.372; r: 22.5;"></circle>
+</svg>

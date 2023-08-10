@@ -1,0 +1,36 @@
+{
+  "id": 15,
+  "page_id": 1,
+  "component_id": 1,
+  "component_type": "ImageNavigation",
+  "sort": 0,
+  "padding_top": 0,
+  "padding_bottom": 0,
+  "padding_left": 0,
+  "padding_right": 0,
+  "elevator_name": null,
+  "preview": 1,
+  "publish": 1,
+  "content": {
+    "name": "\u56fe\u6587\u5bfc\u822a",
+    "padding_between_images": 8,
+    "image_border_radius": 0,
+    "items": [{
+      "id": 1,
+      "parent_id": 1,
+      "image": "cms_stage\/images\/\u5fae\u4fe1\u56fe\u7247_20220510214226.jpg",
+      "title": "\u6162\u8dd1",
+      "font_color": "#FFFFFF",
+      "link": "#",
+      "sort": 0
+    }, {
+      "id": 2,
+      "parent_id": 1,
+      "image": "cms_stage\/images\/\u5fae\u4fe1\u56fe\u7247_20220510214250.jpg",
+      "title": "\u5f92\u6b65",
+      "font_color": "#FFFFFF",
+      "link": "#",
+      "sort": 1
+    }]
+  }
+}
