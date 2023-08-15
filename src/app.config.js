@@ -38,10 +38,7 @@ export default defineAppConfig({
   ],
   requiredBackgroundModes : ["location"],
   plugins:{
-    "materialPlugin": {
-      "version": "1.0.5",
-          "provider": "wx4d2deeab3aed6e5a"
-    }
+   
   },
 
   "lazyCodeLoading": "requiredComponents",
