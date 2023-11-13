@@ -1,5 +1,5 @@
 <template>
-  <view class="product_detail_list-wrapper" :style="appearanceStyles" :id="`_${identifier}_${config.id}`">
+  <view class="product_detail_list-wrapper cms_com" :style="appearanceStyles" :id="`_${identifier}_${config.id}`" :dataCmsId="config.id">
     <view class="product_detail_list-container" :style="containerStyles">
       <image class="product_detail_list_img" :webp="true" :src="fixCMSPath(config.content.background_image_mobile, 1029)" mode="widthFix" lazy-load="false" @load="onLoaded({ type: 'image', src: fixCMSPath(item.background_image, 1029) }, $event)"/>
       <view class="product_detail_list_text_box" hover-class="none" hover-stop-propagation="false">

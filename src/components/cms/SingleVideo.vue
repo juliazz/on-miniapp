@@ -1,5 +1,5 @@
 <template>
-  <view :class="['single_video-wrapper', isEmbedded ? 'is-embedded' : '']" :style="appearanceStyles" :id="`_${identifier}_${config.id}`">
+  <view :class="['single_video-wrapper cms_com', isEmbedded ? 'is-embedded' : '']" :style="appearanceStyles" :id="`_${identifier}_${config.id}`" :dataCmsId="config.id" >
     <view class="single_video-container"  :style="videoStyle">
       <video
         :id="`video_${config.id}`"
@@ -199,7 +199,6 @@ export default {
   mounted() {
     this.initComponent();
     this.touchHandler =Object.assign({}, new touchHandler())// 挂载touchHandler 对象及方法
-    console.log('config ======> ',this.config)
   },
   methods: {
     fixCMSPath,

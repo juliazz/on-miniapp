@@ -1,5 +1,5 @@
 <template>
-  <view class="single_text-wrapper" :style="appearanceStyles" :id="`_${identifier}_${config.id}`">
+  <view class="single_text-wrapper cms_com" :style="appearanceStyles" :id="`_${identifier}_${config.id}`" :dataCmsId="config.id">
     <view class="single_text-container" :style="containerStyles">
       <text
         class="single_text-inner" :style="contentStyles"

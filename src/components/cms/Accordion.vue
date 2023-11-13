@@ -1,5 +1,6 @@
 <template>
-  <view class="accordion-wrapper" :style="appearanceStyles" :id="`_${identifier}_${config.id}`" v-if="config && config.content && config.content.items">
+  <view :class="['accordion-wrapper']" :style="appearanceStyles" :id="`_${identifier}_${config.id}`" :dataCmsId="config.id"
+  v-if="config && config.content && config.content.items">
     <view class="accordion-container">
       <view class="accordion-inner">
         <view :class="['accordion_item', index === activeIndex ? 'active' : '']" v-for="(item, index) in config.content.items" :key="index">

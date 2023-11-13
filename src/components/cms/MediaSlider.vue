@@ -1,5 +1,5 @@
 <template>
-  <view class="media_slider-wrapper" :style="appearanceStyles" :id="`_${identifier}_${config.id}`">
+  <view class="media_slider-wrapper cms_com" :style="appearanceStyles" :id="`_${identifier}_${config.id}`" :dataCmsId="config.id" >
     <view class="media_slider-container" :catch-move="isCatchMove" @touchstart="onTouchStart" @touchend="onTouchEnd">
       <image class="swiper-bg" v-if="config.content.background_image" mode="widthFix" :src="fixCMSPath(config.content.background_image, 1125)">
       </image>
@@ -8,12 +8,12 @@
         :interval="swiperInterval" @change="onSwiperChange">
         <swiper-item :class="['slider_item', config.content.background_image? 'transpartBG':'']"  v-for="(item, index) in config.content.items" :key="index">
           <SingleImage v-if="item.component_type == 'SingleImage'" :identifier="identifier" :config="{
-            id: `${config.id}_${item.id || index}`,
+            id: `${config.id}^${item.id || index}`,
             component_type: item.component_type,
             content: item
           }" :embedded="true" :isActive="activeIndex == index" />
           <SingleVideo v-else-if="item.component_type == 'SingleVideo'" :identifier="identifier" :config="{
-            id: `${config.id}_${item.id || index}`,
+            id: `${config.id}^${item.id || index}`,
             component_type: item.component_type,
             content: {
               ...item,
@@ -35,39 +35,19 @@
         </swiper-item>
       </swiper>
       <!-- 下滑按钮 -->
-      <view class="icon-more-box flex_hsb_vc" hover-class="none" hover-stop-propagation="false"  v-if="config.content.is_following_text_button"   >
+      <!-- <view class="icon-more-box flex_hsb_vc" hover-class="none" hover-stop-propagation="false"  v-if="config.content.is_following_text_button"   >
         <view class="more-line" v-for="(item,index) in [1,2,3,4]" :key="index" @tap="tapToNext">
           <view class="line-box flex_hsb_vc">
             <view>下划造浪</view>
             <view class="icon-font icon-Union" ></view>
           </view>
         </view>
-      </view>
+      </view> -->
       <view v-if="config.content.items.length>1" :class="['scrollbar', config.content.slider_bar_style == 'white' ? 'theme-white' : 'theme-black']"
         :style="scrollbarStyles">
         <view class="scrollbar-inner" :style="scrollbarInnerStyles"></view>
       </view>
-      <!-- <view v-for="(item, index) in config.content.items" :key="index">
-        <view :class="['title-container', activeIndex == index ? 'show' : '']">
-          <view v-if="item.component_type == 'SingleImage' && slideInfo ">
-            <view class="single_image-ttile" :style="titleStyles">{{ item.title }}</view>
-            <view class="single_image-ttile" :style="titleStyles">{{ item.title }}</view>
-            <view class="single_image-sub_ttile" :style="subtitleStyles">{{ item.sub_title }}</view>
-            <block v-if="Array.isArray(item.hotareas) && item.hotareas.length">
-              <view v-for="(hotArea, hotIdx) in item.hotareas" :key="hotIdx" class="single_image-hotarea"
-                :style="toStylesForHotArea(hotArea)" @tap.stop="actionHandler({ type: 'link', data: hotArea.link })">
-              </view>
-            </block>
-            <view v-if="Array.isArray(item.buttons) && item.buttons.length" class="single_image-btns btn_group"
-              :style="btnGroupStyles">
-              <button v-for="(btn, btnIdx) in item.buttons" :key="btnIdx" class="btn" :style="toStylesForBtn(btn)"
-                @tap.stop="actionHandler({ type: 'link', data: btn.link })">
-                {{ btn.text }}
-              </button>
-            </view>
-          </view>
-        </view>
-      </view> -->
+    
     </view>
   </view>
 </template>

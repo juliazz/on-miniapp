@@ -298,7 +298,7 @@ export default {
     }
     // 战队数据
     if(this.type=='team'){
-      const {teamRegions} =  FormDataHandler.getFormData();
+      let {teamRegions} =  FormDataHandler.getFormData();
       this.formOptions.teamRegion = teamRegions
     }
     // 时间选择器
@@ -359,9 +359,6 @@ export default {
       const list = this.formOptions&&this.formOptions[key] ? this.formOptions[key] : this.range
       const valueKey=this.valueKey
       let value
-      console.log('list[]=====>',list)
-      console.log('list[valueKey]=====>',valueKey)
-      console.log('list[index]=====>',list[index])
       if(fullValue){
         value =list[index]
       }else{

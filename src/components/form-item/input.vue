@@ -12,9 +12,10 @@
 <script>
 import Emitter from '@/utils/emitter.js';
 import {
-  desensitizify,
+  desensitizify,errorHandler
 } from "@/utils";
 import AuthPhoneBtn from '@/components/form-item/input-auth-phone.vue'
+import types from "@/store/types";
 export default {
   name: 'iInput',
   components: { AuthPhoneBtn},
@@ -49,7 +50,8 @@ export default {
       // this.dispatch('iFormItem', 'form-change', value);
     },
     handleBlur(e) {
-      const value = e.target.value;
+      const value = e.target ? e.target.value : e.detail.value;
+     
       this.$emit('input', value);
        this.currentValue = value;
       this.dispatch('iFormItem', 'form-blur', this.currentValue);
@@ -69,7 +71,8 @@ export default {
     font-weight: 400;
     font-size: 28rpx;
     color: #999;
-    line-height: 28rpx !important;
+    line-height: 1.5;
+    // line-height: 28rpx !important;
   }
   .input{
     word-wrap: break-word;

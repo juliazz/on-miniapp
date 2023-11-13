@@ -1,7 +1,7 @@
 <template>
-  <view class="elevator-wrapper" :style="appearanceStyles" :id="`_${identifier}_${config.id}`" v-if="sorted">
+  <view class="elevator-wrapper cms_com" :style="appearanceStyles" :id="`_${identifier}_${config.id}`" v-if="sorted" :dataCmsId="config.id">
     <view :class="['elevator-container', fixedPosition ? 'fixed' : '']" :style="containerStyles" :id="`_${identifier}_${config.id}_container`">
-      <scroll-view class="elevator-container--inner" :style="innerStyles" :scroll-x="true" :show-scrollbar="false" :scroll-into-view="activedItemID" :scroll-with-animation="true">
+      <scroll-view class="elevator-container--inner" :scroll-anchoring="true" :style="innerStyles" :scroll-x="true" :show-scrollbar="false" :scroll-into-view="activedItemID" :scroll-with-animation="true">
         <view class="elevator-items" v-if="Array.isArray(config.content.items) && config.content.items.length">
           <view
             v-for="(item, index) in config.content.items" :key="index"
@@ -246,7 +246,7 @@ export default {
           // 延迟处理的原因: 滚动事件有`节流`处理, 因此存在延迟
           setTimeout(() => {
             this.scrollJumping = false;
-          }, 1000 / 50);
+          }, 300);
         }
       });
     },
@@ -290,7 +290,7 @@ export default {
           display: inline-block; margin: 0 32rpx; white-space: nowrap;
           .elevator-item {
             display: inline-block; padding: 24rpx 48rpx; background: #FAF7F6; border-radius: 80rpx;
-            font-size: 32rpx; color: #000; line-height: 1.5;
+            font-size: 32rpx; color: #000; line-height: 1.5; overflow-anchor: none;
             & + .elevator-item { margin-left: 16rpx; }
             &.actived { color: #FFF; background-color: #000; }
           }

@@ -1,5 +1,5 @@
 <template>
-  <view class="shop_the_look-wrapper" :style="appearanceStyles" :id="`_${identifier}_${config.id}`" v-if="config && config.content">
+  <view class="shop_the_look-wrapper cms_com" :style="appearanceStyles" :id="`_${identifier}_${config.id}`" v-if="config && config.content" :dataCmsId="config.id" >
     <view class="shop_the_look_box_type_1" v-if="config.content.style_type == 1">
       <view class="shop_the_look_box-top">
         <view class="eyebrow">{{ config.content.eyebrow }}</view>

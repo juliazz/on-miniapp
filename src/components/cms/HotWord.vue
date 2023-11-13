@@ -1,5 +1,5 @@
 <template>
-  <view class="hot_word-wrapper" :style="appearanceStyles" :id="`_${identifier}_${config.id}`">
+  <view class="hot_word-wrapper cms_com" :style="appearanceStyles" :id="`_${identifier}_${config.id}`" :dataCmsId="config.id">
     <view class="hot_word-container">
       <!-- <view class="hot_word-header">{{config.content.name}}</view> -->
       <scroll-view class="hot_word-items" :scroll-x="true" :show-scrollbar="false">
@@ -64,10 +64,11 @@ export default {
           width: 1125rpx; white-space: pre-wrap; margin-left: 32rpx;
         }
         .hot_word-row {
-          display: inline-block; margin-bottom: -24rpx;
+          margin-bottom: -24rpx; box-sizing: border-box; overflow-x: auto;
+          display: flex; align-items: center; align-content: flex-start; justify-content: start; justify-items: start; flex-direction: row; flex-wrap: wrap;
           .hot_word-item {
             height: 96rpx; padding-left: 8rpx; padding-right: 48rpx; margin: 0 16rpx 32rpx 0; background: #F0ECEB; border-radius: 48rpx;
-            display: inline-flex; justify-content: space-between; align-items: center;
+            display: flex; flex-direction: row; justify-content: space-between; align-items: center;
             .item_image-visual {
               width: 80rpx; height: 80rpx; background: #FFFFFF; border-radius: 50%; overflow: hidden;
               image { width: 100%; height: auto; vertical-align: middle; }

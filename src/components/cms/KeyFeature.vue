@@ -1,5 +1,5 @@
 <template>
-  <view class="key_feature-wrapper" :style="appearanceStyles" :id="`_${identifier}_${config.id}`" v-if="config && config.content">
+  <view class="key_feature-wrapper cms_com" :style="appearanceStyles" :id="`_${identifier}_${config.id}`" v-if="config && config.content" :dataCmsId="config.id" >
     <view class="key_feature-container" :style="containerStyles">
       <view class="key_feature-media">
         <video

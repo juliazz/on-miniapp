@@ -1,9 +1,11 @@
 import Taro from "@tarojs/taro";
 import store from '@/store';
 import MD5 from '@/utils/md5';
+import deviceUtil from "@/utils/device-util";
 import types from '../store/types';
 import vict from './vict'
 import CryptoJS from 'crypto-js';
+import defaultFn from './TRTool.js';
 export const RES_SUCCESS_CODE = 200;
 export const RES_FAILURE_CODE = 400;
 export const RES_NO_AUTHORITY_CODE = 401;
@@ -17,9 +19,12 @@ const storage = {
   callback: {}
 };
 const { envVersion } = Taro.getAccountInfoSync().miniProgram;
-let LoginTimes = 5;
-let  _debug = ['production', 'prod'].includes(process.env.NODE_ENV) ? false : true;
-export const Vict =vict
+let LoginTimes, UUIDtimes = 5;
+
+let _debug = ['production', 'prod'].includes(process.env.NODE_ENV) ? false : true;
+export const Vict = vict
+export const Fn = defaultFn;
+export const device = deviceUtil;
 /**
  * PX 转 RPX
  * @param {number} value4PX 常规像素值
@@ -50,38 +55,80 @@ export const checkSetting = option => {
   if (!option || typeof option != 'object' || !option.scope) return;
   Taro.getSetting({
     complete: (res) => {
-			if (!res.authSetting[option.scope]) {
-				Taro.authorize({
-					scope: option.scope,
-					success: () => {
-						if (option.success) option.success();
-					},
-					fail: () => {
-						Taro.showModal({
-							title: option.title,
-							content: option.message,
-							success: (smRes) => {
-								if (smRes.confirm) {
-									Taro.openSetting({
-										success: (res) => {
-											if (res.authSetting[option.scope]) {
-												if (option.success) option.success();
-											} else {
-												if (option.fail) option.fail();
-											}
-										}
-									})
-								} else {
-									if (option.fail) option.fail();
-								}
-							}
-						})
-					}
-				})
-			} else {
-				if (option.success) option.success();
-			}
-		}
+      if (!res.authSetting[option.scope]) {
+        Taro.authorize({
+          scope: option.scope,
+          success: () => {
+            if (option.success) option.success();
+          },
+          fail: () => {
+            Taro.showModal({
+              title: option.title,
+              content: option.message,
+              success: (smRes) => {
+                if (smRes.confirm) {
+                  Taro.openSetting({
+                    success: (res) => {
+                      if (res.authSetting[option.scope]) {
+                        if (option.success) option.success();
+                      } else {
+                        if (option.fail) option.fail();
+                      }
+                    }
+                  })
+                } else {
+                  if (option.fail) option.fail();
+                }
+              }
+            })
+          }
+        })
+      } else {
+        if (option.success) option.success();
+      }
+    }
+  })
+}
+/**
+ * 打开用户设置
+ * @param {Object} option 授权项配置
+ */
+export const openSetting = option => {
+  if (!option || typeof option != 'object' || !option.scope) return;
+  Taro.getSetting({
+    complete: (res) => {
+      if (!res.authSetting[option.scope]) {
+        Taro.authorize({
+          scope: option.scope,
+          success: () => {
+            if (option.success) option.success();
+          },
+          fail: () => {
+            Taro.showModal({
+              title: option.title,
+              content: option.message,
+              success: (smRes) => {
+                if (smRes.confirm) {
+                  Taro.openSetting({
+                    success: (res) => {
+                      if (res.authSetting[option.scope]) {
+                        if (option.success) option.success();
+                      } else {
+                        if (option.fail) option.fail();
+                      }
+                    }
+                  })
+                } else {
+                  if (option.fail) option.fail();
+                }
+              }
+            })
+          }
+        })
+      } else {
+        if (option.success) option.success();
+      }
+    }
   })
 }
 
@@ -98,7 +145,7 @@ export const hideCustomLoading = () => {
  */
 export const showLoading = () => {
   storage.loadingCount++;
-  Taro.showLoading({title: '加载中',});
+  Taro.showLoading({ title: '加载中', });
 }
 
 /**
@@ -168,16 +215,16 @@ export const objectArraySort = (array, key, method = 'asc') => {
 }
 
 export const guid = () => {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx' .replace(/[xy]/g,  o => {
-    var  r = Math.random()*16|0, v = o ==  'x'  ? r : (r&0x3|0x8);
-    return  v.toString(16);
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, o => {
+    var r = Math.random() * 16 | 0, v = o == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
   });
 }
 
 /**
  * 空函数
  */
-export const fn = () => {}
+export const fn = () => { }
 
 /**
  * 检测参数是否为空值
@@ -221,7 +268,7 @@ export const runCallback = (target, context = null, args = null) => {
     runCallback(storage.callback[target]);
   } else if (Array.isArray(target) && target.length) {
     // # 1.
-    while(target.length) {
+    while (target.length) {
       const { fn, content, args } = target.shift();
       runCallback(fn, content, args);
     }
@@ -299,7 +346,7 @@ export const deepClone = source => {
   if (!source) return source;
   try {
     return JSON.parse(JSON.stringify(source));
-  } catch(err) {
+  } catch (err) {
     console.warn(err);
   }
 }
@@ -316,12 +363,12 @@ export const arrayTranslater = (array, size = 2, clonable = true) => {
     if (clonable) {
       try {
         const original = deepClone(array);
-        while(original.length) ret.push(original.splice(0, size));
+        while (original.length) ret.push(original.splice(0, size));
       } catch (error) {
         console.warn('@arrayTranslater::', error);
       }
     } else {
-      while(array.length) ret.push(array.splice(0, size));
+      while (array.length) ret.push(array.splice(0, size));
     }
     return ret;
   }
@@ -668,15 +715,15 @@ export const ajax = args => {
   //
   return new Promise((resolve, reject) => {
     // ajaxCache[xhrKey] = true;
-    console.log('request-Url---->',_url)
-    _data&&JSON.stringify(_data)!=="{}"&&console.log('request-Data------------>',_data)
+    console.log('request-Url---->', _url)
+    _data && JSON.stringify(_data) !== "{}" && console.log('request-Data------------>', _data)
     Taro.request({
       url: fixSlash(`${_host}${_url}`),
       data: _data,
       method: _method,
       header: _headers,
-      success: async(res) => {
-        console.log('request-Res---->',res)
+      success: async (res) => {
+        console.log('request-Res---->', res)
         const { statusCode, data } = res;
         if (_json) {
           if (statusCode === RES_SUCCESS_CODE) {
@@ -698,12 +745,12 @@ export const ajax = args => {
               _debug && console.log(`[Unauthorized]<${_url}>::`, data);
               //
               // console.log('LoginTimes',LoginTimes)
-              if(LoginTimes>0){
-                const {data} = await doSilentLogin(true).catch(err => {
+              if (LoginTimes > 0) {
+                const { data } = await doSilentLogin(true).catch(err => {
                   reject(err);
                 });
                 data && resolve(ajax(args));
-              }else{
+              } else {
                 // Taro.showToast({ title: data.message || '身份已过期，请重新登录', icon: 'none' });
                 // 鉴权失败跳转至 UCenter 页面
                 let returnUrl = '';
@@ -756,7 +803,7 @@ export const ajax = args => {
 export const loadCMSConfig = (type, code) => {
   // splash: 开屏; index: 首页; category: 分类页; plp: 列表页; pdp: 详情页; landing: 活动页; recmd: 推荐位;
   // uc_ad: 个人中心广告位; store: 门店信息; keyword: 热搜; size_charts: 尺码表; size_mapping: 尺码范围
-  if (!['splash', 'index', 'category', 'plp', 'pdp', 'landing', 'recmd', 'uc_ad', 'club','store', 'keyword', 'size_charts', 'size_mapping', 'legal','announcement','user_center','electronic_invoice'].includes(type)) {
+  if (!['splash', 'index', 'category', 'plp', 'pdp', 'landing', 'recmd', 'uc_ad', 'club', 'store', 'keyword', 'size_charts', 'size_mapping', 'legal', 'announcement', 'user_center', 'electronic_invoice'].includes(type)) {
     return Promise.reject(getErrorInfo('缺少必要参数或参数错误：页面类型'));
   }
   // const { envVersion } = Taro.getAccountInfoSync().miniProgram;
@@ -766,9 +813,9 @@ export const loadCMSConfig = (type, code) => {
   // const env = 'publish';
   const channel = 'wcmp'; // wcmp: 微信小程序; pcweb: PC官网; mobweb: H5官网
   //
-  const envJSON = _debug ? '_stage' :''
+  const envJSON = _debug ? '_stage' : ''
   let _filePath = '', showLoading = false;
-  switch(type) {
+  switch (type) {
     case "splash":
       _filePath = `/json${envJSON}/${env}/splash.json`;
       showLoading = false;
@@ -922,27 +969,28 @@ export const errorHandler = (err, showToast = false, label) => {
  * @param {Object} err
  * @returns
  */
-export const errorHandlerFront = (forntmsg, showToast = false, label,err) => {
-  if (!err) return false;
-  showToast && Taro.showToast({ title:forntmsg.msg|| '网络不给力', icon: 'none' });
-  console.warn(label, err);
+export const errorHandlerFront = (forntmsg, showToast = false, label, err) => {
+  // if (!err) return false;
+  showToast && Taro.showToast({ title: forntmsg.msg || '网络不给力', icon: 'none' });
+  console.warn(label, err || '');
 };
 
 /**
  * 获取 OpenID & Token - OnRunning Frontend API
  * @returns {Promise}
  */
-export const getOnToken = async(resetFlag = false) => {
+export const getOnToken = async (resetFlag = false) => {
   const loginRes = await Taro.login();
   return new Promise((resolve, reject) => {
     let _expireTime = Taro.getStorageSync('expireTime')
-    if(_expireTime && !resetFlag){
+    if (_expireTime && !resetFlag) {
       let _now = new Date().getTime()
-      let _expire = _expireTime*1000
+      let _expire = _expireTime * 1000
       // console.log(_now,_expire)
-      if(_now - _expire < 0){
+      if (_now - _expire < 0) {
         let token = Taro.getStorageSync('token')
-        resolve({ token });
+        let open_id = Taro.getStorageSync('open_id')
+        resolve({ token, open_id });
         return;
       }
     }
@@ -956,11 +1004,12 @@ export const getOnToken = async(resetFlag = false) => {
       },
       showLoading: false
     }).then(res => {
-      const { code, token, expire_at } = res;
+      const { code, token, expire_at, open_id } = res;
       if (code === 200) {
         Taro.setStorageSync('token', token);
+        Taro.setStorageSync('open_id', open_id);
         Taro.setStorageSync('expireTime', expire_at);
-        resolve({ token });
+        resolve({ token, open_id });
       } else {
         console.warn('@getONToken::', res);
         reject(res);
@@ -976,20 +1025,23 @@ export const getOnToken = async(resetFlag = false) => {
  * 静默登录
  * @returns {Promise}
  */
-export const doSilentLogin = async(resetFlag,callback) => {
-  const {scene} = store.state.APPLaunchOption
-  console.log('sense----场景值',scene)
-  if(scene==1154)return
-  await getOnToken(resetFlag).catch(err => console.warn('@doSilentLogin::', err));
+export const doSilentLogin = async (resetFlag, callback) => {
+  const { scene } = store.state.APPLaunchOption
+  console.log('sense----场景值', scene)
+  if (scene == 1154) return
+  const { token, open_id } = await getOnToken(resetFlag).catch(err => console.warn('@doSilentLogin::', err));
   LoginTimes -= 1
   return new Promise((resolve, reject) => {
     ajax({ url: types.USER_OPENID_LOGIN, showLoading: false }).then(res => {
-      const { code, data ,wxUserStatus} = res;
+      const { code, data, wxUserStatus } = res;
       if (code === RES_SUCCESS_CODE) {
         LoginTimes = 5
         Taro.setStorageSync('lw_loginStatus', wxUserStatus);
         typeof callback === 'function' && callback()
-        resolve({data,wxUserStatus});
+        resolve({ data, wxUserStatus, open_id });
+        if (wxUserStatus) {
+          getUserUUID()
+        }
       } else {
         console.warn('@doSilentLogin::', res);
         reject(res);
@@ -1001,26 +1053,66 @@ export const doSilentLogin = async(resetFlag,callback) => {
   });
 };
 /**
+ * 获取UUID
+ */
+
+export const getUserUUID = () => {
+  UUIDtimes -= 1
+  return new Promise((reslove, reject) => {
+    Taro.showLoading();
+    ajax({
+      url: types.GET_UUID,
+      host: $ON_API_HOST,
+      method: "POST",
+    })
+      .then((res) => {
+        Taro.hideLoading();
+        const { code, data: { uuid } } = res;
+        //没拿到 uuid 重新获取
+        if (code == 10002) {
+          if (UUIDtimes > 0) {
+            setTimeout(() => {
+              getUserUUID()
+              reslove()
+            }, 2000)
+            //   getUserUUID()
+          }
+        } else if (code == RES_SUCCESS_CODE) {
+          // UUIDtimes=5
+          store.state.globalData.TA.login(uuid)
+          reslove(uuid)
+        } else {
+          reject()
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        reject();
+        Taro.hideLoading();
+      });
+  })
+};
+/**
  * 加载用户心中数据
  */
-export const  getUCenterInfo =()=>{
-  return new Promise((reslove,reject)=>{
+export const getUCenterInfo = () => {
+  return new Promise((reslove, reject) => {
     ajax({
       url: types.USER_CENTER,
       method: "POST",
       authorize: false,
-      showLoading:false
+      showLoading: false
     }).then(res => {
-      const { code, data ,wxUserStatus} = res;
+      const { code, data, wxUserStatus } = res;
       if (code === RES_SUCCESS_CODE) {
         if (typeof data.info === 'object') {
-          let userInfo = Object.assign({ ...data.info },{wxUserStatus});
-          const {mobile} =userInfo
-          let isUserMember=wxUserStatus && userInfo.isMember
+          let userInfo = Object.assign({ ...data.info }, { wxUserStatus });
+          const { mobile } = userInfo
+          let isUserMember = wxUserStatus && userInfo.isMember
           Taro.setStorageSync('userInfo', userInfo);
           Taro.setStorageSync('mobile', mobile);
           Taro.setStorageSync('isUserMember', isUserMember);
-          const userInfo_ = Object.assign({ ...userInfo},{isUserMember});
+          const userInfo_ = Object.assign({ ...userInfo }, { isUserMember });
           reslove(userInfo_);
         }
       } else if (code === RES_NO_AUTHORITY_CODE) {
@@ -1072,7 +1164,7 @@ export const VTypes = {
   required: /^.+$/,
   mobile: /^1[3456789]\d{9}$/,
   email: /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/i,
-  name:/^.{2,18}$/,
+  name: /^.{2,18}$/,
   /**
    * 必须包含大小写字母和数字
    */
@@ -1105,7 +1197,7 @@ export const validator = (formValues, formRules) => {
   // 没有字段或没有规则
   if (!fieldNames.length || !ruleFields.length) return ret;
   // 循环校验字段
-  while(fieldNames.length) {
+  while (fieldNames.length) {
     const fieldName = fieldNames.shift();
     const fieldValue = formValues[fieldName];
     const fieldRules = formRules[fieldName];
@@ -1158,7 +1250,7 @@ export const validateField = (value, ruleInfo) => {
     let ret = { rules: null, errorMsgs: '' };
     const { rule, min, max, options, pattern, regexp, message, type } = ruleInfo;
     if (allowRuleNames.includes(rule)) {
-      switch(rule) {
+      switch (rule) {
         case "required":
           if (isEmpty(value) || (typeof value === 'string' && !value.trim())) {
             ret.rules = { ...ruleInfo };
@@ -1216,7 +1308,7 @@ export const validateField = (value, ruleInfo) => {
  * @param {String} msg 提示内容
  * @param {String} returnPath 回退页面
  */
- export const missParams = (msg, returnPath) => {
+export const missParams = (msg, returnPath) => {
   Taro.showModal({
     title: '信息提示',
     content: msg || '缺少必要参数',
@@ -1233,9 +1325,8 @@ export const validateField = (value, ruleInfo) => {
 /**
  * 是否为 Tabbar 页面
  */
- export const  isTabbarPage=(target) =>{
-  // console.log(1110,Taro.getCurrentInstance().page.route)
-  let link=target?target:Taro.getCurrentInstance().page.route
+export const isTabbarPage = (target) => {
+  let link = target ? target : Taro.getCurrentInstance().page.route
   return [
     '/pages/index/index',
     '/pages/category/index',
@@ -1245,43 +1336,64 @@ export const validateField = (value, ruleInfo) => {
   ].includes(link);
 }
 // 千分位
-export const numFormat = (num,len = 0) => {
+export const numFormat = (num, len = 0) => {
   if (isNaN(num)) return num;
   num = Number(num).toFixed(len);
   // return Number(num).toLocaleString("en-US")
-  let res=num.toString().replace(/\d+/, function(n){ // 先提取整数部分
-    return n.replace(/(\d)(?=(\d{3})+$)/g,function($1){
-      return $1+",";
+  let res = num.toString().replace(/\d+/, function (n) { // 先提取整数部分
+    return n.replace(/(\d)(?=(\d{3})+$)/g, function ($1) {
+      return $1 + ",";
     });
   })
   return res;
 }
 
 // 绑定分享关系
-export const makeShare = ( args = '', page = '', title = 'On昂跑官方商城', imageUrl = '') => {
-  return new Promise(async(resolve, reject) => {
+export const makeShare = (args = '', page = '', title = 'On昂跑官方商城', imageUrl = '', extra) => {
+  return new Promise(async (resolve, reject) => {
     ajax({
       url: types.MAKE_SHARE,
-      data:{
-        args:args,
-        url:page
+      data: {
+        args: args,
+        url: page
       }
     }).then(res => {
       if (RES_SUCCESS_CODE === res.code) {
         let path = `/${page}`
-        if(args) path += `?${args}`
+        const { share_method,share_type,product_type,product_name} = extra||{}
+        // console.log('path----extra----',extra)
+        console.log('path----extra----',path)
+        let par = {
+          share_type: share_type || '小程序自带',
+          share_method:share_method|| '分享至会话',
+        }
+        //pdp 需要额外传
+        if(path=='/subpages/pdp/index'){
+          par=Object.assign({
+            product_type,
+            product_name
+          },par)
+        }
+        const ta = store.state.globalData.TA;
+        console.log('par--------',par)
+        ta.track({ eventName: 'share',
+        properties:{
+          ...par
+        }})
+
+        if (args) path += `?${args}`
         let query;
-        if(res.data.sid) {
-          query=`${args?'&':''}sid=${res.data.sid}`
-          path += `${args?'&':'?'}sid=${res.data.sid}`
+        if (res.data.sid) {
+          query = `${args ? '&' : ''}sid=${res.data.sid}`
+          path += `${args ? '&' : '?'}sid=${res.data.sid}`
         }
         resolve({
           title: title,
           query,
-          imageUrl: fixCMSPath(imageUrl) ,
+          imageUrl: fixCMSPath(imageUrl),
           path: path
         })
-      }else{
+      } else {
         Taro.showToast({
           title: res.message,
           icon: 'none',
@@ -1294,40 +1406,39 @@ export const makeShare = ( args = '', page = '', title = 'On昂跑官方商城',
         icon: 'none',
         duration: 2000
       })
-      console.log(err)
       reject(err)
     });
   });
 }
 
 //获取绑定结果
-export const makeBind =async (sid) => {
-  const {query} = store.state.APPLaunchOption
-  console.log('@onLaunch::-----》page',query)
-  return new Promise(async(resolve, reject) => {
+export const makeBind = async (sid) => {
+  const { query } = store.state.APPLaunchOption
+  console.log('@onLaunch::-----》page', query)
+  return new Promise(async (resolve, reject) => {
     // let onToken = Taro.getStorageSync('token');
     // if (!onToken) {
     //   const ret = await getOnToken().catch(err => reject(err));
     //   onToken = ret.token;
     // }
     // if (onToken) {
-      await store.state.loginPromise;
-      let page = Taro.getCurrentPages()
-      let url = page[page.length - 1].route
-      ajax({
-        url: types.MAKE_BIND,
-        data:{ sid, url }
-      }).then(res => {
-        if (RES_SUCCESS_CODE === res.code) {
-          resolve(res)
-        }else{
-          Taro.showToast({ title: res.message, icon: 'none', duration: 2000 });
-        }
-      }).catch(err => {
-        Taro.showToast({ title: err.message, icon: 'none', duration: 2000 });
-        console.log(err)
-        reject(err)
-      });
+    await store.state.loginPromise;
+    let page = Taro.getCurrentPages()
+    let url = page[page.length - 1].route
+    ajax({
+      url: types.MAKE_BIND,
+      data: { sid, url }
+    }).then(res => {
+      if (RES_SUCCESS_CODE === res.code) {
+        resolve(res)
+      } else {
+        Taro.showToast({ title: res.message, icon: 'none', duration: 2000 });
+      }
+    }).catch(err => {
+      Taro.showToast({ title: err.message, icon: 'none', duration: 2000 });
+      console.log(err)
+      reject(err)
+    });
     // } else {
     //   console.warn('Token获取失败');
     //   reject(new Error('Token获取失败'));
@@ -1338,7 +1449,7 @@ export const makeBind =async (sid) => {
 /**
  * 打开腾讯客服
  */
-export const  openCustomerServiceChat = (corpId)=> {
+export const openCustomerServiceChat = (corpId) => {
   Taro.openCustomerServiceChat({
     extInfo: {
       url: `https://work.weixin.qq.com/kf/kfcc92b36a81a1c28e0`
@@ -1350,7 +1461,7 @@ export const  openCustomerServiceChat = (corpId)=> {
   })
 }
 // 订阅消息
-export const getDoSubscribe = (_list) =>{
+export const getDoSubscribe = (_list) => {
   return new Promise((resolve, reject) => {
     Taro.getSetting({
       withSubscriptions: true,
@@ -1362,12 +1473,12 @@ export const getDoSubscribe = (_list) =>{
             _suboo = false
             let _acceptList = []
             for (let k in res.subscriptionsSetting.itemSettings) {
-              if(res.subscriptionsSetting.itemSettings[k] == 'accept' && _list.includes(k)){
+              if (res.subscriptionsSetting.itemSettings[k] == 'accept' && _list.includes(k)) {
                 _acceptList.push(k)
               }
               if (_list.indexOf(k) < 0) {
                 _suboo = true
-              }else{
+              } else {
                 resolve(_acceptList)
               }
             }
@@ -1398,8 +1509,8 @@ export const getDoSubscribe = (_list) =>{
               fail: (res) => {
                 console.log("@requestSubscribeMessage=fail", res)
                 Taro.showToast({
-                    title: "网络异常，请重试",
-                    icon: "none",
+                  title: "网络异常，请重试",
+                  icon: "none",
                 })
                 resolve()
               }
@@ -1415,16 +1526,16 @@ export const getDoSubscribe = (_list) =>{
   });
 }
 
-const isDef =(v)=>{
-	return v !== undefined && v !== null
+const isDef = (v) => {
+  return v !== undefined && v !== null
 }
 
-export const isPromise =(val)=>{
-	return (
-		isDef(val) &&
-		typeof val.then === 'function' &&
-		typeof val.catch === 'function'
-	)
+export const isPromise = (val) => {
+  return (
+    isDef(val) &&
+    typeof val.then === 'function' &&
+    typeof val.catch === 'function'
+  )
 }
 
 let gWorker = null;
@@ -1462,12 +1573,12 @@ export const encrypt2 = (data, keyStr = '3edc#EDC4rfv$RFV', ivStr = '1qaz!QAZ2ws
 /**
  * 加载用户心中数据
  */
-export const getLoginText =()=>{
-  return new Promise((reslove,reject)=>{
+export const getLoginText = () => {
+  return new Promise((reslove, reject) => {
     ajax({
       url: types.SUPPORT_CONFIG,
       method: "POST",
-      showLoading:false
+      showLoading: false
     }).then(res => {
       const { code, data } = res;
       if (code === RES_SUCCESS_CODE) {
@@ -1483,13 +1594,287 @@ export const getLoginText =()=>{
   })
 };
 
+
+// 周年庆所用接口 start
+/**
+    * 上传微信步数
+    * @param {Object} params
+    * @returns 无
+    */
+export const uploadWxRunData = async (params) => {
+  // await getOnToken().catch(err => console.warn('@doSilentLogin::', err));
+  const { callback, data } = params;
+  ajax({
+    url: types.WXRUNDATADECRYPT, method: "POST", showLoading: true, host: $ON_API_HOST, data
+  }).then((res) => {
+    typeof callback === "function" && callback(res);
+  }).catch((err) => {
+    errorHandler(err, true, "@uploadWxRunData::");
+    typeof callback === "function" && callback(err);
+  });
+};
+
+/**
+     * 获取步数成绩
+     * @param  无
+     * @returns res
+     */
+export const getScore = async () => {
+  // await getOnToken().catch(err => console.warn('@doSilentLogin::', err));
+  return new Promise((reslove, reject) => {
+    ajax({
+      url: types.GETSCORE, method: "POST", showLoading: true, host: $ON_API_HOST
+    }).then((res) => {
+      reslove(res)
+    }).catch((err) => {
+      reject()
+      errorHandler(err, true, "@getScore::");
+    });
+  })
+};
+
+/**
+     * 获取活动状态
+     * @param  无
+     * @returns res
+     */
+export const getActivityStstus = async () => {
+  return new Promise((reslove, reject) => {
+    ajax({
+      url: types.GET_ACTIVITY_STATUS, method: "GET", showLoading: true, host: $ON_API_HOST
+    }).then((res) => {
+      reslove(res)
+    }).catch((err) => {
+      reject()
+      errorHandler(err, true, "@getActivityStstus::");
+    });
+  })
+};
+
+/**
+     * 获取用户订阅消息列表
+     * @param  无
+     * @returns res
+     */
+export const getSubcribeList = async () => {
+  // await getOnToken().catch(err => console.warn('@doSilentLogin::', err));
+  return new Promise((reslove, reject) => {
+    ajax({
+      url: types.GET_SUBSCRIBE_LIST, method: "GET", showLoading: true, host: $ON_API_HOST
+    }).then((res) => {
+      reslove(res)
+    }).catch((err) => {
+      reject()
+      errorHandler(err, true, "@getSubcribeList::");
+    });
+  })
+};
+
+/**
+     * 记录订阅消息
+     * @param{Object} data
+     * @returns res
+     */
+export const recordSubcribe = async (data) => {
+  // await getOnToken().catch(err => console.warn('@doSilentLogin::', err));
+  return new Promise((reslove, reject) => {
+    ajax({
+      url: types.RECORD_SUBSCRIBE, method: "POST", showLoading: true, host: $ON_API_HOST, data
+    }).then((res) => {
+      reslove(res)
+    }).catch((err) => {
+      reject()
+      errorHandler(err, true, "@recordSubcribe::");
+    });
+  })
+};
+
+/**
+     * 参与活动
+     * @param 无
+     * @returns res
+     */
+export const joinActivity = async () => {
+  // await getOnToken().catch(err => console.warn('@doSilentLogin::', err));
+  return new Promise((reslove, reject) => {
+    ajax({
+      url: types.JOIN_ACTIVITY, method: "POST", showLoading: true, host: $ON_API_HOST
+    }).then((res) => {
+      reslove(res)
+    }).catch((err) => {
+      reject()
+      errorHandler(err, true, "@joinActivity::");
+    });
+  })
+};
+
+/**
+     * 好友助力
+     * @param{Object} data
+     * @returns res
+     */
+export const friendHelp = async (data) => {
+  // await getOnToken().catch(err => console.warn('@doSilentLogin::', err));
+  return new Promise((reslove, reject) => {
+    ajax({
+      url: types.FRIEND_HELP, method: "POST", showLoading: true, host: $ON_API_HOST, data
+    }).then((res) => {
+      reslove(res)
+    }).catch((err) => {
+      reject()
+      errorHandler(err, true, "@friendHelp::");
+    });
+  })
+};
+
+/**
+     * 好友助力排名
+     * @param{Object} data
+     * @returns res
+     */
+export const friendHelpRank = async (data) => {
+  // await getOnToken().catch(err => console.warn('@doSilentLogin::', err));
+  return new Promise((reslove, reject) => {
+    ajax({
+      url: types.FRIEND_HELP_RANK, method: "POST", showLoading: true, host: $ON_API_HOST, data
+    }).then((res) => {
+      reslove(res)
+    }).catch((err) => {
+      reject()
+      errorHandler(err, true, "@friendHelpRank::");
+    });
+  })
+};
+
+/**
+     * 上传成绩
+     * @param 无
+     * @returns res
+     */
+export const uploadScore = async () => {
+  // await getOnToken().catch(err => console.warn('@doSilentLogin::', err));
+  return new Promise((reslove, reject) => {
+    ajax({
+      url: types.UPLOAD_SCORE, method: "POST", showLoading: true, host: $ON_API_HOST
+    }).then((res) => {
+      reslove(res)
+    }).catch((err) => {
+      reject()
+      errorHandler(err, true, "@uploadScore::");
+    });
+  })
+};
+
+/**
+     * 获取奖品信息
+     * @param 无
+     * @returns res
+     */
+export const getPrizeInfo = async () => {
+  // await getOnToken().catch(err => console.warn('@doSilentLogin::', err));
+  return new Promise((reslove, reject) => {
+    ajax({
+      url: types.PRIZE_INFO, method: "GET", showLoading: true, host: $ON_API_HOST
+    }).then((res) => {
+      reslove(res)
+    }).catch((err) => {
+      reject()
+      errorHandler(err, true, "@getPrizeInfo::");
+    });
+  })
+};
+
+/**
+     * 排名列表
+     * @param 无
+     * @returns res
+     */
+export const getRankList = async (par) => {
+  const { page, page_size } = par
+  // await getOnToken().catch(err => console.warn('@doSilentLogin::', err));
+  return new Promise((reslove, reject) => {
+    ajax({
+      url: types.RANK_LIST,
+      data: {
+        ...par
+      },
+      method: "POST", showLoading: true, host: $ON_API_HOST
+    }).then((res) => {
+      reslove(res)
+    }).catch((err) => {
+      reject()
+      errorHandler(err, true, "@getRankList::");
+    });
+  })
+};
+
+/**
+     * 预约参与活动
+     * @param 无
+     * @returns res
+     */
+export const reserveActivity = async () => {
+  // await getOnToken().catch(err => console.warn('@doSilentLogin::', err));
+  return new Promise((reslove, reject) => {
+    ajax({
+      url: types.RESERVE_ACTIVITY, method: "POST", showLoading: true, host: $ON_API_HOST, data: {}
+    }).then((res) => {
+      reslove(res)
+    }).catch((err) => {
+      reject()
+      errorHandler(err, true, "@reserveActivity::");
+    });
+  })
+};
+/**
+     * 获取步数列表
+     * @param 无
+     * @returns res
+     */
+export const getStepList = async () => {
+  // await getOnToken().catch(err => console.warn('@doSilentLogin::', err));
+  return new Promise((reslove, reject) => {
+    ajax({
+      url: types.STEPLIST, method: "GET", showLoading: true, host: $ON_API_HOST, data: {}
+    }).then((res) => {
+      reslove(res)
+    }).catch((err) => {
+      reject()
+      errorHandler(err, true, "@getStepList::");
+    });
+  })
+};
+
+
+/**
+     * 更新用户信息，获取称号
+     * @param 无
+     * @returns res
+     */
+export const updateUserInfo = async (data) => {
+  // await getOnToken().catch(err => console.warn('@doSilentLogin::', err));
+  return new Promise((reslove, reject) => {
+    ajax({
+      url: types.USER_INFO_SET, method: "POST", showLoading: true, host: $API_HOST, data
+    }).then((res) => {
+      reslove(res)
+    }).catch((err) => {
+      reject()
+      errorHandler(err, true, "@getStepList::");
+    });
+  })
+};
+// 周年庆所用接口 end
+
 export default {
-  RES_SUCCESS_CODE, RES_NO_AUTHORITY_CODE,Vict,
+  RES_SUCCESS_CODE, RES_NO_AUTHORITY_CODE, Vict,
   px2rpx, rpx2px, checkSetting, showCustomLoading, hideCustomLoading, showLoading, hideLoading, setStorageSync, getStorageSync, removeStorageSync, clearStorageSync, objectArraySort, guid,
-  fn, addCallback, runCallback, debounce, throttle, dateFormat,isTabbarPage, deepClone, arrayTranslater, arrayToTree, filterTreeNode, findTreeNodePaths, fixSlash, fixCMSPath, fixCMSNumber, fixCMSPdtInfo, fixColorThumbnail, isImagePath,
+  fn, addCallback, runCallback, debounce, throttle, dateFormat, isTabbarPage, deepClone, arrayTranslater, arrayToTree, filterTreeNode, findTreeNodePaths, fixSlash, fixCMSPath, fixCMSNumber, fixCMSPdtInfo, fixColorThumbnail, isImagePath,
   encodeObject2URIParams, decodeURIParams2Object, getQueryString, signHandler, getSignedParams, ajax, loadCMSConfig, fixComponentName,
   desensitizify, getUCenterInfo, isPromise, initWorker,
-  errorHandler,errorHandlerFront, getOnToken, doSilentLogin, getPhoneNumber,
-  VTypes, validateField, validator, missParams,numFormat,makeShare,makeBind,openCustomerServiceChat,getDoSubscribe,encrypt2,getLoginText
+  errorHandler, errorHandlerFront, getOnToken, doSilentLogin, getPhoneNumber,
+  VTypes, validateField, validator, missParams, numFormat, makeShare, makeBind, openCustomerServiceChat, getDoSubscribe, encrypt2, getLoginText,
+  uploadWxRunData, getScore, getActivityStstus, getSubcribeList, joinActivity, Fn, device,
+  friendHelp, friendHelpRank, uploadScore, getPrizeInfo, getRankList, reserveActivity, getStepList, updateUserInfo
 };
 

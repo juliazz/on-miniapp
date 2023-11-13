@@ -64,12 +64,12 @@
                 </view>
               </block>
             </view>
-            <view class="checkbox" @tap="toggleNotice" v-if="!userStatus.isSubscribe">
+            <!-- <view class="checkbox" @tap="toggleNotice" v-if="!userStatus.isSubscribe">
               <image class="checkbox-icon" mode="widthFix " src="@/assets/images/icons/checkbox-checked.svg"
                 v-if="formValues.noticeStatus" />
               <image class="checkbox-icon" mode="widthFix " src="@/assets/images/icons/checkbox.svg" v-else />
               <view class="checkbox-text">订阅昂跑最新资讯和新品通知</view>
-            </view>
+            </view> -->
           </view>
         </view>
       </view>
@@ -146,12 +146,12 @@
                 </view>
               </block>
             </view>
-            <view class="checkbox" @tap="toggleNotice" v-if="!userStatus.isSubscribe">
+            <!-- <view class="checkbox" @tap="toggleNotice" v-if="!userStatus.isSubscribe">
               <image class="checkbox-icon" mode="widthFix " src="@/assets/images/icons/checkbox-checked.svg"
                 v-if="formValues.noticeStatus" />
               <image class="checkbox-icon" mode="widthFix " src="@/assets/images/icons/checkbox.svg" v-else />
               <view class="checkbox-text">订阅昂跑最新资讯和新品通知</view>
-            </view>
+            </view> -->
           </view>
         </view>
       </view>
@@ -162,6 +162,7 @@
 <script>
 import Taro from "@tarojs/taro";
 import mixins from '@/utils/mixins';
+import {  encrypt2 } from '@/utils';
 import {
   RES_SUCCESS_CODE,
   ajax,
@@ -169,10 +170,16 @@ import {
   getPhoneNumber,
   desensitizify,
   VTypes,
-  initWorker
+  initWorker,
+  Vict,
+  getUserUUID,
+  getUCenterInfo
 } from "@/utils";
+import * as ssTrack from '@/utils/ssTrack';
 import types from "@/store/types";
 import store from '@/store';
+const ta = store.state.globalData.TA;
+
 export default {
   name: "LoginGuide",
   mixins: [mixins],
@@ -195,7 +202,11 @@ export default {
      * `LoginGuide` 组件显示状态
      */
     visible() {
-      return this.options?.visible || false;
+      const { visible } = this.options
+      if (visible) {
+        this.onPopShow()
+      }
+      return visible || false;
     },
     /**
      * 关闭时是否以`游客身份`继续
@@ -299,6 +310,17 @@ export default {
     /**
      * 显示
      */
+    onPopShow() {
+      store.state.globalData.TA.track({
+        eventName: 'pop_up_show',
+        properties:{
+          pop_up_name: '登录或加入昂跑'
+        },
+      })
+    },
+    /**
+     * 显示
+     */
     onShow(stage) {
       const oldStage = this.stage;
       this.doReset();
@@ -314,6 +336,13 @@ export default {
       } else {
         this.doReset();
       }
+      store.state.globalData.TA.track({
+        eventName: 'pop_up_end',
+        properties:{
+          pop_up_wayout: null,
+          pop_up_name: '登录或加入昂跑'
+        }
+      })
       this.$emit("hide", { oldStage, newStage: 0 });
     },
     /**
@@ -515,7 +544,7 @@ export default {
       //
       this.doLoginXHR({
         mobile,
-        code,
+        code: type === 2 ? encrypt2(code) : code,
         type,
         isSubscribe: noticeStatus ? 1 : 0,
       });
@@ -539,7 +568,6 @@ export default {
           source: query.sid
         })
       }
-      console.log('USER_MOBILE_LOGIN----par', query)
       if (!mobile || !type)
         return console.warn("@doLoginXHR:: 缺少必要参数", args), false;
       return ajax({
@@ -547,18 +575,37 @@ export default {
         method: "POST",
         data: argPlus,
       })
-        .then((res) => {
+        .then(async (res) => {
           const { code, data } = res;
           if (code === RES_SUCCESS_CODE) {
-            // Taro.setStorageSync('lw_token', data.token);
             Taro.setStorageSync("lw_loginStatus", res.wxUserStatus);
             Taro.setStorageSync("isUserMember", 1);
             Taro.setStorageSync("mobile", mobile);
             this.afterSuccess();
-            //
+            // 登录埋点
+            const login_type = type == 3 ? '微信授权' : (type == 2 ? '密码登录' : '验证码登录')
             if (!this.userStatus.isMember) {
               this.doJoinMember();
             }
+            const uuid = await getUserUUID()
+            // 无奈之举兼容接口数据延迟
+            // if(!uuid){
+            //   setTimeout(()=>{
+            //     const uuid = await getUserUUID()
+            //   },3000)
+            // }
+            // uuid &&  await getUserUUID()
+            const userInfo = await getUCenterInfo();
+            ta.setSuperProperties({
+              current_status: userInfo.wxUserStatus ? '登录用户' : '游客',
+            })
+            ta.track({
+              eventName: "login",
+              properties: {
+                login_type
+              }
+            })
+            ssTrack.track_loginTime()
           } else {
             errorHandler(res, true, "@doLoginXHR::");
           }
@@ -589,6 +636,21 @@ export default {
           let msg = "注册成功";
           if (code !== RES_SUCCESS_CODE) msg = "网络开小差了，请重试！";
           Taro.showToast({ title: msg, icon: "none" });
+          // 入会埋点 - SS
+          const { query } = store.state.APPLaunchOption
+          const keys = ['sid','utm_campaign','utm_source','utm_medium','utm_term','utm_content'];
+          const o = {};
+          keys.forEach((key) => {
+            let v = query[key]
+            if (v) {
+              o[key] = v;
+            }
+          })
+          ta.userSet({
+            properties: {
+              ...o
+            }
+          })
         })
         .catch((err) => {
           errorHandler(err, true, "@doJoinMember::");

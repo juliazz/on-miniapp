@@ -87,6 +87,12 @@ const rules ={
       trigger: "change",
     },
   ],
+  pic: [
+    { required: true,message: "请上传图片", type:'string',trigger: "change" },
+  ],
+  pics: [
+    { required: true,message: "请上传图片",type:'array', trigger: "change", fields:{type: "string", required: true, message: "请上传图片"}},
+  ],
   jobFile: [
     {
       required: true,

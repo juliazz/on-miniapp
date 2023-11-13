@@ -1,5 +1,5 @@
 <template>
-  <view class="announcement-wrapper" :style="appearanceStyles" v-if="visible && config.content">
+  <view class="announcement-wrapper cms_com" :style="appearanceStyles" v-if="visible && config.content" :name="111">
     <view class="follow-notice">
       <view class="follow_tip fllow_tip_notice">
         <view :class="['line-fram', canFrame ? 'can-frame' : '']" :style="animateSpeed()">

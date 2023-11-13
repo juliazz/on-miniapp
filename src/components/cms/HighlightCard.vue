@@ -1,5 +1,5 @@
 <template>
-  <view class="high_light_card-wrapper" :style="appearanceStyles" :id="`_${identifier}_${config.id}`" v-if="config && config.content">
+  <view class="high_light_card-wrapper cms_com" :style="appearanceStyles" :id="`_${identifier}_${config.id}`" v-if="config && config.content" :dataCmsId="config.id">
     <view class="high_light_card-container">
       <block v-for="(item, index) in config.content.items" :key="index">
         <view class="high_light_card-box">

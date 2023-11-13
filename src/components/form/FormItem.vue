@@ -1,6 +1,6 @@
 <template>
   <view class="form-item-box">
-    <view :class="['form-line','flex_hfs_vc',type=='uploader' ? 'uploader' :'']">
+    <view :class="['form-line','flex_hfs_vfs',type=='uploader' ? 'uploader' :'']">
       <label :for="labelFor" v-if="label" :class="['form-label',{'label-required': isRequired}]">{{label}}</label>
       <slot ></slot>
     </view>
@@ -34,7 +34,6 @@ export default {
       this.initialValue = this.fieldValue;
       this.setRules();
       if(this.prop=='teamRegion'){
-        console.log('this.prop',this.prop)
         this.teamRegion=this.form.teamRegions
       }
     }
@@ -82,9 +81,6 @@ export default {
       // 使用 async-validator
       const validator = new AsyncValidator({ [this.prop]: rules });
       let model = {[this.prop]: this.fieldValue};
-      console.log('rules------>',rules)
-      console.log('trigger------>',trigger)
-      console.log('model------>',model)
       validator.validate(model, { firstFields: true }, errors => {
         this.isShowMes = errors ? true : false;
         this.message = errors ? errors[0].message : '';

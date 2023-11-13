@@ -1,5 +1,5 @@
 <template>
-  <view class="short_form_story_banner-wrapper" :style="appearanceStyles" :id="`_${identifier}_${config.id}`">
+  <view class="short_form_story_banner-wrapper cms_com" :style="appearanceStyles" :id="`_${identifier}_${config.id}`" :dataCmsId="config.id">
     <view class="short_form_story_banner-container"  >
       <image class="background_image_mobile" :src="fixCMSPath(config.content.background_image_mobile, 1125)" mode="widthFix" lazy-load="false" @load="onLoaded({ type: 'image', src: fixCMSPath(config.content.background_image_mobile, 1125) }, $event)"/>
       <view class="info_box">

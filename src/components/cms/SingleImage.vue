@@ -1,7 +1,8 @@
 <template>
   <view
-    :class="['single_image-wrapper', isEmbedded ? 'is-embedded' : '']"
+    :class="['single_image-wrapper', isEmbedded ? 'is-embedded' : '','cms_com']"
     :style="appearanceStyles"
+    :dataCmsId="config.id"
     :id="`_${identifier}_${config.id}`"
   >
     <view
@@ -330,7 +331,7 @@ export default {
             const {width} = res[0]
             this.selfHeight =deviceUtil.getCalcWidth({...$event.detail},width)
           } else {
-            this.initSelfHeight();
+            this.initSelfHeight($event);
           }
         });
       })
@@ -374,7 +375,6 @@ export default {
         }
         this.onShowLoginGuide(true);
       } else {
-        console.log('2222222')
         if(red_envelope_desc=='redPacket'){
           this.getRedPacket(btn)
           return

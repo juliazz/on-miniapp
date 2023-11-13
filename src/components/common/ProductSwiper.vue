@@ -7,15 +7,16 @@
           <swiper-item class="swiper_item-cls">
             <view class="swiper_item-inner">
               <block v-for="(item, index) in frame" :key="index">
-                <view class="swiper_item-tile" :style="itemStyles">
-                  <BaseItem :source="item" :tagColor="tagColor" :tagBgColor="tagBgColor" :iconBgColor="iconBgColor"  :enableFavorite="enableFavorite" />
+                <view class="swiper_item-tile" :id="`pdtitem_${item.style_slug}`" :style="itemStyles">
+                  <BaseItem :source="item" :tagColor="tagColor" :tagBgColor="tagBgColor" :iconBgColor="iconBgColor"
+                    :enableFavorite="enableFavorite" />
                 </view>
               </block>
             </view>
           </swiper-item>
         </block>
       </swiper>
-      <view class="swiper-scrollbar" v-if="list.length>1">
+      <view class="swiper-scrollbar" v-if="list.length > 1">
         <view class="scrollbar">
           <view class="scrollbar-inner" :style="scrollbarInnerStyles"></view>
         </view>
@@ -27,7 +28,7 @@
 <script>
 import BaseItem from '@/components/common/BaseItem.vue';
 import { arrayTranslater } from '@/utils';
-
+import Taro, { eventCenter, getCurrentInstance, nextTick } from '@tarojs/taro';
 export default {
   name: 'ProductSwiper',
   components: { BaseItem },
@@ -42,13 +43,15 @@ export default {
         tagColor: '#FBF7F6',
         tagBgColor: 'white',
         iconBgColor: 'white',
-        enableFavorite: true
+        enableFavorite: true,
+
       })
     }
   },
   data() {
     return {
-      activeIndex: 0
+      activeIndex: 0,
+      observer_: null,
     };
   },
   computed: {
@@ -110,7 +113,8 @@ export default {
      */
     list() {
       if (Array.isArray(this.items) && this.items.length) {
-        return arrayTranslater(this.items, 2);
+        let list_ = arrayTranslater(this.items, 2);
+        return list_
       } else {
         return [];
       }
@@ -137,7 +141,50 @@ export default {
       return styles;
     }
   },
+
+  destroyed() {
+    if (this._observer) {
+      this._observer.disconnect();
+    }
+  },
+  mounted() {
+    this.addTrack()
+  },
   methods: {
+    addTrack() {
+      if (this._observer) {
+        this._observer.disconnect();
+      }
+      let list_ = this.list
+      if (list_.length) {
+        nextTick(() => {
+          const page = Taro.getCurrentInstance().page
+          this._observer = Taro.createIntersectionObserver(page, { thresholds: [0], observeAll: true })
+          this._observer.relativeToViewport({
+            bottom: -100, left: 200,
+          })
+            .observe('.swiper_item-tile', (res) => {
+              const { id } = res;
+              const item_id = id.split('_')[1]
+              const item = list_.flat().find(el => el.style_slug == item_id)
+              const { style_slug, name, style_display_name } = item ? item : {}
+              if (res.intersectionRatio > 0 && item) {
+                this.$store.state.globalData.SR.track('expose_sku_component',
+                  {
+                    "sku": {
+                      "sku_id": style_slug, // 若商品无sku_id时，可传spu_id信息
+                      "sku_name": name || style_display_name // 若商品无sku_name时，可传spu_name信息
+                    },
+                    "spu": {
+                      "spu_id": style_slug, // 若商品无spu_id时，可传sku_id信息
+                      "spu_name": name || style_display_name // 若商品无spu_name时，可传sku_name信息
+                    }
+                  })
+              }
+            })
+        })
+      }
+    },
     onSwiperChange(evt) {
       this.activeIndex = evt.detail.current;
     }
@@ -146,33 +193,59 @@ export default {
 </script>
 
 <style lang="scss">
-  .product_swiper-wrapper {
-    .product_swiper-header {
-      padding: 32rpx 32rpx; font-size: 28rpx; color: #000; line-height: 150%;font-weight: 400;
-    }
-    .product_swiper-inner {
-      .swiper-cls {
-        width: 100%; height: 654rpx;
-        .swiper_item-cls {
-          width: 100%; height: 100%;
-          .swiper_item-inner {
-            width: 100%; height: 100%; display: flex; justify-content: space-between; align-items: stretch;
-            .swiper_item-tile {
-              width: 368rpx; background: #FAF7F6;
-            }
+.product_swiper-wrapper {
+  .product_swiper-header {
+    padding: 32rpx 32rpx;
+    font-size: 28rpx;
+    color: #000;
+    line-height: 150%;
+    font-weight: 400;
+  }
+
+  .product_swiper-inner {
+    .swiper-cls {
+      width: 100%;
+      height: 654rpx;
+
+      .swiper_item-cls {
+        width: 100%;
+        height: 100%;
+
+        .swiper_item-inner {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          justify-content: space-between;
+          align-items: stretch;
+
+          .swiper_item-tile {
+            width: 368rpx;
+            background: #FAF7F6;
           }
         }
       }
-      .swiper-scrollbar {
-        padding: 32rpx 0;
-        .scrollbar {
-          width: 400rpx; height: 1Px; margin: 0 auto 0; background: #CCC; position: relative;
-          .scrollbar-inner {
-            width: 40rpx; height: 2Px; background-color: #000; transition: all 0.1s linear;
-            position: absolute; bottom: 0; left: 0;
-          }
+    }
+
+    .swiper-scrollbar {
+      padding: 32rpx 0;
+
+      .scrollbar {
+        width: 400rpx;
+        height: 1Px;
+        margin: 0 auto 0;
+        background: #CCC;
+        position: relative;
+
+        .scrollbar-inner {
+          width: 40rpx;
+          height: 2Px;
+          background-color: #000;
+          transition: all 0.1s linear;
+          position: absolute;
+          bottom: 0;
+          left: 0;
         }
       }
     }
   }
-</style>
+}</style>

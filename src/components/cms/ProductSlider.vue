@@ -1,18 +1,10 @@
 <template>
-  <view
-    class="product_slider-wrapper"
-    :style="appearanceStyles"
-    :id="`_${identifier}_${config.id}`"
-    v-if="config && config.content"
-  >
+  <view class="product_slider-wrapper cms_com" :style="appearanceStyles" :id="`_${identifier}_${config.id}`" :dataCmsId="config.id"
+    :data-name="1111" v-if="config && config.content">
     <view class="product_slider-container">
       <view class="category_banner" v-if="config.content.top_banner">
-        <image
-          class="category_banner-inner"
-          mode="widthFix"
-          :webp="true"
-          :src="fixCMSPath(config.content.top_banner, 1125)"
-          @tap.stop="doViewCategory(config.content.top_banner_link)"
+        <image class="category_banner-inner" mode="widthFix" :webp="true"
+          :src="fixCMSPath(config.content.top_banner, 1125)" @tap.stop="doViewCategory(config.content.top_banner_link)"
           @load="
             onLoaded(
               {
@@ -21,35 +13,24 @@
               },
               $event
             )
-          "
-          @error="
-            onLoadedError(
-              {
-                type: 'image',
-                src: fixCMSPath(config.content.top_banner, 1125),
-              },
-              $event
-            )
-          "
-        />
+            " @error="
+    onLoadedError(
+      {
+        type: 'image',
+        src: fixCMSPath(config.content.top_banner, 1125),
+      },
+      $event
+    )
+    " />
       </view>
-      <view
-        class="category_content"
-        v-if="
-          (!config.content.top_banner_style &&
-            (config.content.title || config.content.sub_title)) ||
-          (Array.isArray(list) && list.length)
-        "
-      >
+      <view class="category_content" v-if="(!config.content.top_banner_style &&
+          (config.content.title || config.content.sub_title)) ||
+        (Array.isArray(list) && list.length)
+        ">
         <!-- 非悬浮模式 & (副)标题存在 -->
-        <view
-          class="category_header"
-
-          v-if="
-            !config.content.top_banner_style &&
-            (config.content.title || config.content.sub_title)
-          "
-        >
+        <view class="category_header" v-if="!config.content.top_banner_style &&
+          (config.content.title || config.content.sub_title)
+          ">
           <view class="category_title" v-if="config.content.title">
             <view class="category_title-text" :style="titleStyles">{{
               config.content.title
@@ -60,152 +41,97 @@
               src="@/assets/images/icons/arrow.svg"
               @tap.stop="doViewCategory(config.content.top_banner_link)"
             /> -->
-            <view class="icon-font icon-gengduo1 category_title-icon" v-if="config.content.top_banner_link" :style="category_banner_Styles" @tap.stop="doViewCategory(config.content.top_banner_link)"></view>
+            <view class="icon-font icon-gengduo1 category_title-icon" v-if="config.content.top_banner_link"
+              :style="category_banner_Styles" @tap.stop="doViewCategory(config.content.top_banner_link)"></view>
           </view>
-          <view class="category_subtitle" v-if="config.content.sub_title"
-          :style="category_banner_Styles">{{
+          <view class="category_subtitle" v-if="config.content.sub_title" :style="category_banner_Styles">{{
             config.content.sub_title
           }}</view>
         </view>
         <!-- 数据 -->
-        <view
-          v-if="Array.isArray(list) && list.length"
-          :class="[
-            'items_container',
-            config.content.display_style == 'slider'
-              ? 'category-slider_mode'
-              : '',
-            config.content.top_banner_style === 1
-              ? 'items_container-float'
-              : '',
-          ]"
-        >
+        <view v-if="Array.isArray(list) && list.length" :class="[
+          'items_container',
+          config.content.display_style == 'slider'
+            ? 'category-slider_mode'
+            : '',
+          config.content.top_banner_style === 1
+            ? 'items_container-float'
+            : '',
+        ]">
           <!-- Slider 模式 -->
-          <view
-            class="category_slider"
-            v-if="config.content.display_style == 'slider'"
-          >
-            <swiper
-              class="category_swiper"
-              :circular="true"
-              next-margin="375rpx"
-              @change="onSwiperChange"
-              :current="activeIndex"
-            >
-              <swiper-item
-                :class="['category_swiper-item']"
-                v-for="(item, index) in list"
-                :key="index"
-              >
+          <view class="category_slider" v-if="config.content.display_style == 'slider'">
+            <swiper class="category_swiper" :circular="true" next-margin="375rpx" @change="onSwiperChange"
+              :current="activeIndex">
+              <swiper-item :class="['category_swiper-item']" v-for="(item, index) in list" :key="index">
                 <view :class="['category_item', index == 0 ? 'p32' : '']">
-                  <view
-                    class="pdt_item pdt_item-banner"
-                    v-if="item.__type__ == 'banner'"
-                  >
-                    <image
-                      class="pdt_item-banner--image"
-                      mode="aspectFill"
-                      :webp="true"
-                      :src="fixCMSPath(item.image, 456)"
-                      @tap.stop="
+                  <view class="pdt_item pdt_item-banner" :id="`pdtitem_${item.style_slug}`"
+                    v-if="item.__type__ == 'banner'">
+                    <image class="pdt_item-banner--image" mode="aspectFill" :webp="true"
+                      :src="fixCMSPath(item.image, 456)" @tap.stop="
                         actionHandler(
                           item.link ? { type: 'link', data: item.link } : null
                         )
-                      "
-                      @load="
-                        onLoaded(
-                          { type: 'image', src: fixCMSPath(item.image, 456) },
-                          $event
-                        )
-                      "
-                      @error="
-                        onLoadedError(
-                          { type: 'image', src: fixCMSPath(item.image, 456) },
-                          $event
-                        )
-                      "
-                    />
+                        " @load="
+    onLoaded(
+      { type: 'image', src: fixCMSPath(item.image, 456) },
+      $event
+    )
+    " @error="
+    onLoadedError(
+      { type: 'image', src: fixCMSPath(item.image, 456) },
+      $event
+    )
+    " />
                   </view>
-                  <view
-                    class="pdt_item"
-                    :style="{
-                      backgroundColor: config.content.card_color || '#FFF',
-                    }"
-                    v-else
-                  >
-                    <BaseItem
-                      :source="item"
-                      :enableFavorite="true"
-                      :tagBgColor="config.content.tag_color || '#FFF'"
-                      iconBgColor="#fff"
-                      :enableLazyLoad="enableLazyLoad"
-                    />
+                  <view class="pdt_item" :id="`pdtitem_${item.style_slug}`" :style="{
+                    backgroundColor: config.content.card_color || '#FFF',
+                  }" v-else>
+                    <BaseItem :source="item" :enableFavorite="true" :tagBgColor="config.content.tag_color || '#FFF'"
+                      iconBgColor="#fff" :enableLazyLoad="enableLazyLoad" />
                   </view>
                 </view>
               </swiper-item>
             </swiper>
           </view>
           <!-- Grid 模式: 兼容 Slider 模式 -->
-          <view
-            v-else
-            :class="[
-              'category_list',
-              `category_list-${config.content.display_style}`,
-            ]"
-          >
+          <view v-else :class="[
+            'category_list',
+            `category_list-${config.content.display_style}`,
+          ]">
             <view class="category_list-inner">
               <block v-for="(item, index) in list" :key="index">
-                <view
-                  class="pdt_item pdt_item-banner"
-                  v-if="item.__type__ == 'banner'"
-                >
-                  <image
-                    class="pdt_item-banner--image"
-                    mode="widthFix"
-                    :webp="true"
-                    :src="fixCMSPath(item.image, 456)"
+                <view class="pdt_item pdt_item-banner" :id="`pdtitem_${item.style_slug}`"
+                  v-if="item.__type__ == 'banner'">
+                  <image class="pdt_item-banner--image" mode="widthFix" :webp="true" :src="fixCMSPath(item.image, 456)"
                     @tap.stop="
                       actionHandler(
                         item.link ? { type: 'link', data: item.link } : null
                       )
-                    "
-                    @load="
-                      onLoaded(
-                        { type: 'image', src: fixCMSPath(item.image, 456) },
-                        $event
-                      )
-                    "
-                    @error="
-                      onLoadedError(
-                        { type: 'image', src: fixCMSPath(item.image, 456) },
-                        $event
-                      )
-                    "
-                  />
+                      " @load="
+    onLoaded(
+      { type: 'image', src: fixCMSPath(item.image, 456) },
+      $event
+    )
+    " @error="
+    onLoadedError(
+      { type: 'image', src: fixCMSPath(item.image, 456) },
+      $event
+    )
+    " />
                 </view>
-                <view
-                  class="pdt_item"
-                  :style="{
-                    backgroundColor: config.content.card_color || '#FFF',
-                  }"
-                  v-else
-                >
-                  <BaseItem
-                    :source="item"
-                    :enableFavorite="true"
-                    :tagBgColor="config.content.tag_color || '#FFF'"
-                    :enableLazyLoad="enableLazyLoad"
-                  />
+                <view class="pdt_item" :id="`pdtitem_${item.style_slug}`" :style="{
+                  backgroundColor: config.content.card_color || '#FFF',
+                }" v-else>
+                  <BaseItem :source="item" :enableFavorite="true" :tagBgColor="config.content.tag_color || '#FFF'"
+                    :enableLazyLoad="enableLazyLoad" />
                 </view>
               </block>
             </view>
           </view>
           <!-- 滚动条 -->
-          <view :class="['category_scrollbar', config.content.slider_bar_style == 'white' ? 'theme-white' : '']" v-if="list.length > 1" >
-            <view
-              class="category_scrollbar-inner"
-              :style="scrollbarInnerStyles"
-            ></view>
+          <view :class="['category_scrollbar', config.content.slider_bar_style == 'white' ? 'theme-white' : '']"
+            v-if="list.length > 1">
+            <view class="category_scrollbar-inner" :style="scrollbarInnerStyles"></view>
             <!-- 当使用 ScrollView 标签实现 Slider 模式时启用 -->
             <!-- <view class="category_scrollbar-inner" :style="{ left: `${scrollbarX}rpx` }"></view> -->
           </view>
@@ -256,6 +182,7 @@ export default {
       list: [],
       scrollbarX: 0,
       activeIndex: 0,
+      observer_: null,
     };
   },
   computed: {
@@ -287,21 +214,21 @@ export default {
      */
     titleStyles() {
       let styles = {};
-      const { font_size,text_color } = this.config.content;
+      const { font_size, text_color } = this.config.content;
       font_size &&
         !isNaN(font_size) &&
         (styles.fontSize = `${fixCMSNumber(font_size)}rpx`);
-        text_color &&
+      text_color &&
         (styles.color = `${text_color}`);
       return styles;
     },
-      /**
-     * silder card  文字颜色
-     */
-     category_banner_Styles() {
+    /**
+   * silder card  文字颜色
+   */
+    category_banner_Styles() {
       let styles = {};
       const { text_color } = this.config.content;
-        text_color &&
+      text_color &&
         (styles.color = text_color);
       return styles;
     },
@@ -340,8 +267,42 @@ export default {
       this.initComponent();
     }
   },
+  destroyed() {
+    this._observer && this._observer.disconnect()
+  },
   methods: {
     fixCMSPath,
+    addTrack() {
+      const { list } = this;
+      if (list.length) {
+        setTimeout(() => {
+          const page = Taro.getCurrentInstance().page
+          this._observer = Taro.createIntersectionObserver(page, { thresholds: [0], observeAll: true })
+          this._observer.relativeToViewport({
+            bottom: 100, left: 375
+          })
+            .observe('.pdt_item', (res) => {
+              const { id } = res;
+              const item_id = id.split('_')[1]
+              const item = list.flat().find(el => el.style_slug == item_id)
+              const { style_slug, name } = item ? item : {}
+              if (res.intersectionRatio > 0 && item) {
+                this.$store.state.globalData.SR.track('expose_sku_component',
+                  {
+                    "sku": {
+                      "sku_id": style_slug, // 若商品无sku_id时，可传spu_id信息
+                      "sku_name": name // 若商品无sku_name时，可传spu_name信息
+                    },
+                    "spu": {
+                      "spu_id": style_slug, // 若商品无spu_id时，可传sku_id信息
+                      "spu_name": name // 若商品无spu_name时，可传sku_name信息
+                    }
+                  })
+              }
+            })
+        }, 2000)
+      }
+    },
     /**
      * 加载分类商品
      */
@@ -383,6 +344,7 @@ export default {
             this.list = list;
             this.initialled = true; // 初始化完成: 数据加载 & 广告位处理<排序 & 插入>
             //
+            this.addTrack()
             this.initComponent();
           } else {
             errorHandler(res, true, "@loadSource::");
@@ -469,9 +431,8 @@ export default {
           "childs"
         );
         if (n1 && n1.id && n2 && n2.id) {
-          let url = `/subpages/plp/index?n1=${n1.id}&n2=${n2.id}${
-            n3 && n3.id ? "&n3=" + n3.id : ""
-          }`;
+          let url = `/subpages/plp/index?n1=${n1.id}&n2=${n2.id}${n3 && n3.id ? "&n3=" + n3.id : ""
+            }`;
           Taro.navigateTo({ url });
         }
       } else {
@@ -532,6 +493,7 @@ export default {
       }
 
       .items_container {
+
         // Slider Mode
         .category_swiper {
           height: 654rpx;
@@ -618,7 +580,7 @@ export default {
                 display: inline-block;
                 vertical-align: top;
 
-                & + .pdt_item {
+                &+.pdt_item {
                   margin-left: 16rpx;
                 }
               }
@@ -644,6 +606,7 @@ export default {
             left: 0;
             transition: all 0.1s linear;
           }
+
           &.theme-white {
             background-color: rgba(255, 255, 255, 0.6);
 

@@ -38,7 +38,7 @@
           <image class="logo-image" mode="widthFix" src="@/assets/images/icons/logo-black.svg" v-else />
         </block>
         <block v-else>
-          <view v-if="config.style === 'black'">
+          <view >
             {{ config.title }}
           </view>
         </block>
@@ -87,7 +87,9 @@ export default {
         enableScaner: false,
         enableLogo4L: false,
         enableLogo4M: false,
-        beforeBack: null
+        beforeBack: null,
+        // iconStyle:'black' //white  icon颜色 适配不同背景色
+
       })
     },
     transitionStyle:{type: Boolean, default: true}
@@ -115,6 +117,7 @@ export default {
       backgroundColor && (styles.backgroundColor = backgroundColor);
       const visible = this.$store.state.visible4HTS;
       styles.opacity = visible ? '1' : '0';
+      console.log('headerWrapperStyles',styles)
       return styles;
     },
     /**
@@ -144,7 +147,6 @@ export default {
       let styles = {};
       const { width } = this.wxMenuButtonRect;
       styles.width = `${750 - px2rpx(width + 7) * 2}rpx`;
-      //
       const { style } = this.config;
       if (style === 'white') styles.color = 'white';
       //
@@ -242,6 +244,7 @@ export default {
   mounted() {
     // 'ready' 事件派发
     eventCenter.once(getCurrentInstance().router.onReady, () => {
+      console.log('Header.config::', this.config);
       this.$store.commit('setHeaderHeight', this.headerHeight);
       this.$emit('ready', { height: this.headerHeight });
     });
@@ -277,6 +280,9 @@ export default {
         Taro.navigateTo({url:this.$store.state.prevPage})
         this.$store.state.prevPage = ''
       }else{
+        let prePage = currentPage
+        console.log('prePage-----',prePage)
+        this.$store.state.prevPagePro = prePage
         Taro.navigateBack();
       }
     },

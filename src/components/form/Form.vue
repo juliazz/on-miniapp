@@ -5,17 +5,23 @@
 </template>
 <script>
 import FormDataHandler from "@/utils/from-Handler.js";
+import Emitter from '@/utils/emitter';
 import types from '@/store/types';
 import Taro from "@tarojs/taro";
 import {ajax, showCustomLoading, hideCustomLoading ,errorHandler,RES_SUCCESS_CODE} from '@/utils';
 export default {
   name: 'iForm',
+  mixins: [ Emitter ],
+  // inject: [ 'pop' ],
   data() {
     return { fields: [] }
   },
   props: {
     model: { type: Object },
     rules: { type: Object }
+  },
+  mounted() {
+
   },
   provide() {
     return { form: this }
@@ -49,7 +55,6 @@ export default {
         chilPicker.formOptions.shoeSize=shoeSize.womens
       }
       chilPicker.formValues.gender=gender
-      console.log('chilPicker.formOptions.shoeSize',chilPicker.formOptions.shoeSize)
     },
     setColorRange(product_id,sizeFeild){
       this.setOrderShoneSize(product_id,sizeFeild,'shoeSizeOrder')
@@ -62,7 +67,6 @@ export default {
       hideCustomLoading()
       chilPicker.formOptions[sizeKey]=shoeSizeList
       chilPicker.formValues.gender=product_id
-      console.log('setOrderShoneSize=======chilPicker',chilPicker)
     },
     getOrderShowSize(product_id){
       if(!product_id){ Taro.showToast({ title: '颜色选择有误', icon: 'none',duration: 2000  }); return }
@@ -90,6 +94,7 @@ export default {
     }
   },
   created() {
+    this.dispatch('getNameAvator', 'form-add',  this);
     this.$on('form-add', field => {
       if (field) this.fields.push(field);
       if(field.prop=='shoeSizeOrder'){
@@ -120,6 +125,8 @@ export default {
       const {product_id} =field.fieldValue||{}
       orderShoneSizeFeild&&this.setColorRange(product_id,orderShoneSizeFeild)
       }
+      console.log('form-change------', field.fieldValue)
+      this.dispatch('getNameAvator', 'form-change',  field.fieldValue);
     })
     // 引入赛区数据
     const {teamRegions} = FormDataHandler.getFormData();

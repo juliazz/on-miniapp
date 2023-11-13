@@ -1,5 +1,5 @@
 <template>
-  <view class="quick_facts-wrapper" :style="appearanceStyles" :id="`_${identifier}_${config.id}`" v-if="config && config.content">
+  <view class="quick_facts-wrapper cms_com" :style="appearanceStyles" :id="`_${identifier}_${config.id}`" v-if="config && config.content" :dataCmsId="config.id" >
 
     <view class="quick_facts-container">
       <block v-for="(item, index) in config.content.items" :key="index">

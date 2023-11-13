@@ -1,5 +1,5 @@
 <template>
-<movable-area>
+<movable-area :class="['sidebar-container', isShow ? 'sidebar-show' : '']">
   <movable-view direction="all" :x="x" :y="y" style="pointer-events: auto;" @change="move">
     <view class="sidebar-wrapper" v-if="Array.isArray(config) && config.length">
       <block v-for="(item, index) in config" :key="index">
@@ -18,6 +18,10 @@
 <script>
 import { openCustomerServiceChat ,debounce} from '@/utils';
 import Service from "@/components/common/Service.vue";
+import { getCurrentPages, eventCenter } from '@tarojs/taro';
+import deviceUtil from "@/utils/device-util";
+const routesAnimation = ['pages/index/index'];
+
 export default {
   name: 'Sidebar',
   components: {Service },
@@ -31,7 +35,17 @@ export default {
   },
   data() {
     return {
+      /** 控制首页第一屏是否显示 */
+      isShow: false,
     };
+  },
+  created() {
+    let page = getCurrentPages();
+    let currentPage = page[page.length-1];
+    if(!routesAnimation.includes(currentPage.route)) {
+      this.isShow = true;
+    }
+    this.initEvents();
   },
   computed:{
     x(){
@@ -46,7 +60,14 @@ export default {
     move:debounce( function(e) {
       this.$store.state.iocnPosition.x = e.detail.x
       this.$store.state.iocnPosition.y = e.detail.y
-    },200)
+    },200),
+    initEvents() {
+      eventCenter.on('scroll', (args, currentPage) => {
+        if(routesAnimation.includes(currentPage.route)) {
+          this.isShow = args.scrollTop >  deviceUtil.getWindowHeightPX() / 2 ? true : false;
+        }
+      });
+    }
   }
 }
 </script>
@@ -136,6 +157,14 @@ movable-view {
 .rect{
   height: 100rpx;
   width: 120rpx;
+}
+
+.sidebar-container {
+  opacity: 0;
+  transition: opacity .3s;
+  &.sidebar-show {
+    opacity: 1;
+  }
 }
 
 </style>

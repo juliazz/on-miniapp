@@ -1,5 +1,5 @@
 <template>
-  <view class="occupation-wrapper" :style="appearanceStyles" :id="`_${identifier}_${config.id}`">
+  <view class="occupation-wrapper" :style="appearanceStyles" :id="`_${identifier}_${config.id}`" :dataCmsId="config.id">
     <view class="occupation-container" :style="containerStyles"></view>
   </view>
 </template>

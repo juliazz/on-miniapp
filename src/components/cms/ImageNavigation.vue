@@ -1,5 +1,5 @@
 <template>
-  <view class="image_navigation-wrapper" :style="appearanceStyles" :id="`_${identifier}_${config.id}`" v-if="sorted">
+  <view class="image_navigation-wrapper cms_com" :style="appearanceStyles" :id="`_${identifier}_${config.id}`" v-if="sorted" :dataCmsId="config.id">
     <scroll-view :scroll-x="true" :show-scrollbar="false" class="image_navigation-container" :style="containerStyles" @scroll="onScroll">
       <view :class="['image_navigation-box',`image_navigation${config.id}`]" hover-class="none" hover-stop-propagation="false">
         <view v-for="(item, index) in config.content.items" :key="index" class="image_nav-item" :style="itemStyles"

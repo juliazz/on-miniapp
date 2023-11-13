@@ -1,5 +1,5 @@
 <template>
-  <view class="block_gallery-wrapper" :style="appearanceStyles" :id="`_${identifier}_${config.id}`" v-if="config && config.content">
+  <view class="block_gallery-wrapper cms_com" :style="appearanceStyles" :id="`_${identifier}_${config.id}`" v-if="config && config.content" :dataCmsId="config.id" >
     <view class="block_gallery-container">
       <block v-for="(item, index) in list" :key="index">
         <view class="block_gallery-tile" :style="toGalleryTileStyles(item)">

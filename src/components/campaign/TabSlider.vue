@@ -2,6 +2,7 @@
   <view
     class="tab_slider-wrapper"
     :id="`_${identifier}_${config.id}`"
+    :dataCmsId="config.id"
     v-if="config && config.content&&runningList&&runningList.length"
   >
     <view class="bg-box">

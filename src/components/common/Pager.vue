@@ -1,5 +1,6 @@
 <template>
   <view
+    ref="pager"
     :class="[
       'pager-wrapper',
       enableHeader ? 'pager-has_header' : '',
@@ -29,6 +30,9 @@
       <Splash @end="onSplashEnd"  @splashStart="onSplashStart"/>
     </block>
     <Logout :isShow="$store.state.isLogoutPopShow"/>
+
+    <!-- 腾讯隐私协议弹框 -->
+    <privacy-popup @agree="onAgree"></privacy-popup>
   </view>
 </template>
 
@@ -39,15 +43,16 @@ import Sidebar from "./Sidebar.vue";
 import Loader from "./Loader.vue";
 import Splash from "@/components/common/Splash.vue";
 import Logout from "@/components/common/logoutPop.vue";
-import Taro from "@tarojs/taro";
+import Taro ,{ eventCenter, getCurrentInstance }from "@tarojs/taro";
 import Monitor from '@/utils/monitor.js';
+import * as ssTrack from '@/utils/ssTrack.js';
 import types, { CMP_SPLASH_VISITED } from "@/store/types";
 import * as utils from "@/utils";
-const { getStorageSync } = utils;
+const { getStorageSync} = utils;
 
 export default {
   name: "Pager",
-  components: { Header, Tabbar, Sidebar, Loader, Splash ,Logout},
+  components: { Header, Tabbar, Sidebar, Loader, Splash, Logout},
   props: {
     /**
      * `Header` 配置项参数或启用
@@ -246,10 +251,23 @@ export default {
       };
       return false;
     },
+        /**
+     * 产品树状数据
+     */
+     categoryTree() {
+      return this.$store.state.categoryTree;
+    },
   },
-  onLoad(options){
-    console.log('page 组件里的onLoad',options)
+  mounted(options){
     Monitor.hookApp(options)
+    eventCenter.on(getCurrentInstance().router.onShow, () => {//模拟页面onShow事件
+      console.log('eventCenter.once  onShow page_view_start')
+       this.onPageShow()
+    })
+
+  },
+  beforeDestroy() {
+    eventCenter.off(getCurrentInstance().router.onShow);
   },
   methods: {
     /**
@@ -270,12 +288,18 @@ export default {
       setTimeout(()=>{
         this.getSplashReady=true
       },200)
-      console.log("动画开始了");
     },
     //开屏动画结束
     onSplashEnd() {
-      console.log("动画结束了");
       this.$emit("end");
+    },
+    // 隐私协议已同意
+    onAgree() {
+      this.$emit("onAgree");
+    },
+    //页面展示  用于埋点
+    onPageShow(){
+      ssTrack.handlePageOnShow(this.$store.state)
     },
   },
 };
