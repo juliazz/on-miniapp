@@ -7,7 +7,7 @@ import {
   USER_COLLECTION_ADD,
   UPDATE_CLOSE_APP,
   UPDATE_OPEN_APP,
-  USER_CENTER,
+  USER_INFO_GET,
 } from "./types";
 import {
   RES_SUCCESS_CODE,
@@ -93,9 +93,9 @@ export default new Vuex.Store({
     indexAnnounceStatus: true,
     cartAnnounceStatus: true,
     checkoutAnnounceStatus: true,
-    jobApply:{
-      shareCardImg:fixCMSPath('http://job-resume.oss-cn-shanghai.aliyuncs.com/staic/jobShareCard.jpg'),
-      shareCircleImg:fixCMSPath('http://job-resume.oss-cn-shanghai.aliyuncs.com/staic/jobShareCircle.jpg')
+    jobApply: {
+      shareCardImg: fixCMSPath('http://job-resume.oss-cn-shanghai.aliyuncs.com/staic/jobShareCard.jpg'),
+      shareCircleImg: fixCMSPath('http://job-resume.oss-cn-shanghai.aliyuncs.com/staic/jobShareCircle.jpg')
     },
     templateId: {
       production: {
@@ -112,6 +112,18 @@ export default new Vuex.Store({
             "FEXgEwKwUsZvWCzOSx1oad1vBCwRLFBU94rE3zZZNLI",
             "GJ4jwOmRZRaEwLfjVqdq5Cw9CLGILroX7ICBXcaUp3E",
           ],
+          ANNIVERSARY:{
+            reservation:[
+              {id:'Ta_wMkmvg7xr6xQszGUAB6rJXbqgpEMIt8AwkDhKk8k', index: 2, isSub:false },
+              {id:'JYr_uiS-Jew68UUB9Nq6y4WAMNhbeDhWm5J18zNotkk', index: 3, isSub:false },
+              {id:'uwGCRo7m0smyaWZmEXuQzx7cKJOENRUcjKFDrbaXLSI', index: 4, isSub:false},
+             ],
+             scoreData:[
+              {id:'JYr_uiS-Jew68UUB9Nq6y4WAMNhbeDhWm5J18zNotkk', index: 3 },
+              {id:'uwGCRo7m0smyaWZmEXuQzx7cKJOENRUcjKFDrbaXLSI', index: 4},
+              {id:'JickAuE3ajBYCnPTzO6BLnkFP3qRFsUwE89IiDC1Di8', index: 5 },
+            ]
+          }
         },
       },
       prod: {
@@ -128,6 +140,18 @@ export default new Vuex.Store({
             "FEXgEwKwUsZvWCzOSx1oad1vBCwRLFBU94rE3zZZNLI",
             "GJ4jwOmRZRaEwLfjVqdq5Cw9CLGILroX7ICBXcaUp3E",
           ],
+          ANNIVERSARY:{
+            reservation:[
+              {id:'Ta_wMkmvg7xr6xQszGUAB6rJXbqgpEMIt8AwkDhKk8k', index: 2, isSub:false },
+              {id:'JYr_uiS-Jew68UUB9Nq6y4WAMNhbeDhWm5J18zNotkk', index: 3, isSub:false },
+              {id:'uwGCRo7m0smyaWZmEXuQzx7cKJOENRUcjKFDrbaXLSI', index: 4, isSub:false},
+             ],
+             scoreData:[
+              {id:'JYr_uiS-Jew68UUB9Nq6y4WAMNhbeDhWm5J18zNotkk', index: 3 },
+              {id:'uwGCRo7m0smyaWZmEXuQzx7cKJOENRUcjKFDrbaXLSI', index: 4},
+              {id:'uwGCRo7m0smyaWZmEXuQzx7cKJOENRUcjKFDrbaXLSI', index: 5 },
+            ]
+          }
         },
       },
       stage: {
@@ -171,10 +195,23 @@ export default new Vuex.Store({
             "FEXgEwKwUsZvWCzOSx1oad1vBCwRLFBU94rE3zZZNLI",
             "GJ4jwOmRZRaEwLfjVqdq5Cw9CLGILroX7ICBXcaUp3E",
           ],
+          ANNIVERSARY:{
+            reservation:[
+              {id:'_f3R5iifkIaOpkzWB4Y5SZQy4Bse0yeVBhohEgul3dU', index: 2, isSub:false },
+              {id:'x5QrEt6HeMjEnoDUkv9--Ar5zJn6HxOHId8PVZKyKo4', index: 3, isSub:false },
+              {id:'6H7QVIkiRu7unVfD988y7KucR_AmIzd8ps2PyyT3-ro', index: 4, isSub:false},
+             ],
+             scoreData:[
+              {id:'x5QrEt6HeMjEnoDUkv9--Ar5zJn6HxOHId8PVZKyKo4', index: 3 },
+              {id:'6H7QVIkiRu7unVfD988y7KucR_AmIzd8ps2PyyT3-ro', index: 4 },
+              {id:'CNGDK8E_qgeM_q5nuQQWlRMFnu9BOPglpskgbngGyL0', index: 5 },
+            ]
+          }
         },
       },
     },
     prevPage: "",
+    prevPagePro: null,
     loginText: {},
     iocnPosition: {
       x: 320,
@@ -182,15 +219,32 @@ export default new Vuex.Store({
     },
     loading: false,
     // 登录超时弹窗是否全局页面显示
-    isLogoutPopShow: false
+    isLogoutPopShow: false,
+    globalData: {}
   },
   getters: {
     innerPadding(state) {
       const { headerHeight, tabbarHeight } = state;
       return { headerHeight, tabbarHeight };
     },
+    getUserInfo(state) {
+
+
+    },
   },
   mutations: {
+    /**
+     * 设置全局变量
+     * @param {Object} state
+     * @param {Array<Object>} payload
+     */
+    setGlobalData(state, payload) {
+      if (payload) {
+        state.globalData = Object.assign(state.globalData, { ...payload });
+      } else {
+        console.warn("@Store.Mutations.setGlobalData::", payload);
+      }
+    },
     /**
      * 缓存Launch信息
      * @param {Object} state
@@ -483,6 +537,37 @@ export default new Vuex.Store({
         });
     },
     /**
+     * 获取用户信息
+     * @param {Object} context Store实例
+     * @param {Object} payload
+     * @returns 无
+     */
+    QueryUserInfo(context, payload = {}) {
+      const { args, callback } = payload;
+      const userInfo = Taro.getStorageSync("userInfo");
+      if (userInfo) {
+        typeof callback === "function" && callback(userInfo);
+         return userInfo 
+        }
+      ajax({
+        url: USER_INFO_GET,
+        method: "POST",
+      })
+        .then((res) => {
+          const { code, data } = res;
+          if (code === RES_SUCCESS_CODE) {
+            const userInfo = { ...data.info };
+            Taro.setStorageSync("userInfo", userInfo);
+            typeof callback === "function" && callback(userInfo);
+          } else {
+            errorHandler(res, true, "@loadSource::");
+          }
+        })
+        .catch((err) => {
+          errorHandler(err, true, "@loadSource::");
+        });
+    },
+    /**
      * 检查打开应用状态是否超时
      * @param {Object} context Store实例
      * @param {Object} arg
@@ -493,11 +578,11 @@ export default new Vuex.Store({
       ajax({
         url: UPDATE_OPEN_APP, method: "POST", showLoading: false
       }).then((res) => {
-        const { data ,code} = res;
+        const { data, code } = res;
         const IS_EXPIRED = 1; //未过期： 0 , 过期：1
-        if(code === RES_SUCCESS_CODE){
-          if(data && data.isExpired === IS_EXPIRED){
-            context.commit("setLogoutPopVisile",true)
+        if (code === RES_SUCCESS_CODE) {
+          if (data && data.isExpired === IS_EXPIRED) {
+            context.commit("setLogoutPopVisile", true)
             Taro.removeStorageSync("userInfo");
             Taro.removeStorageSync("mobile");
             Taro.removeStorageSync("isUserMember");

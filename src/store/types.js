@@ -328,23 +328,23 @@ export const SUPPORT_CONFIG = '/api/support/config/get';
 /**
  * squardRace - 参加活动(报名)
  */
-export const JOIN_ACTIVITY = '/api/srace/join-activity'; //1
+export const SQ_JOIN_ACTIVITY = '/api/srace/join-activity';
 /**
  * squardRace - 创建队伍
- */ //1
-export const CREATE_TEAM = '/api/srace/create-team'; //1
+ */
+export const CREATE_TEAM = '/api/srace/create-team';
 /**
  * squardRace - 获取鞋码数据
  */
-export const GET_SHOES_SIZES = '/api/srace/get-shoes-sizes'; //1
+export const GET_SHOES_SIZES = '/api/srace/get-shoes-sizes';
 /**
  * squardRace - 获取战区
  */
-export const GET_TEAM_REGIONS = '/api/srace/get-regions'; //1
+export const GET_TEAM_REGIONS = '/api/srace/get-regions';
 /**
  * squardRace -申请加入队伍
  */
-export const APPLY_TEAM = '/api/srace/apply-team';  // 1
+export const APPLY_TEAM = '/api/srace/apply-team';  
 /**
  * squardRace -获取队伍列表
  */
@@ -366,10 +366,19 @@ export const ADD_PERFORMANCE = '/api/srace/add-performance';
  */
 export const GET_PERFORMANCE = '/api/srace/get-performance';
 /**
+ * squardRace 上传图片微信授权
+ */
+export const IMG_UPLOAD = '/api/common/multipartUpload'; //微信授权获取
+/**
  * squardRace 上传图片
  */
-export const IMG_UPLOAD = '/api/srace/upload-image';
-
+export const IMG_UPLOAD_LOCAL = '/api/common/upload';
+	
+/**
+ * chooseIMAGE 上传图片
+ */
+export const CHOOSE_IMG_UPLOAD = '/api/upload/team'; // 从微信相册选择
+	
 /**
  * squardRace 获取赛事排行榜
  */
@@ -394,7 +403,7 @@ export const MAKE_SHARE_QRCODE_ON = '/api/getWechatMpQrCode';
 /**
  * squardRace 获取队伍数据接口
  */
-export const GET_ACTIVITY_STATUS = '/api/srace/get-activity-status';
+export const GET_ACTIVITY_STATUS_SQ = '/api/srace/get-activity-status';
 
 /**
  * 优惠券兑换列表
@@ -462,9 +471,14 @@ export const UPDATE_CLOSE_APP = "/api/member/closeWx";
 * 登出小程序更新
 */
 export const LOGOUT_APP = "/api/member/logout";
+/**
+* 获取加密id
+*/
+export const GET_UUID = "/api/crm/uuid";
 
 
 import campaign from "@/store/campaignApi";
+import sqRaceApi from "@/store/sqRaceApi";
 
 export default {
   CODE2OPENID, GET_PHONE_NUMBER,
@@ -476,9 +490,9 @@ export default {
   ORDER_REFUND, ORDER_SERVICE, ORDER_RETURN_SUBMIT, ORDER_CANCEL_SERVICE, ORDER_CANCEL_REFUND, ORDER_REORDER, ORDER_CANCEL, AFTERSALE_LIST, AFTERSALE_DETAIL,
   GET_STORE_BY_SKU, OSS_CONFIG,ORDER_CHECK_COUPON_CODE,STORE_ORDER_API,STORE_ORDER_DETAIL_API,UPDATE_OPEN_APP,UPDATE_CLOSE_APP,LOGOUT_APP,
   CMP_SPLASH_VISITED, HOME_FOLLOW_TIP, DIALOG_GUEST_CONFIRM_UCENTER, DIALOG_GUEST_CONFIRM_CHECKOUT, WORKER_SIGNAL_STOP, ORDER_COMPLETE,MAKE_SHARE,MAKE_SHARE_QRCODE,MAKE_BIND,SUBSCRIBE_ADD,PRODUCT_SCAN,
-  JOIN_ACTIVITY,CREATE_TEAM,GET_SHOES_SIZES,GET_TEAM_REGIONS,APPLY_TEAM,GET_TEAM,CHECK_APPLY,GET_APPLY,ADD_PERFORMANCE,GET_PERFORMANCE,IMG_UPLOAD,GET_RANCE,GET_MEMBERS,GET_TEAM_INFO,
-  GET_ACTIVITY_STATUS,GET_MEMBER_INFO,SUPPORT_CONFIG,MAKE_SHARE_QRCODE_ON, GET_USER_COUPON,GET_RESERVATION_INFO,GET_SUBSCRIBE_SIZE,
+  SQ_JOIN_ACTIVITY,CREATE_TEAM,GET_SHOES_SIZES,GET_TEAM_REGIONS,APPLY_TEAM,GET_TEAM,CHECK_APPLY,GET_APPLY,ADD_PERFORMANCE,GET_PERFORMANCE,IMG_UPLOAD,GET_RANCE,GET_MEMBERS,GET_TEAM_INFO,
+  GET_ACTIVITY_STATUS_SQ,GET_MEMBER_INFO,SUPPORT_CONFIG,MAKE_SHARE_QRCODE_ON, GET_USER_COUPON,GET_RESERVATION_INFO,GET_SUBSCRIBE_SIZE,
   RESERVATION_SUBMIT,RESERVATION_RECORD,CLUB_CAMPAIGN,TXT_TO_RAS,
-  JOB_LIST,JOB_DETAIL,JOB_APPLY,RESUME_UPLOAD,
-  ...campaign
+  JOB_LIST,JOB_DETAIL,JOB_APPLY,RESUME_UPLOAD,IMG_UPLOAD_LOCAL,GET_UUID,
+  ...campaign,...sqRaceApi
 };
