@@ -16,6 +16,14 @@ export default defineAppConfig({
       "pages/shopOrderCode/index",
     ]
   },
+  {
+    root:"subpages",
+    pages:[
+      "aliCheckout/index",
+      "aliPay/index"
+      
+    ]
+  },
 ],
   window: {
     backgroundTextStyle: "light",
