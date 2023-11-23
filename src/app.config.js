@@ -19,8 +19,8 @@ export default defineAppConfig({
   {
     root:"subpages",
     pages:[
-      "aliCheckout/index",
-      "aliPay/index"
+      "posCheckout/index",
+      "posPay/index"
       
     ]
   },
