@@ -17,6 +17,14 @@ export default defineAppConfig({
       "pages/campaignCNY24/index",
     ]
   },
+  {
+    root:"subpages",
+    pages:[
+      "posCheckout/index",
+      "posPay/index"
+      
+    ]
+  },
 ],
   window: {
     backgroundTextStyle: "light",

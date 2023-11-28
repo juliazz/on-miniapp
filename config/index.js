@@ -11,14 +11,14 @@ const config = {
   },
   sourceRoot: 'src',
   outputRoot: `dist/${process.env.TARO_ENV}`,
-  plugins: ['taro-plugin-compiler-optimization',['@tarojs/plugin-inject', {
+  plugins: ['taro-plugin-compiler-optimization', ['@tarojs/plugin-inject', {
     components: {
       View: {
         'data-cms-id': "''"
       }
     }
   }]],
-  
+
   terser: {
     enable: true,
     config: {
@@ -40,11 +40,10 @@ const config = {
     '@/store': path.resolve(__dirname, '..', 'src/store')
   },
   sass: {
-    resource:  path.resolve(__dirname, '..', 'src/assets/css/var@function.scss'),
+    resource: path.resolve(__dirname, '..', 'src/assets/css/var@function.scss'),
   },
   copy: {
     patterns: [
-      { from: 'src/moduleClub/assets', to: `dist/${process.env.TARO_ENV}/moduleClub/assets` },
       { from: 'src/workers', to: `dist/${process.env.TARO_ENV}/workers` }
     ],
     options: {
@@ -59,7 +58,7 @@ const config = {
       pxtransform: {
         enable: true,
         config: {
-          minPixelValue:1,
+          minPixelValue: 1,
         }
       },
       url: {
@@ -81,7 +80,7 @@ const config = {
     },
     prerender: {
       // match: 'pages/**', // 所有以 `pages/shop/` 开头的页面都参与 prerender
-   //   include: ['pages/index/index'], // `pages/any/way/index` 也会参与 prerender
+      //   include: ['pages/index/index'], // `pages/any/way/index` 也会参与 prerender
     },
     webpackChain: (chain, webpack) => {
       chain.merge({

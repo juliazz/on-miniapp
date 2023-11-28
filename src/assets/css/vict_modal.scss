@@ -2,65 +2,188 @@
 
 // 【弹框（modal）配置】
 
-$modal-close-size: rpx(20);  // 自定义modal 关闭icon 的尺寸（一般为正方形）
-$modal-btn-height: rpx(50);  // 自定义modal 关闭button 的高度
-$modal-btn-font-size: rpx(16); // 自定义modal 关闭button 的 字体大小
+$modal-close-size: 24PX; // 自定义modal 关闭icon 的尺寸（一般为正方形）
+$modal-btn-height: 50PX; // 自定义modal 关闭button 的高度
+$modal-btn-font-size: 16PX; // 自定义modal 关闭button 的 字体大小
 
-.vict-flex-row { @extend %vict-flex-row; }
-.vict-fixed-top { position: fixed; @extend %vict-position-top; }
+.vict-flex-row {
+  @extend .vict-flex-row;
+}
+
+.vict-fixed-top {
+  position: fixed;
+  @extend .vict-position-top;
+}
+
 .vict-mask {
-  @extend %vict-mask;
-  z-index: 9990;
-  &.midea { background-color: #000000; }
+  @extend .vict-mask;
+  z-index: 999;
+
+  &.midea {
+    background-color: #000000;
+  }
+
+  &.show {
+    animation: con-popup 0.5s ease;
+    animation-fill-mode: forwards;
+  }
+
+  &.hide {
+    animation: con-popdown 0.5s ease;
+    animation-fill-mode: forwards;
+  }
 }
 
-.vict-toast-con,.vict-modal-dialog { position: fixed; @extend %position-center-custom; z-index: 9999;}
-
-.vict-toast-con {
-  top: 40%; width: rpx(160);min-height: rpx(50); background-color: rgba(33,33,33,0.9); border-radius: rpx(2);
-  text-align: center; font-size: rpx(12); line-height: rpx(50); color: #fff;font-family:DFPHeiW5-GB;
+.vict-toast-con,
+.vict-modal-dialog {
+  position: fixed;
+  @extend .position-center-custom;
+  z-index: 9999;
+  border-radius: 24rpx;
+  background-color: #fff;
+  padding: 64rpx 48rpx;
 }
 
-.vict-modal-dialog { background-color: #fff; 
-  &.show { animation: show-modal 0.3s ease; animation-fill-mode:forwards; }
-  &.hide { animation: hide-modal 0.3s ease; animation-fill-mode:forwards; } }
-	@keyframes show-modal {
-  0% { opacity:0; }
-  100% {  opacity:1; }
+// .vict-toast-con {
+//   top: 40%; width: 160PX;min-height: 50PX; background-color: rgba(33,33,33,0.9); border-radius: 2PX;
+//   text-align: center; font-size: 12PX; line-height: 50PX; color: #fff;font-family:DFPHeiW5-GB;
+// }
+
+.vict-modal-dialog {
+  .vict-modal-content {
+    margin-bottom:50rpx;
+    text-align: center;
+    font-size: 28rpx;
+    overflow-wrap:break-word;
+    color: #333;
+    line-height: 1.4;
+  }
+  //组件内部dom样式
+
+.nobgcolor {
+  background-color: transparent;
 }
-@keyframes hide-modal {
-  0% {  opacity:1; }
-  100% {  opacity:0; }
+
+.bottom {
+  left: 0;
+  transform: translate(0, 0);
+  bottom: 0;
+  top: auto;
 }
-.nobgcolor{background-color: transparent;}
-.bottom{left: 0; transform: translate(0,0); bottom:0; top:auto;}
-.vict-modal-title { text-align: center; font-size: rpx(16); line-height: rpx(32); color: #000000; }
+
+.vict-modal-title {
+  text-align: center;
+  font-size: 20PX;
+  line-height: 32PX;
+  margin: 40rpx 0 20rpx 0;
+  font-weight: 500;
+  color: #000000;
+
+}
 
 .vict-modal-close {
-  position: absolute; top: rpx(15); right: rpx(16); z-index: 999;
-  width: $modal-close-size; height: $modal-close-size; justify-content:center;
+  position: absolute;
+  top: 15PX;
+  right: 16PX;
+  z-index: 999;
+  width: $modal-close-size;
+  height: $modal-close-size;
+  justify-content: center;
+
   //background-color: #1AAD19;
-	&.bottom{
-		top:auto;
-		bottom: rpx(-40);
-		right: auto;
-		color: #fff;
-		margin-left: rpx(-8);
-		left: 50%;
-	}
+  &.bottom {
+    top: auto;
+    bottom: -40PX;
+    right: auto;
+    color: #fff;
+    margin-left: -8PX;
+    left: 50%;
+  }
 }
+
 //.vict-modal-close image { width: 100%; height: auto; }
 
 .vict-modal-btn-con {
-  height: #{ $modal-btn-height + rpx(1) }; border-top: rpx(1) solid #f1f1f1;
-  text-align: center; font-size: $modal-btn-font-size; line-height: $modal-btn-height;
-  .vict-modal-btn {
-    flex: 1; font-size: rpx(16); font-family: PingFangSC-Medium; letter-spacing: rpx(1);
+  height: #{ $modal-btn-height + 1PX };
+  text-align: center;
+  font-size: $modal-btn-font-size;
+  line-height: $modal-btn-height;
+  flex-wrap: nowrap !important;
+  .btn:first-child{
+    margin-right: 20rpx;
   }
-  .vict-modal-btn-cancel { color: #666666; border-right: rpx(1) solid #f1f1f1; }
-  .vict-modal-btn-ensure { color: #000000; }
+  .vict-modal-btn {
+    flex: 1;
+    font-size: 16PX;
+    font-family: PingFangSC-Medium;
+    letter-spacing: 1PX;
+  }
+
+  .vict-modal-btn-cancel {
+    color: #666666;
+    border-right: 1PX solid #f1f1f1;
+  }
+
+  .vict-modal-btn-ensure {
+    color: #000000;
+  }
+}
+  &.show {
+    animation: show-modal 0.5s ease;
+    animation-fill-mode: forwards;
+  }
+
+  &.hide {
+    animation: hide-modal 0.5s ease;
+    animation-fill-mode: forwards;
+  }
+  &.bottom-modal {
+    left: 0;
+    bottom: 0;
+    transform: translate3d(0, 50%, 0);
+    z-index: 99999;
+    width: 100%;
+    text-align: left;
+    opacity: 0;
+    background-color: #fff;
+  
+    &.show {
+      animation: con-popup 0.5s ease;
+      animation-fill-mode: forwards;
+    }
+  
+    &.hide {
+      animation: con-popdown 0.5s ease;
+      animation-fill-mode: forwards;
+    }
+  
+    .vict-action-close {
+      margin-top: 8PX;
+      background-color: #fff;
+      font-size: 14PX;
+      line-height: 50PX;
+    }
+  }
 }
 
+@keyframes show-modal {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes hide-modal {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
 
 // @keyframes vict-toasting {
 //   0% { opacity: 0; display: block; }
@@ -68,28 +191,26 @@ $modal-btn-font-size: rpx(16); // 自定义modal 关闭button 的 字体大小
 //   100% { opacity: 0; display: none; }
 // }
 
+@keyframes con-popup {
+  0% {
+    transform: translate3d(0, 50%, 0);
+    opacity: 0;
+  }
 
-.vict-action-con {
-  position: fixed; left: 0; bottom: 0; transform: translate3d(0, 50%, 0); z-index:99999;
-  width:100%; text-align: center; opacity:0;
-
-  &.show { animation: con-popup 0.3s ease; animation-fill-mode:forwards; }
-
-  &.hide { animation: con-popdown 0.3s ease; animation-fill-mode:forwards; }
-
-  .vict-action-close {
-    margin-top:rpx(8); background-color: #fff;
-    font-size: rpx(14); line-height: rpx(50);
-    &.isIPX { padding-bottom: $tabBar-IPX-padding; }
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
   }
 }
 
-@keyframes con-popup {
-  0% { transform: translate3d(0, 50%, 0); opacity:0; }
-  100% { transform: translate3d(0, 0, 0); opacity:1; }
-}
 @keyframes con-popdown {
-  0% { transform: translate3d(0, 0, 0); opacity:1; }
-  100% { transform: translate3d(0, 50%, 0); opacity:0; }
-}
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
 
+  100% {
+    transform: translate3d(0, 50%, 0);
+    opacity: 1;
+  }
+}
