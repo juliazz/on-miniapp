@@ -73,6 +73,6 @@
     "stylelint": "15.10.1",
     "taro-plugin-compiler-optimization": "^1.0.4",
     "thread-loader": "^3.0.4",
-    "vue-loader": "^15.9.2"
+    "vue-loader": "15.9.2"
   }
 }
