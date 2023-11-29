@@ -24,7 +24,6 @@ const config = {
   },
   copy: {
     patterns: [
-      { from: 'src/moduleClub/assets', to: `dist/${process.env.TARO_ENV}/moduleClub/assets` },
       { from: 'src/workers', to: `dist/${process.env.TARO_ENV}/workers` }
     ],
     options: {
@@ -39,7 +38,7 @@ const config = {
       pxtransform: {
         enable: true,
         config: {
-          minPixelValue:1,
+          minPixelValue: 1,
         }
       },
       url: {
