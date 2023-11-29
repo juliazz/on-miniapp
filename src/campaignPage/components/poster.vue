@@ -12,7 +12,7 @@
     <view class="cny-btn-container">
       <view
         class="cny-poster-btn"
-        @tap="createImg"
+        @tap="createImg($event)"
       >
         <text> 保存图片</text>
         <text class="iconfont icon-btn_log cny-btn-log-icon" />
@@ -96,6 +96,7 @@ export default {
     saveImageToPhotosAlbum(canvasImg){
       console.log('saveImageToPhotosAlbum---------', canvasImg)
       // this.createImg()
+      const that = this
       if(canvasImg){
         Taro.saveImageToPhotosAlbum({
         filePath: canvasImg,
@@ -106,6 +107,7 @@ export default {
           console.log('saveImageToPhotosAlbum',res)
           if(res.errMsg === "saveImageToPhotosAlbum:ok"){
             Taro.showToast({ title: "保存成功"});
+            that.$emit('close')
           }else{
             Taro.showToast({ title: "保存失败"});
           }
@@ -132,7 +134,8 @@ export default {
           }
         })
     },
-    createImg(){
+    createImg(e){
+      e.stopPropagation()
       const that = this
       showCustomLoading()
       setTimeout(()=>{
@@ -146,7 +149,7 @@ export default {
           context.setFontSize(16)
           context.font='fusion-pixel-10px-monospaced-zh_hans'
           context.setFillStyle('#D2D2D2')
-          context.fillText((this.desensitizify(this.mobile)), 296, 495)
+          context.fillText((that.desensitizify(that.mobile)), 296, 495)
           context.draw(false, that.handleCanvarToImg)
         },
         complete(res){

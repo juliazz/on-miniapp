@@ -30,7 +30,6 @@
                   <image
                     v-if="!!avator.formData.pic"
                     :src="avator.formData.pic"
-                    mode="widthFix"
                   />
                   <text
                     v-else
@@ -41,7 +40,10 @@
                   <view class="lottery-chance-num">
                     {{ isMember ? qualifyNum : '?' }}
                   </view>
-                  <view class="lottery-chance-text">
+                  <view
+                    class="lottery-chance-text"
+                    style="margin-top: 10rpx;"
+                  >
                     抽奖机会
                   </view>
                 </view>
@@ -60,6 +62,12 @@
                 <text>设置订阅提醒</text>
                 <text class="iconfont icon-cny_call_on" />
               </view>
+            </view>
+            <view v-if="!isMember" class="no-login-text">
+              <image
+                :src="cnyImg.cny_text_03"
+                mode="widthFix"
+              />
             </view>
           </view>
           <view class="cny-content-f-signature">
@@ -113,7 +121,7 @@
               <text class="iconfont icon-btn_log cny-btn-log-icon" />
             </view>
             <view
-              v-if="activityStatus === 2 && !startDraw"
+              v-if="activityStatus === 2 && !startDraw && qualifyNum"
               class="cny-btn"
               @tap="drawLottery"
             >
@@ -121,7 +129,7 @@
               <text class="iconfont icon-btn_log cny-btn-log-icon" />
             </view>
             <view
-              v-if="activityStatus === 2 && startDraw"
+              v-if="activityStatus === 2 && (startDraw || !qualifyNum)"
               class="cny-btn btn-grey"
             >
               <text>开始抽奖</text>
@@ -160,8 +168,10 @@
               <view class="cny-content-bottom-right-text">
                 费德勒亲笔签名卡片
               </view>
-              <image
-                :src="cnyImg.cny_prize"
+              <view
+                class="image-container"
+                :style="{background: `url(${cnyImg.cny_prize})`,backgroundSize: '102%',
+                         backgroundPosition: 'center'}"
               />
             </view>
           </view>
@@ -271,6 +281,8 @@
             :show="pupOptions.show"
             :bg-color="'rgba(0,0,0,0)'"
             :custom-style="{width: '100%'}"
+            :bg-style="{background:'rgba(0,0,0,0.8)'}"
+            :show-close="false"
             @close="closePup"
           >
             <Poster
@@ -284,8 +296,10 @@
         <view class="record-list">
           <ActivityPup 
             :show="recodPupOptions.show"
-            :bg-color="'white'"
+            :bg-color="'rgba(250, 247, 246, 1)'"
             :is-bottom="true"
+            :bg-style="{background:'rgba(0, 0, 0, 0.1)'}"
+            :custom-style="{borderRadius: '32rpx  32rpx  0px  0px'}"
             @close="closePup"
           >
             <view>
@@ -325,9 +339,10 @@
         <view class="rule-pup">
           <ActivityPup 
             :show="rulePupOptions.show"
-            :bg-color="'white'"
+            :bg-color="'rgba(250, 247, 246, 1)'"
             :is-bottom="true"
-            :custom-style="{bottom:'-100%'}"
+            :custom-style="{bottom:'-100%',borderRadius: '32rpx 32rpx 0px 0px'}"
+            :bg-style="{background:'rgba(0, 0, 0, 0.1)'}"
             @close="closePup"
           >
             <view>
@@ -424,7 +439,7 @@ export default {
       },
       templateIds:['_f3R5iifkIaOpkzWB4Y5 SVcYX7bHwU3DyxxPKoi76wQ'],
       startDraw: false,
-      winOrNot: true,
+      winOrNot: false,
       slotLength: 30,
       rawSlotItems:[],
       slotItems:[['http://oss.on-running.cn/crm/roger-lucky-draw/01.png'], ['http://oss.on-running.cn/crm/roger-lucky-draw/01.png'], ['http://oss.on-running.cn/crm/roger-lucky-draw/01.png'], ['http://oss.on-running.cn/crm/roger-lucky-draw/01.png']],
@@ -445,14 +460,15 @@ export default {
       cnyPrizeList:[],
       cnyRecordList: {},
       mobile:'',
-      countDownTime: ''
+      countDownTime: '',
+      countDownTimer: null
     };
   },
   computed: {
     headerOptions() {
       let option = {
         backgroundColor: "#B22526",
-        style: "black",
+        style: "white",
         enableBack2Home: true,
       };
       const title = "";
@@ -461,7 +477,7 @@ export default {
     },
     cnyImg(){
       return {
-        cny_bottom: 'https://oss.on-running.cn/crm/roger-lucky-draw/cny_bottom.svg',
+        cny_bottom: 'https://oss.on-running.cn/crm/roger-lucky-draw/cny_bottom_new.svg',
         cny_lucky: 'https://oss.on-running.cn/crm/roger-lucky-draw/cny_lucky.svg',
         cny_prize: fixCMSPath('https://oss.on-running.cn/crm/roger-lucky-draw/cny_prize.jpg', 280),
         cny_text_01: 'https://oss.on-running.cn/crm/roger-lucky-draw/cny_text_04.svg',
@@ -471,6 +487,7 @@ export default {
     }
   },
   async mounted() {
+    showCustomLoading();
     await this.$store.state.loginPromise;
     this.isMember = Taro.getStorageSync('lw_loginStatus')
     if(!this.isMember){
@@ -488,7 +505,10 @@ export default {
         this.mobile = userInfo.mobile
       }
     }
-    this.getCnyInfo()
+    await this.getCnyInfo() 
+    setTimeout(()=>{
+      hideCustomLoading();
+    },2000)
   },
   async onLoad() {
     let {shopCode = "" } =
@@ -496,9 +516,7 @@ export default {
     showCustomLoading();
     // this.codeUrl='http://on-running.oss-cn-shanghai.aliyuncs.com/cms_stage/images/74670e5b0201a9285b4801ab865b6109.jpg'
     this.codeUrl=shopCode
-    hideCustomLoading();
     Taro.hideShareMenu();
-
     Taro.loadFontFace({
       family: 'fusion-pixel-10px-monospaced-zh_hans',
       source: 'url("https://oss.on-running.cn/static/wxmp/fusion-pixel-10px-monospaced-zh_hans.woff2")',
@@ -568,6 +586,7 @@ export default {
     },
     // 抽奖
     async drawLottery(){
+      wx.vibrateLong()
       const res = await cnyDraw()
       if(res.code === 200 && res.data && res.data.flag){
         this.winOrNot = res.data.flag
@@ -588,11 +607,13 @@ export default {
     async getCnyInfo(){
      const res = await getCnyInfo();
      if(res.code === 200){
-      console.log(res)
       const activityInfo = res.data?.activity_info
       this.activityInfo = activityInfo
-      this.countDown(activityInfo)
       this.activityStatus = activityInfo.status
+      clearTimeout(this.countDownTimer)
+      if(activityInfo.status === 1){
+        this.countDownTimer = this.countDown(activityInfo)
+      }      
       // 中奖列表
       if(activityInfo.status === 3){
         this.getCnyPrizeList()
@@ -687,10 +708,11 @@ export default {
         offsetTop: 100
       })
     },
-    countDown(activityInfo){
+    countDown(activityInfo, isLoop){
       if(!activityInfo){
         return ''
       }
+     
       const {date_type, left_time} = activityInfo
       if(date_type === 0){
         this.countDownTime = ` ${left_time} 天`
@@ -699,17 +721,24 @@ export default {
       if(date_type === 1){
         this.countDownTime = ` ${left_time} 小时`
         return setTimeout(()=>{
-          this.countDown(activityInfo)
+          this.getCnyInfo()
         }, 1800000)
       }
       if(date_type === 2){
         this.countDownTime = ` ${left_time} 分钟`
         return setTimeout(()=>{
-          this.countDown(activityInfo)
+          this.getCnyInfo()
         }, 60000)
       }
       if(date_type === 3){
-        this.countDownTime = ` ${left_time}  秒`
+        if(isLoop){
+          this.activityInfo.left_time --
+        }
+        if(this.activityInfo.left_time === 0){
+          this.getCnyInfo()
+          return
+        }
+        this.countDownTime = ` ${this.activityInfo.left_time}  秒`
         return setTimeout(()=>{
           this.countDown(activityInfo)
         }, 500)
@@ -917,12 +946,15 @@ $cny-border: 2px solid #D2D2D2;
   position: relative;
   border-left: $cny-border;
   border-right: $cny-border;
+  margin-top: 40rpx;
 }
 .cny-content-top{
   display: flex;
   justify-content: space-between;
   border-top: $cny-border;
-  margin-top: 80rpx ;
+  margin-top: 0rpx ;
+  position: relative;
+  overflow: hidden;
   .cny-content-top-left{
     width: 430rpx;
     display: flex;
@@ -989,8 +1021,9 @@ $cny-border: 2px solid #D2D2D2;
         align-items: center;
         border-right: $cny-border;
         image{
-          width: 100%;
-          height: 100%;
+          width: 144rpx;
+          height:144rpx;
+          display: block;
         }
         .icon-cny_avator{
           font-size: 100rpx;
@@ -1075,17 +1108,22 @@ $cny-border: 2px solid #D2D2D2;
     flex-direction: column;
     justify-content: space-between;
     .cny-content-bottom-right-text{
-      height: 70rpx;
+      height: 68rpx;
       display: flex;
       justify-content: center;
       align-items: center;
       font-size: 24rpx;
       color: #F0C38C;
     }
-    image{
-      width: 100%;
-      height: 210rpx;
+    .image-container{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 302rpx;
+      height: 212rpx;
+      overflow: hidden;
     }
+    
   }
 }
 .cny-content--time-line-bottom{
@@ -1132,9 +1170,7 @@ $cny-border: 2px solid #D2D2D2;
   justify-content: center;
   align-items: center;
   .cny-btn{
-    background: linear-gradient(90deg, rgba(240, 35, 35, 0.29) -23.45%, rgba(255, 22, 22, 0) 36.62%, rgba(255, 197, 86, 0.29) 72.43%, rgba(255, 227, 78, 0) 115.86%),
-                linear-gradient(90deg, rgba(240, 35, 35, 0.29) -23.45%, rgba(255, 162, 22, 0) 36.62%, rgba(255, 197, 86, 0.29) 73.78%, rgba(255, 227, 78, 0) 115.86%),
-                linear-gradient(0deg, #F0C38C, #F0C38C),
+    background: linear-gradient(90deg, rgba(198, 13, 13, 0.74) -23.45%, rgba(255, 162, 22, 0) 36.62%, rgba(255, 197, 86, 0.74) 73.78%, rgba(255, 227, 78, 0) 115.86%),
                 linear-gradient(0deg, #F0DA8C, #F0DA8C);
     width: auto;
     height: 96rpx;
@@ -1187,7 +1223,7 @@ $cny-border: 2px solid #D2D2D2;
     transform-style: preserve-3d; /* 保持 3D 效果 */
     overflow: hidden;
     position: relative;
-    padding-right: 100rpx;
+    padding-right: 20rpx;
     letter-spacing: 2rpx;
 }
 
@@ -1214,7 +1250,7 @@ $cny-border: 2px solid #D2D2D2;
     align-items: center;
     color: #F0C38C;
     font-size: 40rpx;
-    border: 4px solid rgba(240, 195, 140, .5);
+    border: 4px solid rgba(240, 195, 140, 1);
     .come-back-icon{
        font-size: 20rpx;
        margin-left: 10rpx;
@@ -1355,6 +1391,23 @@ $cny-border: 2px solid #D2D2D2;
     .cny-page-content{
       pointer-events: none;
     }
+  }
+}
+.no-login-text{
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 96rpx;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: $cny-border;
+  background: #B22526;
+  padding: 0 20rpx;
+  image{
+    width:100%
   }
 }
 </style>
