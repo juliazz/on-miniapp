@@ -1,7 +1,9 @@
 <template>
   <view
     v-if="show"
+    :style="bgStyle"
     class="activity-pup"
+    @tap="close"
   >
     <view
       :class="{'is-bottom': isBottom}"
@@ -9,6 +11,7 @@
       class="pup-content" 
     >
       <image
+        v-if="showClose"
         mode="widthFix"
         src="@/assets/images/icons/close-noborder.svg"
         class="modal-closer"
@@ -27,6 +30,8 @@ export default {
   isBottom:{ type: Boolean, default() { return false } },
   bgColor:{ type: String, default() { return 'white' } },
   customStyle: { type: Object, default() { return {} } },
+  bgStyle: { type: Object, default() { return {} } },
+  showClose:{ type: Boolean, default() { return true } },
  },
   data() {
     return {
