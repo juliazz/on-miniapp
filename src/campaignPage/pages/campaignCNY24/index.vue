@@ -63,7 +63,10 @@
                 <text class="iconfont icon-cny_call_on" />
               </view>
             </view>
-            <view v-if="!isMember" class="no-login-text">
+            <view
+              v-if="!isMember"
+              class="no-login-text"
+            >
               <image
                 :src="cnyImg.cny_text_03"
                 mode="widthFix"
@@ -239,12 +242,21 @@
             class="cny-cms-content"
           >
             <view class="parting-line-container">
-              <view class="line-1" />
+              <view
+                class="line-1"
+                :class="{lengthen: activityStatus > 0}"
+              />
               <view class="line-2" />
             </view>
-            <loadCms page-key="luckydraw_roger" />
+            <loadCms
+              v-if="activityStatus === 0"
+              page-key="luckydraw_roger"
+            />
           </view>
-          <view class="cny-content-bottom">
+          <view
+            v-if="activityStatus === 0"
+            class="cny-content-bottom"
+          >
             <view class="cny-content-bottom-top">
               <view
                 class="come-back"
@@ -323,6 +335,12 @@
                 <text style="margin-left: 40rpx;">抽奖结果：未中奖</text>
               </view> -->
                 <view
+                  v-if="!cnyRecordList.record_list || (cnyRecordList.record_list.length === 0)"
+                  class="record_list_no"
+                >
+                  暂无抽奖记录
+                </view>
+                <view
                   v-for="(item, index) in cnyRecordList.record_list"
                   :key="index"
                   class="record-item"
@@ -334,38 +352,39 @@
                 </view>
               </view>
             </view>
-          </ActivityPup>
+          </activitypup>
         </view>
-        <view class="rule-pup">
-          <ActivityPup 
-            :show="rulePupOptions.show"
-            :bg-color="'rgba(250, 247, 246, 1)'"
-            :is-bottom="true"
-            :custom-style="{bottom:'-100%',borderRadius: '32rpx 32rpx 0px 0px'}"
-            :bg-style="{background:'rgba(0, 0, 0, 0.1)'}"
-            @close="closePup"
-          >
-            <view>
-              <view class="cny-pup-header">
-                <image
-                  class="cny-pup-header-icon"
-                  mode="widthFix"
-                  src="@/assets/images/icons/logo-with-bg.svg"
-                />
-                <text> 活动细则</text>
-              </view>
-              <view
-                style="width: 100%;height: 60vh;"
-                class="rule-content"
-              >
-                <image
-                  :src="ruleImg"
-                  mode="widthFix"
-                />
-              </view>
+        </ActivityPup>
+      </view>
+      <view class="rule-pup">
+        <ActivityPup 
+          :show="rulePupOptions.show"
+          :bg-color="'rgba(250, 247, 246, 1)'"
+          :is-bottom="true"
+          :custom-style="{bottom:'-100%',borderRadius: '32rpx 32rpx 0px 0px'}"
+          :bg-style="{background:'rgba(0, 0, 0, 0.1)'}"
+          @close="closePup"
+        >
+          <view>
+            <view class="cny-pup-header">
+              <image
+                class="cny-pup-header-icon"
+                mode="widthFix"
+                src="@/assets/images/icons/logo-with-bg.svg"
+              />
+              <text> 活动细则</text>
             </view>
-          </ActivityPup>
-        </view>
+            <view
+              style="width: 100%;height: 60vh;"
+              class="rule-content"
+            >
+              <image
+                :src="ruleImg"
+                mode="widthFix"
+              />
+            </view>
+          </view>
+        </ActivityPup>
       </view>
     </view>
   </Pager>
@@ -520,6 +539,10 @@ export default {
     Taro.loadFontFace({
       family: 'fusion-pixel-10px-monospaced-zh_hans',
       source: 'url("https://oss.on-running.cn/static/wxmp/fusion-pixel-10px-monospaced-zh_hans.woff2")',
+      scopes:['native', 'webview'],
+     complete(res){
+      console.log('loadFontFace----complete----------', res)
+     }
     })
   },
   methods: {
@@ -610,6 +633,7 @@ export default {
       const activityInfo = res.data?.activity_info
       this.activityInfo = activityInfo
       this.activityStatus = activityInfo.status
+      this.qualifyNum = res.data.left_qualify_num
       clearTimeout(this.countDownTimer)
       if(activityInfo.status === 1){
         this.countDownTimer = this.countDown(activityInfo)
@@ -647,7 +671,6 @@ export default {
           item.index = index
           return item.is_prize_image
         })[0]
-        console.log('winItem----------', winItem)
         let slotItems = []
         while(slotItems.length < this.slotLength){
           let slotItemsArr = []
@@ -1278,6 +1301,10 @@ $cny-border: 2px solid #D2D2D2;
   position: relative;
   border-top: $cny-border;
   .line-1{
+    &.lengthen{
+      height: 180rpx;
+    }
+
     height: 30rpx;
     width: 720rpx;
     box-sizing: border-box;
@@ -1409,5 +1436,8 @@ $cny-border: 2px solid #D2D2D2;
   image{
     width:100%
   }
+}
+.record_list_no{
+  margin-top: 30rpx;
 }
 </style>
