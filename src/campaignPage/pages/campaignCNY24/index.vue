@@ -352,9 +352,8 @@
                 </view>
               </view>
             </view>
-          </activitypup>
+          </ActivityPup>
         </view>
-        </ActivityPup>
       </view>
       <view class="rule-pup">
         <ActivityPup 
@@ -538,7 +537,7 @@ export default {
     Taro.hideShareMenu();
     Taro.loadFontFace({
       family: 'fusion-pixel-10px-monospaced-zh_hans',
-      source: 'url("https://oss.on-running.cn/static/wxmp/fusion-pixel-10px-monospaced-zh_hans.woff2")',
+      source: 'url("https://6f6e-on-running-4ghwjrhf73b078d7-1312905953.tcb.qcloud.la/icon-font/Fusion-Pixel-10px-Monospaced-zh_hans-Regular.woff2?sign=1bcae92621bffe60ce6d6706bf1d3f1c&t=1701655012")',
       scopes:['native', 'webview'],
      complete(res){
       console.log('loadFontFace----complete----------', res)
@@ -994,7 +993,7 @@ $cny-border: 2px solid #D2D2D2;
       color: #D2D2D2;
       border-right: 2rpx solid #D2D2D2;
       border-bottom: 2rpx solid #D2D2D2;
-      padding: 0 10rpx;
+      padding: 40rpx 30rpx;
     }
     .text-2{
       height: 96rpx;
@@ -1005,7 +1004,7 @@ $cny-border: 2px solid #D2D2D2;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 0 10rpx;
+      padding: 0 30rpx;
       image{
         width:100%;
       }
@@ -1017,6 +1016,7 @@ $cny-border: 2px solid #D2D2D2;
     position: relative;
     .cny-content-top-right-1{
       width: 100%;
+      height: 144rpx;
       display: flex;
       overflow: hidden;
       .lottery-chance{
@@ -1208,7 +1208,6 @@ $cny-border: 2px solid #D2D2D2;
      color: #D2D2D2;
      border: 4px solid #D2D2D2;
      background: none;
-     opacity: .5;
      margin: -2px;
      box-sizing: border-box;
     }
@@ -1364,7 +1363,7 @@ $cny-border: 2px solid #D2D2D2;
   }
   .cny-winners-list-content{
     width: 100%;
-    height: 750rpx;
+    height: 600rpx;
     position: relative;
     border-bottom: $cny-border;
     display: flex;
@@ -1432,7 +1431,7 @@ $cny-border: 2px solid #D2D2D2;
   align-items: center;
   border-bottom: $cny-border;
   background: #B22526;
-  padding: 0 20rpx;
+  padding: 0 30rpx;
   image{
     width:100%
   }
