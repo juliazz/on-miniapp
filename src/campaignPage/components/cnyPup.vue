@@ -49,6 +49,21 @@ export default {
       }else{
         this.style = {}
       }
+      if(val){
+        wx.setPageStyle({
+          style: {
+            overflow: 'hidden',
+            width: '100%',
+            height: '100%'
+          }
+        })
+      }else{
+        wx.setPageStyle({
+          style: {
+            overflow: 'initial'
+          }
+        })
+      }
     }
   },
   mounted() {

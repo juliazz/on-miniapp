@@ -5,12 +5,13 @@
         :src="fixCMSPath(imgUrl, 1125)"
         mode="widthFix"
       />
-      <view class="winner-phone">
+      <view v-if="winOrNot" class="winner-phone">
         {{ desensitizify(mobile) }}
       </view>
     </view>
     <view class="cny-btn-container">
       <view
+        v-if="winOrNot"
         class="cny-poster-btn"
         @tap="createImg($event)"
       >
@@ -18,7 +19,7 @@
         <text class="iconfont icon-btn_log cny-btn-log-icon" />
       </view>
       <view
-        v-if="false"
+        v-else
         class="cny-poster-btn"
         @tap="goBack"
       >
@@ -263,11 +264,7 @@ export default {
   .cny-poster-btn{
     height: 96rpx;
     width: 290rpx;
-    background: linear-gradient(90deg, rgba(240, 35, 35, 0.29) -23.45%, rgba(255, 22, 22, 0) 36.62%, rgba(255, 197, 86, 0.29) 72.43%, rgba(255, 227, 78, 0) 115.86%),
-                linear-gradient(90deg, rgba(240, 35, 35, 0.29) -23.45%, rgba(255, 162, 22, 0) 36.62%, rgba(255, 197, 86, 0.29) 73.78%, rgba(255, 227, 78, 0) 115.86%),
-                linear-gradient(0deg, #F0C38C, #F0C38C),
-                linear-gradient(0deg, #F0DA8C, #F0DA8C);
-
+    background: #F0C38C;
     display: flex;
     justify-content: center;
     align-items: center;

@@ -6,11 +6,8 @@
   >
     <view
       class="cny-page-container"
-      :class="{
-        fix: avator.visible || loginGuideOptions.visible || rulePupOptions.show || recodPupOptions.show || pupOptions.show
-      }"
     >
-      <view class="cny-page-content">
+      <view class="cny-page-content" :catchtouchmove="avator.visible || loginGuideOptions.visible || rulePupOptions.show || recodPupOptions.show || pupOptions.show">
         <view class="cny-container">
           <view class="cny-content-top">
             <view class="cny-content-top-left">
@@ -62,6 +59,11 @@
                 <text>设置订阅提醒</text>
                 <text class="iconfont icon-cny_call_on" />
               </view>
+              <view
+                v-if="!isMember"
+                class="no-login-shadow"
+                @tap="toLogin"
+              />
             </view>
             <view
               v-if="!isMember"
@@ -76,22 +78,22 @@
           <view class="cny-content-f-signature">
             <view class="cny-electronic-screen-wrapper">
               <view class="cny-electronic-screen-content">
-                “费”来好运，快来赢取费德勒亲笔签名照
+                “费”来好运，快来赢取费德勒亲笔签名卡片
               </view>
               <view
                 class="cny-electronic-screen-content"
                 style="color: #D2D2D2;"
               >
-                “费”来好运，快来赢取费德勒亲笔签名照
+                “费”来好运，快来赢取费德勒亲笔签名卡片
               </view>
               <view class="cny-electronic-screen-content">
-                “费”来好运，快来赢取费德勒亲笔签名照
+                “费”来好运，快来赢取费德勒亲笔签名卡片
               </view>
               <view
                 class="cny-electronic-screen-content"
                 style="color: #D2D2D2;"
               >
-                “费”来好运，快来赢取费德勒亲笔签名照
+                “费”来好运，快来赢取费德勒亲笔签名卡片
               </view>
             </view>
           </view>
@@ -502,7 +504,20 @@ export default {
         cny_text_02: 'https://oss.on-running.cn/crm/roger-lucky-draw/cny_text_06.svg',
         cny_text_03: 'https://oss.on-running.cn/crm/roger-lucky-draw/cny_text_05.svg',
       }
-    }
+    },
+    /**
+     * 小程序`胶囊按钮`尺寸及位置
+     */
+     wxMenuButtonRect() {
+      return Taro.getMenuButtonBoundingClientRect();
+    },
+    /**
+     * `Header` 外观尺寸及背景色
+     */
+    headerHeight() {
+      const { top } = this.wxMenuButtonRect;
+      return `${Number(top) + 39}px`;
+    },
   },
   async mounted() {
     showCustomLoading();
@@ -572,6 +587,7 @@ export default {
         }
         this.mobile = userInfo.mobile
       }
+      this.getCnyInfo()
     },
     onGuestConfirm(){
 
@@ -764,6 +780,11 @@ export default {
         return setTimeout(()=>{
           this.countDown(activityInfo)
         }, 500)
+      }
+    },
+    toLogin(){
+      if(!this.isMember){
+        this.loginGuideOptions.visible = true
       }
     }
   }
@@ -982,6 +1003,8 @@ $cny-border: 2px solid #D2D2D2;
     display: flex;
     flex-direction: column;
     position: relative;
+    justify-content: space-between;
+    box-sizing:border-box;
     .text-1{
       height: 240rpx;
       width: 100%;
@@ -992,7 +1015,6 @@ $cny-border: 2px solid #D2D2D2;
       align-items: center;
       color: #D2D2D2;
       border-right: 2rpx solid #D2D2D2;
-      border-bottom: 2rpx solid #D2D2D2;
       padding: 40rpx 30rpx;
     }
     .text-2{
@@ -1000,6 +1022,7 @@ $cny-border: 2px solid #D2D2D2;
       width: 100%;
       border-right: 2rpx solid #D2D2D2;
       border-bottom: 2rpx solid #D2D2D2;
+      border-top: 2rpx solid #D2D2D2;
       position: relative;
       display: flex;
       justify-content: center;
@@ -1014,9 +1037,21 @@ $cny-border: 2px solid #D2D2D2;
   .cny-content-top-right{
     width: 290rpx;
     position: relative;
+    height: 336rpx;
+    display: flex;
+    justify-content: space-between;
+    overflow: hidden;
+    flex-direction: column;
+    box-sizing: border-box;
+    .no-login-shadow{
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      z-index: 3;
+    }
     .cny-content-top-right-1{
       width: 100%;
-      height: 144rpx;
+      height: 142rpx;
       display: flex;
       overflow: hidden;
       .lottery-chance{
@@ -1055,9 +1090,8 @@ $cny-border: 2px solid #D2D2D2;
       }
     }
     .cny-content-top-right-2{
-      height: 96rpx;
+      height: 100rpx;
       border-top: $cny-border;
-      border-bottom: $cny-border;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -1072,6 +1106,7 @@ $cny-border: 2px solid #D2D2D2;
     .cny-content-top-right-3{
       height: 96rpx;
       border-bottom: $cny-border;
+      border-top: $cny-border;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -1193,8 +1228,7 @@ $cny-border: 2px solid #D2D2D2;
   justify-content: center;
   align-items: center;
   .cny-btn{
-    background: linear-gradient(90deg, rgba(198, 13, 13, 0.74) -23.45%, rgba(255, 162, 22, 0) 36.62%, rgba(255, 197, 86, 0.74) 73.78%, rgba(255, 227, 78, 0) 115.86%),
-                linear-gradient(0deg, #F0DA8C, #F0DA8C);
+    background: #F0C38C;
     width: auto;
     height: 96rpx;
     display: flex;
@@ -1412,7 +1446,9 @@ $cny-border: 2px solid #D2D2D2;
 }
 .cny-page-container{
   &.fix{
-    height: calc(100vh - 174rpx);
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
     overflow: hidden;
     .cny-page-content{
       pointer-events: none;
