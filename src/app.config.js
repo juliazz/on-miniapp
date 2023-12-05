@@ -24,6 +24,13 @@ export default defineAppConfig({
       
     ]
   },
+   {
+    root:"posPayPages",
+    pages:[
+      "posCheckout/index",
+      "posPay/index"
+    ]
+  },
 ],
   window: {
     backgroundTextStyle: "light",
