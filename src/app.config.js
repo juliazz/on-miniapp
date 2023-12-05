@@ -8,7 +8,15 @@ export default defineAppConfig({
     "pages/web-view/index",
     "pages/test/index",
   ],
-  subpackages: [],
+  subpackages: [
+    {
+    root: "campaignPage",
+    pages: [
+      "pages/shopOrderCode/index",
+      "pages/campaignCNY24/index",
+    ]
+  }
+  ],
   window: {
     backgroundTextStyle: "light",
     navigationBarBackgroundColor: "#fff",
