@@ -14,7 +14,7 @@ const APPSettings = {
     }
   },
   stage: {
-    appid: 'wx2431275480358c4b',
+    appid: 'wx926eadc0f6fb1fbb',
     templateIds : {
       PDP_CART: ['VVZOq90aYRJeh59AYrXGGy7e6ZtGsPv6LXlYLXt4QV0', 'E8EZMmr_A7OnHHlRh-aNhDKhehY0iVGfNdquoMec33s'],
       PDP_NOTICE: ['KiF6ln5S7Ouy0L7Hj6G7b5iVHn_uM6qJt-6fdzbw44Q'],

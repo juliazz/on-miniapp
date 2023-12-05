@@ -155,7 +155,7 @@ export default new Vuex.Store({
         },
       },
       stage: {
-        appid: "wx2431275480358c4b",
+        appid: "wx926eadc0f6fb1fbb",
         ailiTrackID: "cd8p1ois10@1ab8ca6721d6f7f",
         templateIds: {
           PDP_CART: [
@@ -167,7 +167,7 @@ export default new Vuex.Store({
         },
       },
       development: {
-        appid: "wx2431275480358c4b",
+        appid: "wx926eadc0f6fb1fbb",
         templateIds: {
           PDP_CART: [
             "VVZOq90aYRJeh59AYrXGGy7e6ZtGsPv6LXlYLXt4QV0",
@@ -178,7 +178,7 @@ export default new Vuex.Store({
         },
       },
       dev: {
-        appid: "wx2431275480358c4b",
+        appid: "wx926eadc0f6fb1fbb",
         ailiTrackID: "cd8p1ois10@1ab8ca6721d6f7f",
         templateIds: {
           PDP_CART: [
