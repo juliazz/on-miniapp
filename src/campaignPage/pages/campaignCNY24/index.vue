@@ -1466,6 +1466,7 @@ $cny-border: 2px solid #D2D2D2;
   justify-content: center;
   align-items: center;
   border-bottom: $cny-border;
+  border-top: $cny-border;
   background: #B22526;
   padding: 0 30rpx;
   image{
