@@ -8,7 +8,16 @@ export default defineAppConfig({
     "pages/web-view/index",
     "pages/test/index",
   ],
-  subpackages: [],
+  subpackages: [
+    {
+      root:"posPayPages",
+      pages:[
+        "posCheckout/index",
+        "posPay/index"
+      ]
+      
+    }
+  ],
   window: {
     backgroundTextStyle: "light",
     navigationBarBackgroundColor: "#fff",
