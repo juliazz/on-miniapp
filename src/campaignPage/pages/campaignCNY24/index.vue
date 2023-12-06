@@ -593,6 +593,7 @@ export default {
       this.loginGuideOptions.visible = false
     },
     onLoginSuccess(){
+      this.loginGuideOptions.visible = false
       const userInfo = Taro.getStorageSync('userInfo')
       if(!userInfo || !userInfo.avatarUrl){
         this.avator.visible = true
@@ -607,7 +608,7 @@ export default {
       this.getCnyInfo()
     },
     onGuestConfirm(){
-
+      this.loginGuideOptions.visible = false
     },
     closeAvatorPup(){
       this.avator.visible = false
