@@ -4,7 +4,7 @@
     :open=" popOptions.visible "
     :width="100"
     :action="true"
-    :closeIcon="false"
+    :close-icon="false"
     :position=" popOptions.position "
   >
     <view
@@ -28,7 +28,10 @@
             {{ popOptions.popTitle || '个人信息' }}
           </text>
         </view>
-        <view class="stage-content">
+        <view
+          class="stage-content"
+          :class="{'hide-nick-name': popOptions.hideNickName}"
+        >
           <Form
             ref="form"
             :model="popOptions.formData"
@@ -42,12 +45,13 @@
             >
               <uploaderUserInfo
                 v-model="popOptions.formData.pic"
-                :formType="popOptions.formType"
+                :form-type="popOptions.formType"
                 auth-type="wxAvator"
                 file-type="file"
               />
             </FormItem>
             <FormItem
+              v-if="!popOptions.hideNickName"
               :label="popOptions.formLabel.name"
               prop="name"
             >
@@ -97,17 +101,17 @@ import {
 } from "@/utils";
 import types from "@/store/types";
 export default {
-  name: "getNameAvator",
+  name: "GetNameAvator",
   components: { Dialog ,Form ,WePicker, WeUploder ,FormItem,WeInput,Modal,uploaderUserInfo},
   filters: {
     desensitizify(fieldValue, fieldName) {
       return desensitizify(fieldName, fieldValue);
     },
   },
+  mixins: [mixins],
   provide() {
     return { pop: this }
   },
-  mixins: [mixins],
   props: {
     options: {
       type: Object,
@@ -274,6 +278,9 @@ export default {
       height: 600rpx;
       .input-placeholder{
         line-height: 44rpx !important;
+      }
+      &.hide-nick-name{
+        height: 400rpx;
       }
       .we-form{
         border-top: none;

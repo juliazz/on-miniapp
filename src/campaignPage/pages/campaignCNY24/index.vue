@@ -28,7 +28,7 @@
               <view class="cny-content-top-right-1">
                 <view class="cny-user-photo">
                   <image
-                    v-if="!!avator.formData.pic"
+                    v-if="!!avator.formData.pic && confirmPic"
                     :src="avator.formData.pic"
                   />
                   <text
@@ -107,7 +107,7 @@
             <slotMachine
               :start="startDraw"
               :time-length="12"
-              :slot-length="30"
+              :slot-length="slotLength"
               :win-or-not="true"
               :slot-items="slotItems"
               @endDraw="endDraw"
@@ -354,7 +354,7 @@
                   class="record-item"
                 >
                   <text>{{ item.created_at }}</text>
-                  <text>
+                  <text style="width: 300rpx;">
                     抽奖结果：{{ item.status_desc }}
                   </text>
                 </view>
@@ -438,6 +438,7 @@ export default {
       avator:{
         visible: false,
         position: "bottom",
+        hideNickName: true,
         theme: "white", // 主题  black | white
         needWxAuth: true, //是否使用微信授权
         afterHandler: "",
@@ -452,6 +453,7 @@ export default {
           pic: '',
         },
       },
+      confirmPic: true,
       /**
        * LoginGuide 配置选项
        */
@@ -466,9 +468,9 @@ export default {
       templateIds:['_f3R5iifkIaOpkzWB4Y5 SVcYX7bHwU3DyxxPKoi76wQ'],
       startDraw: false,
       winOrNot: false,
-      slotLength: 30,
+      slotLength: 90,
       rawSlotItems:[],
-      firstItem: {},
+      firstItem: [],
       slotItems:[[], [], []],
       qualifyNum: 0,
       activityInfo:{},
@@ -543,6 +545,7 @@ export default {
       const userInfo = Taro.getStorageSync('userInfo')
       if(!userInfo || !userInfo.avatarUrl){
         this.avator.visible = true
+        this.confirmPic = false
       }else{
         this.avator.formData = {
           name: userInfo.nickName,
@@ -593,6 +596,7 @@ export default {
       const userInfo = Taro.getStorageSync('userInfo')
       if(!userInfo || !userInfo.avatarUrl){
         this.avator.visible = true
+        this.confirmPic = false
       }else{
         this.avator.formData = {
           name: userInfo.nickName,
@@ -607,6 +611,7 @@ export default {
     },
     closeAvatorPup(){
       this.avator.visible = false
+      this.confirmPic = true
     },
     subscribe(){
       Taro.requestSubscribeMessage({
@@ -643,9 +648,9 @@ export default {
         this.winOrNot = res.data.flag
       }
       this.slotItems = [
-          this.adaptSlotItems(this.rawSlotItems),
-          this.adaptSlotItems(this.rawSlotItems),
-          this.adaptSlotItems(this.rawSlotItems)
+          this.adaptSlotItems(this.rawSlotItems, 0),
+          this.adaptSlotItems(this.rawSlotItems, 1),
+          this.adaptSlotItems(this.rawSlotItems, 2)
         ]
       this.startDraw = true
       this.getQualify()
@@ -671,19 +676,21 @@ export default {
         this.getCnyPrizeList()
       }
       this.ruleImg = activityInfo.lucky_draw_rule
-      this.firstItem = activityInfo.image_list[0]
-      this.rawSlotItems = activityInfo.image_list.map((item, index)=>{
-        if(index > 0){
+      if( activityInfo.image_list &&  activityInfo.image_list.length > 3){
+        this.firstItem = activityInfo.image_list.slice(0, 3)
+      }
+     
+      this.rawSlotItems = activityInfo.image_list.filter((item, index)=>{
+        if(index > 2){
           item.image_url = this.fixCMSPath(item.image_url, 1125)
+          return item
         }
-
-        return item
       })
       this.slotItems = [
-        this.adaptSlotItems(this.rawSlotItems),
-        this.adaptSlotItems(this.rawSlotItems),
-        this.adaptSlotItems(this.rawSlotItems)
-      ]
+          this.adaptSlotItems(this.rawSlotItems, 0),
+          this.adaptSlotItems(this.rawSlotItems, 1),
+          this.adaptSlotItems(this.rawSlotItems, 2)
+        ]
       console.log(this.slotItems)
      }
     },
@@ -694,7 +701,7 @@ export default {
       }
     },
     // shuffleArrayWithFixedItemAndNoAdjacentDuplicates
-    adaptSlotItems(rawSlotItems){
+    adaptSlotItems(rawSlotItems, itemIndex){
         if(!rawSlotItems || rawSlotItems.length === 0){
           return []
         }
@@ -716,7 +723,7 @@ export default {
         const firstSlotItemsArr = shuffleAndFixIndexToPosition(rawSlotItems, winItem.index, 0)
         slotItems = slotItems.slice(slotItems.length - this.slotLength, slotItems.length)
         slotItems.splice(0,firstSlotItemsArr.length, ...firstSlotItemsArr)
-        slotItems[0] = this.firstItem
+        slotItems[0] = this.firstItem[itemIndex]
         return slotItems.map((item)=>{
           return item.image_url
         })
@@ -1460,7 +1467,7 @@ $cny-border: 2px solid #D2D2D2;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 520rpx;
+  width: 100%;
 }
 }
 .cny-page-container{
@@ -1479,7 +1486,7 @@ $cny-border: 2px solid #D2D2D2;
   left: 0;
   bottom: 0;
   width: 100%;
-  height: 100rpx;
+  height: 102rpx;
   z-index: 1;
   display: flex;
   justify-content: center;
