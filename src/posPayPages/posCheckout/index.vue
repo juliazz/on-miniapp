@@ -230,13 +230,21 @@ export default {
     Taro.hideShareMenu()
   },
  async onLoad(options) {
+  console.log('options-----------', decodeURIComponent(options.scene))
     showCustomLoading();
     await this.$store.state.loginPromise;
     this.isMember = Taro.getStorageSync('lw_loginStatus')
     if(!this.isMember){
       this.loginGuideOptions.visible = true
     }
-    await this.init(options)
+    const config = {
+      ...options,
+    }
+    const scene = decodeURIComponent(options.scene)
+    if(scene && scene.includes('posOrder=')){
+      config.orderSn = scene.replace('posOrder=', '')
+    }
+    await this.init(config)
     hideCustomLoading()
   },
   methods: {
@@ -301,9 +309,11 @@ export default {
       await getPosOrder({order_number: this.orderSn}).then(res => {
         const data = res.data
         res.code === 200 && (this.order = data)
+        if(data.is_paid && Number(data.is_paid) === 1){
+          this.onAfterPayment(this.orderSn, 1)
+        }
       }).catch(err => {
         console.log(err)
-        reject(err)
       });
     },
     // 获取加密订单号
@@ -509,10 +519,6 @@ export default {
       Taro.navigateTo({
         url: `/subpages/myorder/refund-only/index?orderSn=${this.orderSn}&itemIndex=${i}`
       });
-    },
-    // 倒计时结束
-    countEnd() {
-      this.getOrderDetail()
     },
     // 跳pdp
     goPdpPage(v) {
