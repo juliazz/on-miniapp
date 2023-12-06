@@ -526,6 +526,12 @@ export default {
       return `${Number(top) + 39}px`;
     },
   },
+  onPullDownRefresh () {
+    wx.stopPullDownRefresh()
+  },
+  onReachBottom(){
+    return false
+  },
   async mounted() {
     showCustomLoading();
     await this.$store.state.loginPromise;
