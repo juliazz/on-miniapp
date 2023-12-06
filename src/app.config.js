@@ -10,12 +10,10 @@ export default defineAppConfig({
   ],
   subpackages: [
     {
-      root:"posPayPages",
-      pages:[
-        "posCheckout/index",
-        "posPay/index"
+    root: "campaignPage",
+      pages: [
+        "pages/campaignCNY24/index"
       ]
-      
     }
   ],
   window: {
