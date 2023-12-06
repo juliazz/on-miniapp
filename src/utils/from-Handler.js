@@ -716,18 +716,20 @@ class FormDataHandler {
    * 获取赛区
    */
   getTeamRegions() {
-    ajax({
-      url: types.GET_TEAM_REGIONS,
-      host: $ON_API_HOST,
-      method: "GET",
+    return  new Promise((reslove,reject)=>{
+      ajax({
+        url: types.GET_TEAM_REGIONS,
+        host: $ON_API_HOST,
+        method: "GET",
+      }).then((res) => {
+          reslove(res)
+          const { data } = res;
+          this.updateData({ teamRegions: data || {} });
+        }).catch((err) => {
+          errorHandler(err, true, "@getShoneSize::");
+        });
+
     })
-      .then((res) => {
-        const { data } = res;
-        this.updateData({ teamRegions: data || {} });
-      })
-      .catch((err) => {
-        errorHandler(err, true, "@getShoneSize::");
-      });
   }
 
   /**

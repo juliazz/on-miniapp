@@ -4,13 +4,15 @@ import types from '@/store/types';
 export default {
   created() {
     this.onPageScrollFn = throttle(this.onPageScrollFn, 1000 / 60);
+    let page = getCurrentPages();
+    this.currentPage = page[page.length-1];
   },
   methods: {
     /**
      * 页面滚动事件处理
      */
      onPageScrollFn(evt) {
-      Taro.eventCenter.trigger('scroll', evt);
+      Taro.eventCenter.trigger('scroll', evt, this.currentPage);
       const { forceFloat } =this.headerOptions
       let changeable = (evt.scrollTop > 10)|| !forceFloat ? true : false
       this.toggleHeaderStyle( changeable );
@@ -19,9 +21,11 @@ export default {
      * `Header` 样式切换
      */
     toggleHeaderStyle( changeable ) {
+      const { headerOptions:{iconStyle} } = this
       if (typeof this.headerOptions === 'object') {
         this.headerOptions.backgroundColor = changeable ? 'white' : 'transparent';
-        this.headerOptions.style = changeable ? 'black' : 'white';
+        this.headerOptions.style =iconStyle ? iconStyle : (changeable ? 'black' : 'white');
+
       }
     },
 

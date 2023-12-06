@@ -1,0 +1,132 @@
+.pricacy-content {
+  .privacy-mask {
+    position: fixed;
+    z-index: 997;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
+
+  .privacy-popup {
+    position: fixed;
+    z-index: 998;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    .popup-mask {
+      position: absolute;
+      width: 100vw;
+      height: 100vh;
+      left: 0;
+      right: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+    }
+  }
+
+  .privacy-body {
+    padding: 80rpx 32rpx 0;
+    background: #fff;
+    border-radius: 16rpx 16rpx 0 0;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    transform: translateY(100%);
+    transition: all .3s;
+    opacity: 0;
+    &.pop-show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    &.pop-hide {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+
+    .privacy-title {
+      color: #000;
+      font-family: PingFang SC;
+      font-size: 40rpx;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 150%;
+      text-align: center;
+    }
+
+    .privacy-desc {
+      color: #767676;
+      text-align: justify;
+      font-family: PingFang SC;
+      font-size: 28rpx;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 150%;
+      margin-top: 24rpx;
+
+      &+.privacy-desc {
+        color: #000;
+      }
+
+      .privacy-link {
+        color: #454FA1;
+        font-family: PingFang SC;
+        font-size: 28rpx;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 150%;
+      }
+    }
+
+    .privacy-btns {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 64rpx;
+      padding-bottom: calc(env(safe-area-inset-bottom) + 64rpx);
+
+      .btn {
+        width: 324rpx;
+        background: none;
+        border: 2rpx solid #000;
+        height: 96rpx;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 96rpx;
+        font-family: PingFang SC;
+        font-size: 32rpx;
+        font-style: normal;
+        font-weight: 500;
+
+        &.btn-primary {
+          background: #000;
+          color: #fff;
+        }
+
+        &::after {
+          border: none;
+        }
+      }
+    }
+  }
+
+  &.pop-show {
+    .privacy-body {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    .privacy-mask {
+      background-color: rgba(0, 0, 0, 0.7);
+    }
+  }
+  &.pop-hide {
+    .privacy-body {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    .privacy-mask {
+      z-index: 999;
+    }
+  }
+}

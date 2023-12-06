@@ -1,0 +1,115 @@
+.pricacy-content .privacy-mask {
+  position: fixed;
+  z-index: 997;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+.pricacy-content .privacy-popup {
+  position: fixed;
+  z-index: 998;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+.pricacy-content .privacy-popup .popup-mask {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+.pricacy-content .privacy-body {
+  padding: 80rpx 32rpx 0;
+  background: #fff;
+  border-radius: 16rpx 16rpx 0 0;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  transform: translateY(100%);
+  transition: all 0.3s;
+  opacity: 0;
+}
+.pricacy-content .privacy-body.pop-show {
+  transform: translateY(0);
+  opacity: 1;
+}
+.pricacy-content .privacy-body.pop-hide {
+  transform: translateY(100%);
+  opacity: 0;
+}
+.pricacy-content .privacy-body .privacy-title {
+  color: #000;
+  font-family: PingFang SC;
+  font-size: 40rpx;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%;
+  text-align: center;
+}
+.pricacy-content .privacy-body .privacy-desc {
+  color: #767676;
+  text-align: justify;
+  font-family: PingFang SC;
+  font-size: 28rpx;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+  margin-top: 24rpx;
+}
+.pricacy-content .privacy-body .privacy-desc + .privacy-desc {
+  color: #000;
+}
+.pricacy-content .privacy-body .privacy-desc .privacy-link {
+  color: #454FA1;
+  font-family: PingFang SC;
+  font-size: 28rpx;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+}
+.pricacy-content .privacy-body .privacy-btns {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 64rpx;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 64rpx);
+}
+.pricacy-content .privacy-body .privacy-btns .btn {
+  width: 324rpx;
+  background: none;
+  border: 2rpx solid #000;
+  height: 96rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 96rpx;
+  font-family: PingFang SC;
+  font-size: 32rpx;
+  font-style: normal;
+  font-weight: 500;
+}
+.pricacy-content .privacy-body .privacy-btns .btn.btn-primary {
+  background: #000;
+  color: #fff;
+}
+.pricacy-content .privacy-body .privacy-btns .btn::after {
+  border: none;
+}
+.pricacy-content.pop-show .privacy-body {
+  transform: translateY(0);
+  opacity: 1;
+}
+.pricacy-content.pop-show .privacy-mask {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+.pricacy-content.pop-hide .privacy-body {
+  transform: translateY(100%);
+  opacity: 0;
+}
+.pricacy-content.pop-hide .privacy-mask {
+  z-index: 999;
+}

@@ -1,0 +1,19 @@
+<view class="pricacy-content {{innerShow ? 'pop-show' : 'pop-hide'}}" wx:if="{{pricvacyShow}}">
+  <view class="privacy-mask" catchtouchmove="handleTouch" catchtap="popUp"></view>
+  <view class="privacy-popup" catchtouchmove="prevent">
+    <view class="privacy-body" >
+      <view class="privacy-title">用户协议和隐私政策提示</view>
+      <view class="privacy-desc">
+        感谢您使用on昂跑小程序，为保护您的个人信息安全，我们将提供 <text catchtap="handleOpenPrivacyContract" class="privacy-link">《隐私保护协议》</text>来帮助您了解: 我们如何收集、使用及储存您的个人信息，以及您享有的权利;
+      </view>
+      <view class="privacy-desc">
+        在您使用本服务前，请务必仔细阅读 <text class="privacy-link" catchtap="handleOpenPrivacyContract">《隐私保护协议》</text>以了解详细内容。
+      </view>
+      <view class="privacy-btns">
+        <button class="btn btn-cancel" catchtap="handleDisagree">不同意</button>
+        <button class="btn btn-primary" id="agree-btn" open-type="agreePrivacyAuthorization"
+          bindagreeprivacyauthorization="handleAgree">同意，继续使用</button>
+      </view>
+    </view>
+  </view>
+</view>
