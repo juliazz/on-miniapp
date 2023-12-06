@@ -3,15 +3,29 @@ import Taro from '@tarojs/taro';
 import store from './store';
 import types from './store/types';
 import Monitor from '@/utils/monitor.js';
-import { doSilentLogin, runCallback, loadCMSConfig, getLoginText, getOnToken, ajax } from '@/utils';
+import { doSilentLogin, getUCenterInfo, runCallback, loadCMSConfig, getLoginText, getOnToken, ajax } from '@/utils';
 import FormDataHandler from '@/utils/from-Handler.js';
+import sr from 'sr-sdk-wxapp'
 import './app.scss'
-
+// import config from '../config/index';
 const isWXMP = Taro.getEnv() === 'WEAPP';
 const isProd = Taro.getAccountInfoSync().miniProgram.appId === 'wxa54813b8f36c27de';
 if (isWXMP && isProd) require('@/utils/mtj-wx-sdk');
-
-// Vue.config.productionTip = false
+// 数数埋码
+const TDAnalytics = require("@/utils/tdanalytics.wx.min.js");
+// TA SDK 配置对象
+const TDconfig = {
+  appId: $shushuId, // 项目的 APP ID
+  serverUrl: $shushuURL, // 数据上报地址
+  autoTrack: {
+    appLaunch: true, // 自动采集 ta_mp_launch
+    appShow: true, // 自动采集 ta_mp_show
+    appHide: true, // 自动采集 ta_mp_hide
+    pageShow: true, // 自动采集 ta_mp_view
+    pageShare: true, // 自动采集 ta_mp_share
+  }
+};
+TDAnalytics.init(TDconfig);
 const App = {
   store,
   onLaunch(options) {
@@ -34,9 +48,14 @@ const App = {
     //   runCallback('onReady');
     // });
     //
+    this.initSR_()
     this.initAPP();
     this.loadRecmd();
     this.initMonitor(options)
+  },
+  onShow(options) {
+    Taro.setStorageSync('onAppShowOptions', options)
+    this.handleUTMforTA(options);
   },
   onHide() {
     this.loadCloseAppStatus()
@@ -46,17 +65,46 @@ const App = {
     return h('block', this.$slots.default)
   },
   methods: {
+    // trackInit
+    initSR_() {
+      sr.init({
+        token: $srId,
+        appid: $appid,
+        usePlugin: true,
+        debug: true,
+        proxyPage: true,
+        proxyComponent: true,
+        openSdkShareDepth: true,
+        autoTrack: true,
+        installFrom: 'Taro@v3'
+      })
+      store.commit('setGlobalData', {
+        SR: sr
+      });
+      // 将数数埋码sdk对象 存储全局
+      store.commit('setGlobalData', {
+        TA: TDAnalytics
+      });
+
+    },
     initAPP() {
+      this.handleParaforTA_basic()
       return new Promise(async (resolve, reject) => {
         let loginPromise = doSilentLogin().catch(err => reject(err));
         // 全局缓存 登录状态
         store.commit('setLoginPromise', loginPromise);
-        await loginPromise
+        await loginPromise.then(res => {
+          //设置sr用户信息
+          sr.setUser({
+            open_id: res?.open_id || '',
+          })
+        })
+        this.handleParaforTA_userStatus()
         await this.loadConfig().catch(err => {
           console.warn('@initAPP.loadConfig::', err);
         });
         const loginToken = Taro.getStorageSync('lw_loginStatus');
-        this.loadCheckOpenApp()
+        // this.loadCheckOpenApp()
         Taro.onAppShow(() => {
           this.loadCheckOpenApp()
         })
@@ -65,6 +113,29 @@ const App = {
         this.loadFormConfig()
         getLoginText()
       });
+    },
+    async handleParaforTA_basic() {
+      this.$store.state.globalData.TA.setSuperProperties({
+        login_pt: '小程序',
+        device_mode: Taro.getSystemInfoSync().model,
+      })
+    },
+    async handleParaforTA_userStatus() {
+      const userInfo = await getUCenterInfo();
+      this.$store.state.globalData.TA.setSuperProperties({
+        current_status: userInfo?.wxUserStatus ? '登录用户' : '游客',
+      })
+    },
+    handleUTMforTA(options) {
+      const keys = ['sid', 'utm_campaign', 'utm_source', 'utm_medium', 'utm_term', 'utm_content', 'utm_channel'];
+      const o = {};
+      keys.forEach((key) => {
+        let v = options.query[key]
+        if (v) {
+          o[key] = v;
+        }
+      })
+      this.$store.state.globalData.TA.userSet({ properties: { ...o }, })
     },
     /**
      * 加载项目配置 - 推荐配置
@@ -104,18 +175,20 @@ const App = {
             store.commit('setSplash', res);
             resolve(res);
           } else {
+            store.commit('setSplash', -1);
             reject(res);
           }
         }).catch(err => {
+          store.commit('setSplash', -1);
           console.warn('@loadConfig::', err);
           reject(err);
         });
       });
     },
+
     /**
      * 加载-初始化监控
-     * 
-     * 
+     *
      */
     initMonitor(options) {
       Monitor.hookApp(options)
@@ -151,5 +224,5 @@ const App = {
     }
   }
 }
-
+Taro.app = App
 export default App

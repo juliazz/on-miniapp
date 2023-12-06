@@ -7,7 +7,10 @@
     <view
       class="cny-page-container"
     >
-      <view class="cny-page-content" :catchtouchmove="avator.visible || loginGuideOptions.visible || rulePupOptions.show || recodPupOptions.show || pupOptions.show">
+      <view
+        class="cny-page-content"
+        :catchtouchmove="avator.visible || loginGuideOptions.visible || rulePupOptions.show || recodPupOptions.show || pupOptions.show"
+      >
         <view class="cny-container">
           <view class="cny-content-top">
             <view class="cny-content-top-left">
@@ -49,8 +52,11 @@
                 class="cny-content-top-right-2"
                 @tap="getCnyRecordList"
               >
-                <text>查看抽奖记录</text>
-                <text class="iconfont icon-cny_arrow" />
+                <text>{{ isMember ? '查看抽奖记录' : '点击登录查看抽奖机会' }}</text>
+                <text
+                  v-if="isMember"
+                  class="iconfont icon-cny_arrow"
+                />
               </view>
               <view
                 class="cny-content-top-right-3"
@@ -348,7 +354,7 @@
                   class="record-item"
                 >
                   <text>{{ item.created_at }}</text>
-                  <text style="margin-left: 40rpx;">
+                  <text>
                     抽奖结果：{{ item.status_desc }}
                   </text>
                 </view>
@@ -417,7 +423,7 @@ import {
   shuffleAndFixIndexToPosition
 } from "../../utils";
 export default {
-  name: "Club",
+  name: "CNY",
   components: {
     Pager, slotMachine,
     LoginGuideVue, GetNameAvator,
@@ -462,7 +468,8 @@ export default {
       winOrNot: false,
       slotLength: 30,
       rawSlotItems:[],
-      slotItems:[['http://oss.on-running.cn/crm/roger-lucky-draw/01.png'], ['http://oss.on-running.cn/crm/roger-lucky-draw/01.png'], ['http://oss.on-running.cn/crm/roger-lucky-draw/01.png'], ['http://oss.on-running.cn/crm/roger-lucky-draw/01.png']],
+      firstItem: {},
+      slotItems:[[], [], []],
       qualifyNum: 0,
       activityInfo:{},
       activityStatus: 0,
@@ -658,8 +665,12 @@ export default {
         this.getCnyPrizeList()
       }
       this.ruleImg = activityInfo.lucky_draw_rule
-      this.rawSlotItems = activityInfo.image_list.map((item)=>{
-        item.image_url = this.fixCMSPath(item.image_url, 1125)
+      this.firstItem = activityInfo.image_list[0]
+      this.rawSlotItems = activityInfo.image_list.map((item, index)=>{
+        if(index > 0){
+          item.image_url = this.fixCMSPath(item.image_url, 1125)
+        }
+
         return item
       })
       this.slotItems = [
@@ -699,6 +710,7 @@ export default {
         const firstSlotItemsArr = shuffleAndFixIndexToPosition(rawSlotItems, winItem.index, 0)
         slotItems = slotItems.slice(slotItems.length - this.slotLength, slotItems.length)
         slotItems.splice(0,firstSlotItemsArr.length, ...firstSlotItemsArr)
+        slotItems[0] = this.firstItem
         return slotItems.map((item)=>{
           return item.image_url
         })
@@ -1240,7 +1252,7 @@ $cny-border: 2px solid #D2D2D2;
     font-size: 40rpx;
     &.btn-grey{
      color: #D2D2D2;
-     border: 4px solid #D2D2D2;
+     border: 2px solid #D2D2D2;
      background: none;
      margin: -2px;
      box-sizing: border-box;
@@ -1440,8 +1452,9 @@ $cny-border: 2px solid #D2D2D2;
   height: 88rpx;
   font-size: 28rpx;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
+  width: 520rpx;
 }
 }
 .cny-page-container{
@@ -1460,15 +1473,15 @@ $cny-border: 2px solid #D2D2D2;
   left: 0;
   bottom: 0;
   width: 100%;
-  height: 96rpx;
+  height: 100rpx;
   z-index: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   border-bottom: $cny-border;
+  border-top: $cny-border;
   background: #B22526;
   padding: 0 30rpx;
-  border-top: $cny-border;
   image{
     width:100%
   }

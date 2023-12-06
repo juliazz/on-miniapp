@@ -9,6 +9,10 @@ module.exports = {
     NODE_ENV: '"production"',
   },
   defineConstants: {
+    $appid: JSON.stringify('wxa54813b8f36c27de'),
+    $srId: JSON.stringify('biabf3f6dd165c4d51'),
+    $shushuId:JSON.stringify('debug-appid'),
+    $shushuURL:JSON.stringify('https://thinkdata.on-running.cn'),
     /************************/
     /* 以下为 `生产` 环境配置 */
     /************************/
@@ -19,6 +23,8 @@ module.exports = {
     $OSS_RACE_STATIC: JSON.stringify(
       "https://cdn-squad-race.on-running.cn/static"
     ),
+    // 上传静态资源
+    $UP_ASSETS_HOST: JSON.stringify('https://wechat-mp-gateway.on-running.cn'),
     // ---------------------------LianWei Frontend API 域名-----------------------------------------------
     $API_HOST: JSON.stringify('https://prod-on-lumen-api.on-running.cn'),
     // // 测试静态资源
