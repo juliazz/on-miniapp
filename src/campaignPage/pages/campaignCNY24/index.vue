@@ -1036,6 +1036,7 @@ $cny-border: 2px solid #D2D2D2;
     position: relative;
     justify-content: space-between;
     box-sizing:border-box;
+    border-right: 2rpx solid #D2D2D2;
     .text-1{
       height: 240rpx;
       width: 100%;
@@ -1045,13 +1046,11 @@ $cny-border: 2px solid #D2D2D2;
       justify-content: center;
       align-items: center;
       color: #D2D2D2;
-      border-right: 2rpx solid #D2D2D2;
       padding: 40rpx 30rpx;
     }
     .text-2{
       height: 96rpx;
       width: 100%;
-      border-right: 2rpx solid #D2D2D2;
       border-bottom: 2rpx solid #D2D2D2;
       border-top: 2rpx solid #D2D2D2;
       position: relative;
