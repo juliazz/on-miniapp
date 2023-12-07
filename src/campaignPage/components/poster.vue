@@ -10,7 +10,7 @@
         {{ desensitizify(mobile) }}
       </view>
     </view>
-    <view v-if="showBtn" class="cny-btn-container">
+    <view :style="{opacity: showBtn ? 1 : 0}" class="cny-btn-container">
       <view
         v-if="winOrNot"
         class="cny-poster-btn"

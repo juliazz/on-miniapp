@@ -468,7 +468,7 @@ export default {
       templateIds:['_f3R5iifkIaOpkzWB4Y5 SVcYX7bHwU3DyxxPKoi76wQ'],
       startDraw: false,
       winOrNot: false,
-      slotLength: 90,
+      slotLength: 40,
       rawSlotItems:[],
       firstItem: [],
       slotItems:[[], [], []],
