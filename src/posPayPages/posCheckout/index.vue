@@ -234,15 +234,20 @@ export default {
     showCustomLoading();
     await this.$store.state.loginPromise;
     this.isMember = Taro.getStorageSync('lw_loginStatus')
-    if(!this.isMember){
-      this.loginGuideOptions.visible = true
-    }
     const config = {
       ...options,
     }
     const scene = decodeURIComponent(options.scene)
     if(scene && scene.includes('posOrder=')){
       config.orderSn = scene.replace('posOrder=', '')
+    }
+    if(!this.isMember){
+      this.loginGuideOptions.visible = true
+    }else if(config.orderSn){
+      notifyRegisterResult({
+        order_number: config.orderSn,
+        is_cancel: false
+      })
     }
     await this.init(config)
     hideCustomLoading()
