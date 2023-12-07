@@ -591,6 +591,7 @@ export default {
     },
     onHideGuideClose(){
       this.loginGuideOptions.visible = false
+      this.isMember = Taro.getStorageSync('lw_loginStatus') || Taro.getStorageSync('isUserMember')
     },
     onLoginSuccess(){
       this.loginGuideOptions.visible = false
@@ -605,14 +606,18 @@ export default {
         }
         this.mobile = userInfo.mobile
       }
+      this.isMember = Taro.getStorageSync('lw_loginStatus') || Taro.getStorageSync('isUserMember')
       this.getCnyInfo()
     },
     onGuestConfirm(){
       this.loginGuideOptions.visible = false
+      this.isMember = Taro.getStorageSync('lw_loginStatus') || Taro.getStorageSync('isUserMember')
     },
-    closeAvatorPup(){
+    closeAvatorPup(e){
       this.avator.visible = false
-      this.confirmPic = true
+      if(e === 'update'){
+        this.confirmPic = true
+      }
     },
     subscribe(){
       Taro.requestSubscribeMessage({
