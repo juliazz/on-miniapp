@@ -666,7 +666,7 @@ export default {
      if(res.code === 200){
       const activityInfo = res.data?.activity_info
       this.activityInfo = activityInfo
-      this.activityStatus = activityInfo.status
+      this.activityStatus = activityInfo.status || 0
       this.qualifyNum = res.data.left_qualify_num
       clearTimeout(this.countDownTimer)
       if(activityInfo.status === 1){
