@@ -173,7 +173,7 @@ import { ajax, loadCMSConfig, fixCMSPath, fixColorThumbnail, desensitizify, RES_
 import types from '@/store/types';
 import LoginGuideVue from "@/components/common/LoginGuide.vue";
 import * as ssTrack from '@/utils/ssTrack'
-import { getPosOrder, posPay} from '../utils/index'
+import { getPosOrder, posPay, notifyRegisterResult} from '../utils/index'
 // 默认线上订单
 const DEFAULT_ORDER = 0
 // 门店订单
@@ -250,17 +250,28 @@ export default {
   methods: {
     onHideGuideClose(){
       this.loginGuideOptions.visible = false
-      console.log()
+      notifyRegisterResult({
+        order_number: this.orderSn,
+        is_cancel: true
+      })
     },
     onLoginSuccess(){
       this.loginGuideOptions.visible = false
+      notifyRegisterResult({
+        order_number: this.orderSn,
+        is_cancel: false
+      })
     },
     onGuestConfirm(){
       this.loginGuideOptions.visible = false
+      notifyRegisterResult({
+        order_number: this.orderSn,
+        is_cancel: true
+      })
     },
-    init(options = {}) {
+    async init(options = {}) {
       options.orderSn && (this.orderSn = options.orderSn)
-      this.getStoreOrderDetail()
+     await this.getStoreOrderDetail()
     },
     desensitizify,
     fixCMSPath,

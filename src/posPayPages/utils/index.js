@@ -59,7 +59,25 @@ export const posPay = async (data)=>{
     });
   })
 };
+
+/**
+ * 
+ *  Notify register result
+ *
+ */
+export const notifyRegisterResult = async (data)=>{
+  return new Promise((reslove,reject)=>{
+    ajax({
+      url: types.STORE_MEMBER, method: "POST", showLoading: true, host: $ON_API_HOST, data
+    }).then((res) => {
+      reslove(res)
+    }).catch((err) => {
+      reject()
+      errorHandler(err, true, "@notifyRegisterResult::");
+    });
+  })
+};
 export default {
-  getPosOrder, getSaQRCode, posPay
+  getPosOrder, getSaQRCode, posPay, notifyRegisterResult
 };
 
