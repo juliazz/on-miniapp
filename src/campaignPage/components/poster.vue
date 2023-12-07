@@ -4,12 +4,13 @@
       <image
         :src="fixCMSPath(imgUrl, 1125)"
         mode="widthFix"
+        @load="load"
       />
       <view v-if="winOrNot" class="winner-phone">
         {{ desensitizify(mobile) }}
       </view>
     </view>
-    <view class="cny-btn-container">
+    <view v-if="showBtn" class="cny-btn-container">
       <view
         v-if="winOrNot"
         class="cny-poster-btn"
@@ -44,7 +45,7 @@ import {
   } from '@/utils';
 import avatarIcon from '@/assets/images/icons/avatar.svg'
 export default {
-  name: 'Poster',
+  name: 'PosterC',
   components: {},
   props:{
     winOrNot:{ type: Boolean, default() { return false } },
@@ -71,7 +72,8 @@ export default {
       userInfo:{},
       phone: '',
       isGetTitle: false,
-      hadGetTitle: false
+      hadGetTitle: false,
+      showBtn: false
     };
   },
   async mounted() {
@@ -81,6 +83,11 @@ export default {
     })
   },
   methods: {
+    load(){
+      setTimeout(()=>{
+        this.showBtn = true
+      },500)
+    },
     fixCMSPath,
     makeNumber(data){
       return numFormat(data)
