@@ -84,7 +84,7 @@
                   商品金额
                 </view>
                 <view class="">
-                  ¥{{ order.total_paid }}
+                  ¥{{ order.subtotal }}
                 </view>
               </view>
               <view class="cost-item">
@@ -118,7 +118,7 @@
             </view>
             <view class="product-account">
               <view>合计</view>
-              <view>¥{{ order.total_paid }}</view>
+              <view>¥{{ ((order.subtotal || 0) - (order.discount_amount || 0)).toFixed(2) }}</view>
             </view>
           </view>
           <!--  电子小票 -->
@@ -143,7 +143,7 @@
       >
         <view class="account-left">
           <view class="total-account">
-            共{{ order.total_quantity }}件 | 合计 ¥{{ order.total_paid }}
+            共{{ order.total_quantity }}件 | 合计 ¥{{ ((order.subtotal || 0) - (order.discount_amount || 0)).toFixed(2) }}
           </view>
         </view>
         <view
@@ -374,7 +374,7 @@ export default {
               },
               fail: err => {
                 // this.onAfterPayment(orderSn, 2);
-                Taro.showToast({ title: "支付失败"});
+                // Taro.showToast({ title: "支付失败"});
                 this.payPenging = false;
               }
             });

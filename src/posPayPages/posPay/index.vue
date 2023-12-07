@@ -244,12 +244,11 @@ export default {
   }
 }
 .pos-sa-qrcode{
-  width: 600rpx;
-  height: 780rpx;
+  width: 520rpx;
+  height: 600rpx;
   border-radius: 24rpx;
   position: relative;
   background:white;
-  padding: 80rpx;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
