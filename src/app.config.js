@@ -14,6 +14,7 @@ export default defineAppConfig({
     pages: [
       "pages/shopOrderCode/index",
       "pages/campaignCNY24/index",
+      "pages/landing/index",
     ]
   }
 ],

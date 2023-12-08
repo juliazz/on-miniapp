@@ -235,7 +235,10 @@
             v-else
             class="cny-content--time-line-bottom"
           >
-            <view class="cny-content-bottom-bottom-left more">
+            <view
+              class="cny-content-bottom-bottom-left more"
+              @tap="toMore"
+            >
               <text>查看</text>
               <text style="margin-top: 20rpx;">
                 更多商品
@@ -465,7 +468,7 @@ export default {
         afterHandler: "",
         afterHandlerData: {},
       },
-      templateIds:['_f3R5iifkIaOpkzWB4Y5 SVcYX7bHwU3DyxxPKoi76wQ'],
+      templateIds:{},
       startDraw: false,
       winOrNot: false,
       slotLength: 40,
@@ -490,7 +493,8 @@ export default {
       cnyRecordList: {},
       mobile:'',
       countDownTime: '',
-      countDownTimer: null
+      countDownTimer: null,
+      isSubcribe: false
     };
   },
   computed: {
@@ -554,7 +558,8 @@ export default {
         this.mobile = userInfo.mobile
       }
     }
-    await this.getCnyInfo() 
+    await this.getCnyInfo()
+    this.templateIds = this.$store.state.templateId[process.env.NODE_ENV].templateIds.CNY2024
     setTimeout(()=>{
       hideCustomLoading();
     },2000)
@@ -576,6 +581,9 @@ export default {
     })
   },
   methods: {
+    toMore(){
+      Taro.navigateTo({ url: '/campaignPage/pages/landing/index?key=luckydraw_roger' })
+    },
     fixCMSPath,
     /**
      * 图片预览
@@ -620,24 +628,19 @@ export default {
       }
     },
     subscribe(){
+     if(this.isSubcribe){
+      return Taro.showToast({ title: "您已订阅，无需重复订阅", icon: 'none'});
+     }
+      const templateId= this.templateIds && this.templateIds.activityStart
       Taro.requestSubscribeMessage({
-        tmplIds: this.templateIds,
+        tmplIds: [templateId],
         success: async (sres) => {
-          const arr = []
-          let subscribeSuc = false
-          this.tempIds.map((item)=>{
-            if(sres[item.id] === 'accept'){
-              arr.push(item.index)
-              item.isSub = true
-              if(!subscribeSuc){
-                Taro.showToast({ title: "订阅成功", icon: 'none'});
-                subscribeSuc = true
-              }
-            }
-            return item
-          })
-          // await recordSubcribe({type: arr})
-          // this.$emit('recordsub')
+          console.log('sres---------', sres)
+          if(sres[templateId] === 'accept'){
+            cnyRecordSubcribe({type: 6})
+            this.isSubcribe = true
+            Taro.showToast({ title: "订阅成功", icon: 'none'});
+          }
         },
         complete(sres){
           if(sres.errMsg.includes('requestSubscribeMessage:fail')){
@@ -673,10 +676,11 @@ export default {
       this.activityInfo = activityInfo
       this.activityStatus = activityInfo.status || 0
       this.qualifyNum = res.data.left_qualify_num
+      this.isSubcribe = res.data.has_subscribe
       clearTimeout(this.countDownTimer)
       if(activityInfo.status === 1){
         this.countDownTimer = this.countDown(activityInfo)
-      }      
+      }
       // 中奖列表
       if(activityInfo.status === 3){
         this.getCnyPrizeList()
