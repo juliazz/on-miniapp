@@ -187,7 +187,7 @@
             </view>
           </view>
           <view
-            v-if="activityStatus === 3"
+            v-if="activityStatus === 4"
             class="cny-winners-list-container"
           >
             <view class="cny-winners-list-title">
@@ -220,7 +220,7 @@
             </view>
           </view>
           <view
-            v-if="activityStatus < 1"
+            v-if="activityStatus < 3"
             class="cny-content--time-line-bottom"
           >
             <view class="cny-content-bottom-bottom-left">
@@ -255,17 +255,17 @@
             <view class="parting-line-container">
               <view
                 class="line-1"
-                :class="{lengthen: activityStatus > 0}"
+                :class="{lengthen: activityStatus > 1}"
               />
               <view class="line-2" />
             </view>
             <loadCms
-              v-if="activityStatus === 0"
+              v-if="activityStatus === 1"
               page-key="luckydraw_roger"
             />
           </view>
           <view
-            v-if="activityStatus === 0"
+            v-if="activityStatus === 1"
             class="cny-content-bottom"
           >
             <view class="cny-content-bottom-top">
@@ -414,7 +414,8 @@ import {
   hideCustomLoading,
   fixCMSPath,
   getUCenterInfo,
-  desensitizify
+  desensitizify,
+  makeShare
 } from "@/utils";
 import {
   getCnyInfo,
@@ -531,6 +532,15 @@ export default {
       const { top } = this.wxMenuButtonRect;
       return `${Number(top) + 39}px`;
     },
+    shareData(){
+      let share_title = '"费"来好运抽奖活动'
+      let args = ''
+      return {
+        title: share_title,
+        args,
+        page: `campaignPage/pages/campaignCNY24/index`
+      }
+    }
   },
   onPullDownRefresh () {
     wx.stopPullDownRefresh()
@@ -570,7 +580,7 @@ export default {
     showCustomLoading();
     // this.codeUrl='http://on-running.oss-cn-shanghai.aliyuncs.com/cms_stage/images/74670e5b0201a9285b4801ab865b6109.jpg'
     this.codeUrl=shopCode
-    Taro.hideShareMenu();
+    //  Taro.hideShareMenu();
     Taro.loadFontFace({
       family: 'fusion-pixel-10px-monospaced-zh_hans',
       source: 'url("https://6f6e-on-running-4ghwjrhf73b078d7-1312905953.tcb.qcloud.la/icon-font/Fusion-Pixel-10px-Monospaced-zh_hans-Regular.woff2?sign=1bcae92621bffe60ce6d6706bf1d3f1c&t=1701655012")',
@@ -822,7 +832,27 @@ export default {
         this.loginGuideOptions.visible = true
       }
     }
-  }
+  },
+   /**
+   * 页面分享设置
+   */
+   onShareAppMessage(evt) {
+    let share_image = this.activityInfo.share_card_image || ''
+    const promise = makeShare(this.shareData.args, this.shareData.page, this.shareData.title, share_image)
+    return {
+      promise
+    };
+  },
+  onShareTimeline(){
+    let share_image = this.activityInfo.share_moments_image || ''
+    const promise = makeShare(this.shareData.args, this.shareData.page, this.shareData.title, share_image)
+    return {
+      title: this.shareData.title,
+      query:this.shareData.args,
+      imageUrl:fixCMSPath(share_image),
+      promise
+    };
+  },
 };
 </script>
 
