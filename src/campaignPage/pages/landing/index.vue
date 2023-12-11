@@ -5,7 +5,7 @@
 </template>
 <script>
 import Pager from '@/components/common/Pager.vue';
-import CMSLayout from '@/components/CMSLayout.vue';
+import CMSLayout from '../../components/CMSLayout.vue';
 import Taro from '@tarojs/taro';
 import mixins from '@/utils/mixins';
 import { loadCMSConfig, makeShare,fixCMSPath, getUCenterInfo ,makeBind, showCustomLoading, hideCustomLoading ,Vict} from '@/utils';

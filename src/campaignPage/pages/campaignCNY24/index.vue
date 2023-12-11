@@ -117,7 +117,7 @@
             class="cny-lottery-btn-container"
           >
             <view
-              v-if="activityStatus === 0"
+              v-if="activityStatus === 1"
               class="cny-btn"
               @tap="gotoBuy"
             >
@@ -125,14 +125,14 @@
               <text class="iconfont icon-btn_log cny-btn-log-icon" />
             </view>
             <view
-              v-if="activityStatus === 1"
+              v-if="activityStatus === 2"
               class="cny-btn"
             >
               距离抽奖开始还有{{ countDownTime }}
               <text class="iconfont icon-btn_log cny-btn-log-icon" />
             </view>
             <view
-              v-if="activityStatus === 2 && !startDraw && qualifyNum"
+              v-if="activityStatus === 3 && !startDraw && qualifyNum"
               class="cny-btn"
               @tap="drawLottery"
             >
@@ -140,14 +140,14 @@
               <text class="iconfont icon-btn_log cny-btn-log-icon" />
             </view>
             <view
-              v-if="activityStatus === 2 && (startDraw || !qualifyNum)"
+              v-if="activityStatus === 3 && (startDraw || !qualifyNum)"
               class="cny-btn btn-grey"
             >
               <text>开始抽奖</text>
               <text class="iconfont icon-btn_log cny-btn-log-icon" />
             </view>
             <view
-              v-if="activityStatus === 3"
+              v-if="activityStatus === 4"
               id="look-winners"
               class="cny-btn"
               @tap="lookWinners"
