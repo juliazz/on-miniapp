@@ -84,22 +84,22 @@
           <view class="cny-content-f-signature">
             <view class="cny-electronic-screen-wrapper">
               <view class="cny-electronic-screen-content">
-                “费”来好运，快来赢取费德勒亲笔签名卡片
+                “费”来福运，快来赢取费德勒亲笔签名卡片
               </view>
               <view
                 class="cny-electronic-screen-content"
                 style="color: #D2D2D2;"
               >
-                “费”来好运，快来赢取费德勒亲笔签名卡片
+                “费”来福运，快来赢取费德勒亲笔签名卡片
               </view>
               <view class="cny-electronic-screen-content">
-                “费”来好运，快来赢取费德勒亲笔签名卡片
+                “费”来福运，快来赢取费德勒亲笔签名卡片
               </view>
               <view
                 class="cny-electronic-screen-content"
                 style="color: #D2D2D2;"
               >
-                “费”来好运，快来赢取费德勒亲笔签名卡片
+                “费”来福运，快来赢取费德勒亲笔签名卡片
               </view>
             </view>
           </view>
@@ -121,7 +121,7 @@
               class="cny-btn"
               @tap="gotoBuy"
             >
-              <text>购买商品获得好运机会</text> 
+              <text>购买商品获得福运机会</text> 
               <text class="iconfont icon-btn_log cny-btn-log-icon" />
             </view>
             <view
@@ -226,7 +226,7 @@
             <view class="cny-content-bottom-bottom-left">
               <text>下滑</text>
               <text style="margin-top: 20rpx;">
-                获得好运机会
+                获得福运机会
               </text>
             </view>
             <view class="cny-content-bottom-bottom-right iconfont icon-cny_arrow_big" />
@@ -472,7 +472,7 @@ export default {
       templateIds:{},
       startDraw: false,
       winOrNot: false,
-      slotLength: 40,
+      slotLength: 20,
       rawSlotItems:[],
       firstItem: [],
       slotItems:[[], [], []],
@@ -533,7 +533,7 @@ export default {
       return `${Number(top) + 39}px`;
     },
     shareData(){
-      let share_title = '"费"来好运抽奖活动'
+      let share_title = '"费"来福运抽奖活动'
       let args = ''
       return {
         title: share_title,

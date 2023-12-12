@@ -27,7 +27,7 @@ export default {
   components: {
     SingleText          : () => import('@/components/cms/SingleText.vue'),
     SingleImage         : () => import('./SingleImage.vue'),
-    SingleVideo         : () => import('@/components/cms/SingleVideo.vue'),
+    SingleVideo         : () => import('./SingleVideo.vue'),
     HotWord             : () => import('@/components/cms/HotWord.vue'),
     Occupation          : () => import('@/components/cms/Occupation.vue'),
     ProductSlider       : () => import('@/components/cms/ProductSlider.vue'),
