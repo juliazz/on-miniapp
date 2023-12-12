@@ -127,6 +127,7 @@
             <view
               v-if="activityStatus === 2"
               class="cny-btn"
+              @tap="notStart"
             >
               距离抽奖开始还有{{ countDownTime }}
               <text class="iconfont icon-btn_log cny-btn-log-icon" />
@@ -591,6 +592,9 @@ export default {
     })
   },
   methods: {
+    notStart(){
+      Taro.showToast({ title: "活动未开始，敬请期待"})
+    },
     toMore(){
       Taro.navigateTo({ url: '/campaignPage/pages/landing/index?key=luckydraw_roger' })
     },
