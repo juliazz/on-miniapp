@@ -688,11 +688,11 @@ export default {
       this.qualifyNum = res.data.left_qualify_num
       this.isSubcribe = res.data.has_subscribe
       clearTimeout(this.countDownTimer)
-      if(activityInfo.status === 1){
+      if(activityInfo.status === 2){
         this.countDownTimer = this.countDown(activityInfo)
       }
       // 中奖列表
-      if(activityInfo.status === 3){
+      if(activityInfo.status === 4){
         this.getCnyPrizeList()
       }
       this.ruleImg = activityInfo.lucky_draw_rule
