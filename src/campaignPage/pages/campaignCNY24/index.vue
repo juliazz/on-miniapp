@@ -593,7 +593,7 @@ export default {
   },
   methods: {
     notStart(){
-      Taro.showToast({ title: "活动未开始，敬请期待"})
+      Taro.showToast({ title: "活动未开始，敬请期待",  icon: 'none'})
     },
     toMore(){
       Taro.navigateTo({ url: '/campaignPage/pages/landing/index?key=luckydraw_roger' })
