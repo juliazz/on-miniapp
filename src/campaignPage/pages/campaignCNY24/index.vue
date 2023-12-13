@@ -221,7 +221,7 @@
             </view>
           </view>
           <view
-            v-if="activityStatus < 3"
+            v-if="activityStatus < 2"
             class="cny-content--time-line-bottom"
           >
             <view class="cny-content-bottom-bottom-left">
