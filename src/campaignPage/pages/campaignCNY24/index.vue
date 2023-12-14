@@ -115,7 +115,7 @@
           <view class="cny-slot-machine">
             <slotMachine
               :start="startDraw"
-              :time-length="12"
+              :time-length="8"
               :slot-length="slotLength"
               :win-or-not="true"
               :slot-items="slotItems"
@@ -487,7 +487,7 @@ export default {
       templateIds:{},
       startDraw: false,
       winOrNot: false,
-      slotLength: 30,
+      slotLength: 40,
       rawSlotItems:[],
       firstItem: [],
       slotItems:[[], [], []],
@@ -566,7 +566,7 @@ export default {
   async mounted() {
     showCustomLoading();
     await this.$store.state.loginPromise;
-    this.isMember = Taro.getStorageSync('lw_loginStatus')
+    this.isMember = Taro.getStorageSync('lw_loginStatus') || Taro.getStorageSync('isUserMember')
     if(!this.isMember){
       this.loginGuideOptions.visible = true
     }else{
@@ -690,6 +690,8 @@ export default {
       const res = await cnyDraw()
       if(res.code === 200 && res.data && res.data.flag){
         this.winOrNot = res.data.flag
+      }else{
+        this.winOrNot = false
       }
       this.slotItems = [
           this.adaptSlotItems(this.rawSlotItems, 0),
@@ -777,6 +779,7 @@ export default {
       this.pupOptions.show = false
       this.recodPupOptions.show = false
       this.rulePupOptions.show = false
+      this.winOrNot = false
     },
     toTop(){
       wx.pageScrollTo({
@@ -1430,7 +1433,6 @@ $cny-border: 2px solid #D2D2D2;
     &.lengthen{
       height: 60rpx;
     }
-
     height: 30rpx;
     width: 720rpx;
     box-sizing: border-box;

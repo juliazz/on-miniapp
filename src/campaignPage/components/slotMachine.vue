@@ -89,7 +89,7 @@
         },(Number(this.timeLength) + 3) * 1000 )
       },
       addAnimationInfo(){
-        this.animationInfo.push(`spin ${this.timeLength}s ease-out forwards`)
+        this.animationInfo.push(`spin ${this.timeLength}s linear forwards`)
         //animationInfo
         setTimeout(() => {
           if(this.animationInfo.length < 3){
