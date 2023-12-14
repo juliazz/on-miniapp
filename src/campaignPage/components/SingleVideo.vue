@@ -309,7 +309,7 @@ export default {
           return
       }
      if(this.isSubcribe){
-      return Taro.showToast({ title: "您已订阅，无需重复订阅", icon: 'none'});
+      return Taro.showToast({ title: "订阅成功，敬请期待", icon: 'none'});
      }
       const templateIds = this.$store.state.templateId[process.env.NODE_ENV].templateIds.CNY2024
       const templateId= templateIds && templateIds.activityStart
