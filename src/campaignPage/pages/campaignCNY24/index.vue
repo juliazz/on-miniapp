@@ -115,7 +115,7 @@
           <view class="cny-slot-machine">
             <slotMachine
               :start="startDraw"
-              :time-length="8"
+              :time-length="6"
               :slot-length="slotLength"
               :win-or-not="true"
               :slot-items="slotItems"
@@ -711,7 +711,7 @@ export default {
      if(res.code === 200){
       const activityInfo = res.data?.activity_info
       this.activityInfo = activityInfo
-      this.activityStatus = activityInfo.status || 0
+      this.activityStatus =  activityInfo.status || 0
       this.qualifyNum = res.data.left_qualify_num
       this.isSubcribe = res.data.has_subscribe
       clearTimeout(this.countDownTimer)
