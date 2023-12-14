@@ -1428,7 +1428,7 @@ $cny-border: 2px solid #D2D2D2;
   border-top: $cny-border;
   .line-1{
     &.lengthen{
-      height: 180rpx;
+      height: 60rpx;
     }
 
     height: 30rpx;
