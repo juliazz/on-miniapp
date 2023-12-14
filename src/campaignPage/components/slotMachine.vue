@@ -144,11 +144,11 @@
   // 35% {
   //   transform: translateY(calc(-100% + 400rpx)); /* 调整 translateY 的值以控制滚动距离 */
   // }
-  50% {
-    transform: translateY(calc(-100% + 485rpx)); /* 调整 translateY 的值以控制滚动距离 */
+  90% {
+    transform: translateY(calc(-100% + 480rpx)); /* 调整 translateY 的值以控制滚动距离 */
   }
-  80% {
-    transform: translateY(calc(-100% + 470rpx)); /* 调整 translateY 的值以控制滚动距离 */
+  95% {
+    transform: translateY(calc(-100% + 475rpx)); /* 调整 translateY 的值以控制滚动距离 */
   }
   100% {
     transform: translateY(calc(-100% + 480rpx)); /* 调整 translateY 的值以控制滚动距离 */

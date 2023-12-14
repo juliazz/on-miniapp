@@ -82,7 +82,10 @@
             </view>
           </view>
           <view class="cny-content-f-signature">
-            <view class="cny-electronic-screen-wrapper">
+            <view
+              v-if="activityStatus < 3"
+              class="cny-electronic-screen-wrapper animate-run"
+            >
               <view class="cny-electronic-screen-content">
                 “费”来福运，快来赢取费德勒亲笔签名卡片
               </view>
@@ -101,6 +104,12 @@
               >
                 “费”来福运，快来赢取费德勒亲笔签名卡片
               </view>
+            </view>
+            <view
+              v-else
+              class="cny-electronic-screen-wrapper"
+            >
+              “费”来福运，等你来玩
             </view>
           </view>
           <view class="cny-slot-machine">
@@ -121,7 +130,7 @@
               class="cny-btn"
               @tap="gotoBuy"
             >
-              <text>购买商品获得福运机会</text> 
+              <text>购买商品获得抽奖机会</text> 
               <text class="iconfont icon-btn_log cny-btn-log-icon" />
             </view>
             <view
@@ -137,14 +146,15 @@
               class="cny-btn"
               @tap="drawLottery"
             >
-              <text>开始抽奖</text>
+              <text>点击抽奖</text>
               <text class="iconfont icon-btn_log cny-btn-log-icon" />
             </view>
             <view
               v-if="activityStatus === 3 && (startDraw || !qualifyNum)"
               class="cny-btn btn-grey"
+              @tap="noQualifyNum"
             >
-              <text>开始抽奖</text>
+              <text>点击抽奖</text>
               <text class="iconfont icon-btn_log cny-btn-log-icon" />
             </view>
             <view
@@ -166,7 +176,7 @@
                 <text>1.18 10:00–22:00</text><text>开启抽奖活动</text>
               </view>
               <view class="cny-content-bottom-left-text">
-                <text>1.19 10:00</text><text>公布获奖名单</text>
+                <text>1.19 10:00</text><text>公布中奖名单</text>
               </view>
               <view
                 class="cny-content-bottom-left-text-last"
@@ -223,11 +233,12 @@
           <view
             v-if="activityStatus < 2"
             class="cny-content--time-line-bottom"
+            @tap="gotoBuy"
           >
             <view class="cny-content-bottom-bottom-left">
               <text>下滑</text>
               <text style="margin-top: 20rpx;">
-                获得福运机会
+                选购商品
               </text>
             </view>
             <view class="cny-content-bottom-bottom-right iconfont icon-cny_arrow_big" />
@@ -242,10 +253,13 @@
             >
               <text>查看</text>
               <text style="margin-top: 20rpx;">
-                更多商品
+                THE ROGER系列产品
               </text>
             </view>
-            <view class="cny-content-bottom-bottom-right gold iconfont icon-cny_arrow_big" />
+            <view
+              class="cny-content-bottom-bottom-right gold iconfont icon-cny_arrow_big"
+              @tap="toMore"
+            />
           </view>
         </view>
         <view>
@@ -473,7 +487,7 @@ export default {
       templateIds:{},
       startDraw: false,
       winOrNot: false,
-      slotLength: 20,
+      slotLength: 30,
       rawSlotItems:[],
       firstItem: [],
       slotItems:[[], [], []],
@@ -592,6 +606,11 @@ export default {
     })
   },
   methods: {
+    noQualifyNum(){
+      if(this.qualifyNum < 1){
+        Taro.showToast({ title: "暂未获得抽奖机会",  icon: 'none'})
+      }
+    },
     notStart(){
       Taro.showToast({ title: "活动未开始，敬请期待",  icon: 'none'})
     },
@@ -643,7 +662,7 @@ export default {
     },
     subscribe(){
      if(this.isSubcribe){
-      return Taro.showToast({ title: "您已订阅，无需重复订阅", icon: 'none'});
+      return Taro.showToast({ title: "订阅成功，敬请期待", icon: 'none'});
      }
       const templateId= this.templateIds && this.templateIds.activityStart
       Taro.requestSubscribeMessage({
@@ -665,7 +684,9 @@ export default {
     },
     // 抽奖
     async drawLottery(){
-      wx.vibrateLong()
+      wx.vibrateShort({
+        type: 'heavy'
+      })
       const res = await cnyDraw()
       if(res.code === 200 && res.data && res.data.flag){
         this.winOrNot = res.data.flag
@@ -1335,19 +1356,23 @@ $cny-border: 2px solid #D2D2D2;
 .cny-electronic-screen-wrapper {
     width: max-content; /* 让内容尽可能宽，以便能无限循环滚动 */
     white-space: nowrap; /* 让内容水平排列 */
-    position: absolute; /* 绝对定位 */
+    position: static; /* 绝对定位 */
     left: 0;
-    animation: scrollLeft 18s linear infinite; /* 调用动画 */
     overflow: hidden;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    &.animate-run{
+      position: absolute;
+      animation: scrollLeft 18s linear infinite; /* 调用动画 */
+      justify-content: space-between;
+    }
 }
 .cny-electronic-screen-content {
     display: block; /* 内容水平排列 */
     transform-style: preserve-3d; /* 保持 3D 效果 */
     overflow: hidden;
     position: relative;
-    padding-right: 20rpx;
+    padding-right: 60rpx;
     letter-spacing: 2rpx;
 }
 

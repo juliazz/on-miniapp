@@ -301,10 +301,13 @@ export default {
     },
     subscribe(){
       console.log('subscribe------------')
+      if(!this.activityInfo){
+        return
+      }
       if(this.activityInfo && this.activityInfo.status > 0){
         Taro.navigateTo({ url: '/campaignPage/pages/campaignCNY24/index' });
           return
-        }
+      }
      if(this.isSubcribe){
       return Taro.showToast({ title: "您已订阅，无需重复订阅", icon: 'none'});
      }

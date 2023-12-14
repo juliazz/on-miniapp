@@ -125,8 +125,8 @@ export default new Vuex.Store({
             ]
           },
           CNY2024:{
-            activityStart: 'S98eDj9ahULww1GThjieCpnuix7XxyD-rA8J1yCmHao',
-            drawLotteryStart: 'S98eDj9ahULww1GThjieCpnuix7XxyD-rA8J1yCmHao'
+            activityStart: 'Ta_wMkmvg7xr6xQszGUAB6GlfJxVxLyvDCnBU-Y2wKQ',
+            drawLotteryStart: 'Ta_wMkmvg7xr6xQszGUAB6GlfJxVxLyvDCnBU-Y2wKQ'
           }
         },
       },
@@ -157,8 +157,8 @@ export default new Vuex.Store({
             ]
           },
           CNY2024:{
-            activityStart: 'S98eDj9ahULww1GThjieCpnuix7XxyD-rA8J1yCmHao',
-            drawLotteryStart: 'S98eDj9ahULww1GThjieCpnuix7XxyD-rA8J1yCmHao'
+            activityStart: 'Ta_wMkmvg7xr6xQszGUAB6GlfJxVxLyvDCnBU-Y2wKQ',
+            drawLotteryStart: 'Ta_wMkmvg7xr6xQszGUAB6GlfJxVxLyvDCnBU-Y2wKQ'
           }
         },
       },

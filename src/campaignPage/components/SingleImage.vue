@@ -307,6 +307,9 @@ export default {
     },
     subscribe(){
       console.log('subscribe------------')
+     if(!this.activityInfo || this.activityInfo.status > 0 ){
+      return
+     }
      if(this.isSubcribe){
       return Taro.showToast({ title: "您已订阅，无需重复订阅", icon: 'none'});
      }
