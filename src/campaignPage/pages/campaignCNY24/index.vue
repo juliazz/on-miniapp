@@ -115,9 +115,8 @@
           <view class="cny-slot-machine">
             <slotMachine
               :start="startDraw"
-              :time-length="6"
+              :time-length="slotTime"
               :slot-length="slotLength"
-              :win-or-not="true"
               :slot-items="slotItems"
               @endDraw="endDraw"
             />
@@ -487,7 +486,8 @@ export default {
       templateIds:{},
       startDraw: false,
       winOrNot: false,
-      slotLength: 40,
+      slotLength: 25,
+      slotTime: 8,
       rawSlotItems:[],
       firstItem: [],
       slotItems:[[], [], []],

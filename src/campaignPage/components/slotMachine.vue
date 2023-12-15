@@ -86,10 +86,10 @@
           this.animationIsStart = false
           this.animationInfo = []
           this.$emit('endDraw')
-        },(Number(this.timeLength) + 3) * 1000 )
+        },(Number(this.timeLength) + 2) * 1000 )
       },
       addAnimationInfo(){
-        this.animationInfo.push(`spin ${this.timeLength}s linear forwards`)
+        this.animationInfo.push(`spin ${this.timeLength}s ease-in-out forwards`)
         //animationInfo
         setTimeout(() => {
           if(this.animationInfo.length < 3){
@@ -144,11 +144,24 @@
   // 35% {
   //   transform: translateY(calc(-100% + 400rpx)); /* 调整 translateY 的值以控制滚动距离 */
   // }
-  90% {
+  // 90% {
+  //   transform: translateY(calc(-100% + 480rpx)); /* 调整 translateY 的值以控制滚动距离 */
+  // }
+  // 95% {
+  //   transform: translateY(calc(-100% + 475rpx)); /* 调整 translateY 的值以控制滚动距离 */
+  // }
+  // 100% {
+  //   transform: translateY(calc(-100% + 480rpx)); /* 调整 translateY 的值以控制滚动距离 */
+  // }
+
+  65% {
+    transform: translateY(calc(-100% + 360rpx)); /* 调整 translateY 的值以控制滚动距离 */
+  }
+  80% {
     transform: translateY(calc(-100% + 480rpx)); /* 调整 translateY 的值以控制滚动距离 */
   }
-  95% {
-    transform: translateY(calc(-100% + 475rpx)); /* 调整 translateY 的值以控制滚动距离 */
+  90% {
+    transform: translateY(calc(-100% + 470rpx)); /* 调整 translateY 的值以控制滚动距离 */
   }
   100% {
     transform: translateY(calc(-100% + 480rpx)); /* 调整 translateY 的值以控制滚动距离 */
