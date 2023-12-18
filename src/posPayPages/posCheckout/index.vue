@@ -95,14 +95,14 @@
                   ¥ {{ order.discount_amount }}
                 </view>
               </view>
-              <view class="cost-item">
+              <!-- <view class="cost-item">
                 <view class="">
                   运费
                 </view>
                 <view class="">
                   ¥{{ order.deliveryAmount || '0.00' }}
                 </view>
-              </view>
+              </view> -->
               <!-- 隐藏 -->
               <view
                 v-if="order.points_deducted_amount"
