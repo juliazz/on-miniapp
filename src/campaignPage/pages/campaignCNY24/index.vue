@@ -661,6 +661,7 @@ export default {
       this.avator.visible = false
       if(e === 'update'){
         this.confirmPic = true
+        getUCenterInfo()
       }
     },
     subscribe(){
