@@ -397,10 +397,13 @@ export default {
     this.isMember = Taro.getStorageSync('lw_loginStatus') || Taro.getStorageSync('isUserMember')
     if (!this.isMember) {
       this.loginGuideOptions.visible = true
-    } else {
-      await getUCenterInfo()
-      const userInfo = Taro.getStorageSync('userInfo')
-      if (!userInfo || !userInfo.avatarUrl) {
+    }else{
+      let userInfo = Taro.getStorageSync('userInfo')
+      if(!userInfo || !userInfo.avatarUrl){
+        await getUCenterInfo()
+      }
+      userInfo = Taro.getStorageSync('userInfo')
+      if(!userInfo || !userInfo.avatarUrl){
         this.avator.visible = true
         this.confirmPic = false
       } else {
@@ -486,6 +489,7 @@ export default {
       this.avator.visible = false
       if (e === 'update') {
         this.confirmPic = true
+        getUCenterInfo()
       }
     },
     subscribe() {
