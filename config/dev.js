@@ -9,7 +9,7 @@ module.exports = {
     NODE_ENV: '"dev"'
   },
   defineConstants: {
-    $appid: JSON.stringify('wx2431275480358c4b'),
+    $appid: JSON.stringify('wx926eadc0f6fb1fbb'),
     //-----tracking -------
     $srId: JSON.stringify('bid4d69c99b9b348b4'),
     $shushuId:JSON.stringify('debug-appid'), //shushuId 用于区分不同的小程序

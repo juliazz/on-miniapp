@@ -7,7 +7,6 @@ export default defineAppConfig({
     "pages/cart/index",
     "pages/web-view/index",
     "pages/test/index",
-    "pages/landing/index",
   ],
   subpackages:[
   {
@@ -15,17 +14,10 @@ export default defineAppConfig({
     pages: [
       "pages/shopOrderCode/index",
       "pages/campaignCNY24/index",
+      "pages/landing/index",
     ]
   },
   {
-    root:"subpages",
-    pages:[
-      "posCheckout/index",
-      "posPay/index"
-      
-    ]
-  },
-   {
     root:"posPayPages",
     pages:[
       "posCheckout/index",

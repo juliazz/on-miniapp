@@ -123,6 +123,10 @@ export default new Vuex.Store({
               {id:'uwGCRo7m0smyaWZmEXuQzx7cKJOENRUcjKFDrbaXLSI', index: 4},
               {id:'JickAuE3ajBYCnPTzO6BLnkFP3qRFsUwE89IiDC1Di8', index: 5 },
             ]
+          },
+          CNY2024:{
+            activityStart: 'Ta_wMkmvg7xr6xQszGUAB6GlfJxVxLyvDCnBU-Y2wKQ',
+            drawLotteryStart: 'Ta_wMkmvg7xr6xQszGUAB6GlfJxVxLyvDCnBU-Y2wKQ'
           }
         },
       },
@@ -151,11 +155,15 @@ export default new Vuex.Store({
               {id:'uwGCRo7m0smyaWZmEXuQzx7cKJOENRUcjKFDrbaXLSI', index: 4},
               {id:'uwGCRo7m0smyaWZmEXuQzx7cKJOENRUcjKFDrbaXLSI', index: 5 },
             ]
+          },
+          CNY2024:{
+            activityStart: 'Ta_wMkmvg7xr6xQszGUAB6GlfJxVxLyvDCnBU-Y2wKQ',
+            drawLotteryStart: 'Ta_wMkmvg7xr6xQszGUAB6GlfJxVxLyvDCnBU-Y2wKQ'
           }
         },
       },
       stage: {
-        appid: "wx2431275480358c4b",
+        appid: "wx926eadc0f6fb1fbb",
         ailiTrackID: "cd8p1ois10@1ab8ca6721d6f7f",
         templateIds: {
           PDP_CART: [
@@ -167,7 +175,7 @@ export default new Vuex.Store({
         },
       },
       development: {
-        appid: "wx2431275480358c4b",
+        appid: "wx926eadc0f6fb1fbb",
         templateIds: {
           PDP_CART: [
             "VVZOq90aYRJeh59AYrXGGy7e6ZtGsPv6LXlYLXt4QV0",
@@ -178,7 +186,7 @@ export default new Vuex.Store({
         },
       },
       dev: {
-        appid: "wx2431275480358c4b",
+        appid: "wx926eadc0f6fb1fbb",
         ailiTrackID: "cd8p1ois10@1ab8ca6721d6f7f",
         templateIds: {
           PDP_CART: [
@@ -206,6 +214,10 @@ export default new Vuex.Store({
               {id:'6H7QVIkiRu7unVfD988y7KucR_AmIzd8ps2PyyT3-ro', index: 4 },
               {id:'CNGDK8E_qgeM_q5nuQQWlRMFnu9BOPglpskgbngGyL0', index: 5 },
             ]
+          },
+          CNY2024:{
+            activityStart: 'S98eDj9ahULww1GThjieCpnuix7XxyD-rA8J1yCmHao',
+            drawLotteryStart: 'S98eDj9ahULww1GThjieCpnuix7XxyD-rA8J1yCmHao'
           }
         },
       },

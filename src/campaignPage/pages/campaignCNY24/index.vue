@@ -1,16 +1,8 @@
 <template>
-  <Pager
-    :header="headerOptions"
-    :loader="true"
-    :page-style="pageOptions"
-  >
-    <view
-      class="cny-page-container"
-      :class="{
-        fix: avator.visible || loginGuideOptions.visible || rulePupOptions.show || recodPupOptions.show || pupOptions.show
-      }"
-    >
-      <view class="cny-page-content">
+  <Pager :header="headerOptions" :loader="true" :page-style="pageOptions">
+    <view class="cny-page-container">
+      <view class="cny-page-content"
+        :catchtouchmove="avator.visible || loginGuideOptions.visible || rulePupOptions.show || recodPupOptions.show || pupOptions.show">
         <view class="cny-container">
           <view class="cny-content-top">
             <view class="cny-content-top-left">
@@ -18,129 +10,79 @@
                 <image :src="cnyImg.cny_text_01" />
               </view>
               <view class="text-2">
-                <image
-                  :src="cnyImg.cny_text_02"
-                  mode="widthFix"
-                />
+                <image :src="cnyImg.cny_text_02" mode="widthFix" />
               </view>
             </view>
             <view class="cny-content-top-right">
               <view class="cny-content-top-right-1">
                 <view class="cny-user-photo">
-                  <image
-                    v-if="!!avator.formData.pic"
-                    :src="avator.formData.pic"
-                  />
-                  <text
-                    v-else
-                    class="iconfont icon-cny_avator"
-                  />
+                  <image v-if="!!avator.formData.pic && confirmPic" :src="avator.formData.pic" />
+                  <text v-else class="iconfont icon-cny_avator" />
                 </view>
-                <view class="lottery-chance"> 
+                <view class="lottery-chance">
                   <view class="lottery-chance-num">
                     {{ isMember ? qualifyNum : '?' }}
                   </view>
-                  <view
-                    class="lottery-chance-text"
-                    style="margin-top: 10rpx;"
-                  >
+                  <view class="lottery-chance-text" style="margin-top: 10rpx;">
                     抽奖机会
                   </view>
                 </view>
               </view>
-              <view
-                class="cny-content-top-right-2"
-                @tap="getCnyRecordList"
-              >
-                <text>查看抽奖记录</text>
-                <text class="iconfont icon-cny_arrow" />
+              <view class="cny-content-top-right-2" @tap="getCnyRecordList">
+                <text>{{ isMember ? '查看抽奖记录' : '点击登录查看抽奖机会' }}</text>
+                <text v-if="isMember" class="iconfont icon-cny_arrow" />
               </view>
-              <view
-                class="cny-content-top-right-3"
-                @tap="subscribe"
-              >
+              <view class="cny-content-top-right-3" @tap="subscribe">
                 <text>设置订阅提醒</text>
                 <text class="iconfont icon-cny_call_on" />
               </view>
+              <view v-if="!isMember" class="no-login-shadow" @tap="toLogin" />
             </view>
             <view v-if="!isMember" class="no-login-text">
-              <image
-                :src="cnyImg.cny_text_03"
-                mode="widthFix"
-              />
+              <image :src="cnyImg.cny_text_03" mode="widthFix" />
             </view>
           </view>
           <view class="cny-content-f-signature">
-            <view class="cny-electronic-screen-wrapper">
+            <view v-if="activityStatus < 3" class="cny-electronic-screen-wrapper animate-run">
               <view class="cny-electronic-screen-content">
-                “费”来好运，快来赢取费德勒亲笔签名照
+                “费”来福运，快来赢取费德勒亲笔签名卡片
               </view>
-              <view
-                class="cny-electronic-screen-content"
-                style="color: #D2D2D2;"
-              >
-                “费”来好运，快来赢取费德勒亲笔签名照
+              <view class="cny-electronic-screen-content" style="color: #D2D2D2;">
+                “费”来福运，快来赢取费德勒亲笔签名卡片
               </view>
               <view class="cny-electronic-screen-content">
-                “费”来好运，快来赢取费德勒亲笔签名照
+                “费”来福运，快来赢取费德勒亲笔签名卡片
               </view>
-              <view
-                class="cny-electronic-screen-content"
-                style="color: #D2D2D2;"
-              >
-                “费”来好运，快来赢取费德勒亲笔签名照
+              <view class="cny-electronic-screen-content" style="color: #D2D2D2;">
+                “费”来福运，快来赢取费德勒亲笔签名卡片
               </view>
+            </view>
+            <view v-else class="cny-electronic-screen-wrapper">
+              “费”来福运，等你来玩
             </view>
           </view>
           <view class="cny-slot-machine">
-            <slotMachine
-              :start="startDraw"
-              :time-length="12"
-              :slot-length="30"
-              :win-or-not="true"
-              :slot-items="slotItems"
-              @endDraw="endDraw"
-            />
+            <slotMachine :start="startDraw" :time-length="slotTime" :slot-length="slotLength" :slot-items="slotItems"
+              @endDraw="endDraw" />
           </view>
-          <view
-            class="cny-lottery-btn-container"
-          >
-            <view
-              v-if="activityStatus === 0"
-              class="cny-btn"
-              @tap="gotoBuy"
-            >
-              <text>购买商品获得好运机会</text> 
+          <view class="cny-lottery-btn-container">
+            <view v-if="activityStatus === 1" class="cny-btn" @tap="gotoBuy">
+              <text>购买商品获得抽奖机会</text>
               <text class="iconfont icon-btn_log cny-btn-log-icon" />
             </view>
-            <view
-              v-if="activityStatus === 1"
-              class="cny-btn"
-            >
+            <view v-if="activityStatus === 2" class="cny-btn" @tap="notStart">
               距离抽奖开始还有{{ countDownTime }}
               <text class="iconfont icon-btn_log cny-btn-log-icon" />
             </view>
-            <view
-              v-if="activityStatus === 2 && !startDraw && qualifyNum"
-              class="cny-btn"
-              @tap="drawLottery"
-            >
-              <text>开始抽奖</text>
+            <view v-if="activityStatus === 3 && !startDraw && qualifyNum" class="cny-btn" @tap="drawLottery">
+              <text>点击抽奖</text>
               <text class="iconfont icon-btn_log cny-btn-log-icon" />
             </view>
-            <view
-              v-if="activityStatus === 2 && (startDraw || !qualifyNum)"
-              class="cny-btn btn-grey"
-            >
-              <text>开始抽奖</text>
+            <view v-if="activityStatus === 3 && (startDraw || !qualifyNum)" class="cny-btn btn-grey" @tap="noQualifyNum">
+              <text>点击抽奖</text>
               <text class="iconfont icon-btn_log cny-btn-log-icon" />
             </view>
-            <view
-              v-if="activityStatus === 3"
-              id="look-winners"
-              class="cny-btn"
-              @tap="lookWinners"
-            >
+            <view v-if="activityStatus === 4" id="look-winners" class="cny-btn" @tap="lookWinners">
               <text> 查看中奖名单</text>
               <text class="iconfont icon-btn_log cny-btn-log-icon" />
             </view>
@@ -148,18 +90,15 @@
           <view class="cny-content-time-line">
             <view class="cny-content-time-line-left">
               <view class="cny-content-bottom-left-text">
-                <text>1.1 – 1.10</text><text>获得抽奖机会</text> 
+                <text>1.1 – 1.10</text><text>获得抽奖机会</text>
               </view>
               <view class="cny-content-bottom-left-text">
                 <text>1.18 10:00–22:00</text><text>开启抽奖活动</text>
               </view>
               <view class="cny-content-bottom-left-text">
-                <text>1.19 10:00</text><text>公布获奖名单</text>
+                <text>1.19 10:00</text><text>公布中奖名单</text>
               </view>
-              <view
-                class="cny-content-bottom-left-text-last"
-                @tap="rulePupOptions.show=true"
-              >
+              <view class="cny-content-bottom-left-text-last" @tap="rulePupOptions.show = true">
                 <text>查看活动细则</text>
                 <text class="iconfont icon-cny_bookmark" />
               </view>
@@ -168,24 +107,17 @@
               <view class="cny-content-bottom-right-text">
                 费德勒亲笔签名卡片
               </view>
-              <view
-                class="image-container"
-                :style="{background: `url(${cnyImg.cny_prize})`,backgroundSize: '102%',
-                         backgroundPosition: 'center'}"
-              />
+              <view class="image-container" :style="{
+                background: `url(${cnyImg.cny_prize})`, backgroundSize: '102%',
+                backgroundPosition: 'center'
+              }" />
             </view>
           </view>
-          <view
-            v-if="activityStatus === 3"
-            class="cny-winners-list-container"
-          >
+          <view v-if="activityStatus === 4" class="cny-winners-list-container">
             <view class="cny-winners-list-title">
               <view class="cny-winners-list-title-left" />
               <view class="cny-winners-list-title-right">
-                <image
-                  :src="cnyImg.cny_lucky"
-                  mode="widthFix"
-                />
+                <image :src="cnyImg.cny_lucky" mode="widthFix" />
               </view>
             </view>
             <view class="cny-winners-list-content">
@@ -196,11 +128,7 @@
                     中奖名单
                   </view>
                   <view class="cny-winners-items">
-                    <view
-                      v-for="(item,index) in cnyPrizeList"
-                      :key="index"
-                      class="cny-winners-item"
-                    >
+                    <view v-for="(item, index) in cnyPrizeList" :key="index" class="cny-winners-item">
                       {{ item.mobile }}
                     </view>
                   </view>
@@ -208,127 +136,85 @@
               </view>
             </view>
           </view>
-          <view
-            v-if="activityStatus < 1"
-            class="cny-content--time-line-bottom"
-          >
+          <view v-if="activityStatus < 2" class="cny-content--time-line-bottom" @tap="gotoBuy">
             <view class="cny-content-bottom-bottom-left">
               <text>下滑</text>
               <text style="margin-top: 20rpx;">
-                获得好运机会
+                选购商品
               </text>
             </view>
             <view class="cny-content-bottom-bottom-right iconfont icon-cny_arrow_big" />
           </view>
-          <view
-            v-else
-            class="cny-content--time-line-bottom"
-          >
-            <view class="cny-content-bottom-bottom-left more">
+          <view v-else class="cny-content--time-line-bottom">
+            <view class="cny-content-bottom-bottom-left more" @tap="toMore">
               <text>查看</text>
               <text style="margin-top: 20rpx;">
-                更多商品
+                THE ROGER系列产品
               </text>
             </view>
-            <view class="cny-content-bottom-bottom-right gold iconfont icon-cny_arrow_big" />
+            <view class="cny-content-bottom-bottom-right gold iconfont icon-cny_arrow_big" @tap="toMore" />
           </view>
         </view>
         <view>
-          <view
-            id="cny-cms-content"
-            class="cny-cms-content"
-          >
+          <view id="cny-cms-content" class="cny-cms-content">
             <view class="parting-line-container">
-              <view class="line-1" />
+              <view class="line-1" :class="{ lengthen: activityStatus > 1 }" />
               <view class="line-2" />
             </view>
-            <loadCms page-key="luckydraw_roger" />
+            <loadCms v-if="activityStatus === 1" page-key="luckydraw_roger" />
           </view>
-          <view class="cny-content-bottom">
+          <view v-if="activityStatus === 1" class="cny-content-bottom">
             <view class="cny-content-bottom-top">
-              <view
-                class="come-back"
-                @tap="toTop"
-              >
+              <view class="come-back" @tap="toTop">
                 <text>返回顶部</text>
                 <text class="iconfont icon-cny_arrow come-back-icon" />
               </view>
             </view>
             <view class="cny-content-bottom-bottom">
-              <image
-                :src="cnyImg.cny_bottom"
-                mode="widthFix"
-              />
+              <image :src="cnyImg.cny_bottom" mode="widthFix" />
             </view>
           </view>
         </view>
       </view>
       <view>
         <!-- 弹窗 - 登录方式引导 -->
-        <LoginGuideVue
-          :options="loginGuideOptions"
-          @hide="onHideGuideClose"
-          @success="onLoginSuccess"
-          @confirm="onGuestConfirm"
-        />
+        <LoginGuideVue :options="loginGuideOptions" @hide="onHideGuideClose" @success="onLoginSuccess"
+          @confirm="onGuestConfirm" />
         <!-- 授权头像昵称 -->
-        <GetNameAvator
-          :options="avator"
-          @close="closeAvatorPup"
-        />
+        <GetNameAvator :options="avator" @close="closeAvatorPup" />
         <view>
-          <ActivityPup 
-            :show="pupOptions.show"
-            :bg-color="'rgba(0,0,0,0)'"
-            :custom-style="{width: '100%'}"
-            :bg-style="{background:'rgba(0,0,0,0.8)'}"
-            :show-close="false"
-            @close="closePup"
-          >
-            <Poster
-              :win-or-not="winOrNot"
-              :img-url="winOrNot ? activityInfo.win_prize_image : activityInfo.not_win_prize_image"
-              :mobile="`${mobile}`"
-              @close="closePup"
-            />
+          <ActivityPup :show="pupOptions.show" :bg-color="'rgba(0,0,0,0)'" :custom-style="{ width: '100%' }"
+            :bg-style="{ background: 'rgba(0,0,0,0.8)' }" :show-close="false" @close="closePup">
+            <Poster :win-or-not="winOrNot"
+              :img-url="winOrNot ? activityInfo.win_prize_image : activityInfo.not_win_prize_image" :mobile="`${mobile}`"
+              @close="closePup" />
           </ActivityPup>
         </view>
         <view class="record-list">
-          <ActivityPup 
-            :show="recodPupOptions.show"
-            :bg-color="'rgba(250, 247, 246, 1)'"
-            :is-bottom="true"
-            :bg-style="{background:'rgba(0, 0, 0, 0.1)'}"
-            :custom-style="{borderRadius: '32rpx  32rpx  0px  0px'}"
-            @close="closePup"
-          >
+          <ActivityPup :show="recodPupOptions.show" :bg-color="'rgba(250, 247, 246, 1)'" :is-bottom="true"
+            :bg-style="{ background: 'rgba(0, 0, 0, 0.1)' }" :custom-style="{ borderRadius: '32rpx  32rpx  0px  0px' }"
+            @close="closePup">
             <view>
               <view class="cny-pup-header">
-                <image
-                  class="cny-pup-header-icon"
-                  mode="widthFix"
-                  src="@/assets/images/icons/logo-with-bg.svg"
-                />
+                <image class="cny-pup-header-icon" mode="widthFix" src="@/assets/images/icons/logo-with-bg.svg" />
                 <text> 抽奖记录</text>
               </view>
               <view class="cny-record-user-info">
-                用户手机号码：{{ cnyRecordList && cnyRecordList.user_info && cnyRecordList.user_info.mobile && desensitizify(cnyRecordList.user_info.mobile) }}
+                用户手机号码：{{ cnyRecordList && cnyRecordList.user_info && cnyRecordList.user_info.mobile &&
+                  desensitizify(cnyRecordList.user_info.mobile) }}
               </view>
-              <view
-                class="cny-record-item-list"
-                style="width: 100%;min-height: 300rpx;overflow: hidden;"
-              >
+              <view class="cny-record-item-list" style="width: 100%;min-height: 300rpx;overflow: hidden;">
                 <!-- <view class="record-item">
                 <text>2024.1.23 13:34:34</text>
                 <text style="margin-left: 40rpx;">抽奖结果：未中奖</text>
               </view> -->
-                <view
-                  v-for="(item, index) in cnyRecordList.record_list"
-                  :key="index"
-                  class="record-item"
-                >
+                <view v-if="!cnyRecordList.record_list || (cnyRecordList.record_list.length === 0)"
+                  class="record_list_no">
+                  暂无抽奖记录
+                </view>
+                <view v-for="(item, index) in cnyRecordList.record_list" :key="index" class="record-item">
                   <text>{{ item.created_at }}</text>
-                  <text style="margin-left: 40rpx;">
+                  <text style="width: 300rpx;">
                     抽奖结果：{{ item.status_desc }}
                   </text>
                 </view>
@@ -336,36 +222,21 @@
             </view>
           </ActivityPup>
         </view>
-        <view class="rule-pup">
-          <ActivityPup 
-            :show="rulePupOptions.show"
-            :bg-color="'rgba(250, 247, 246, 1)'"
-            :is-bottom="true"
-            :custom-style="{bottom:'-100%',borderRadius: '32rpx 32rpx 0px 0px'}"
-            :bg-style="{background:'rgba(0, 0, 0, 0.1)'}"
-            @close="closePup"
-          >
-            <view>
-              <view class="cny-pup-header">
-                <image
-                  class="cny-pup-header-icon"
-                  mode="widthFix"
-                  src="@/assets/images/icons/logo-with-bg.svg"
-                />
-                <text> 活动细则</text>
-              </view>
-              <view
-                style="width: 100%;height: 60vh;"
-                class="rule-content"
-              >
-                <image
-                  :src="ruleImg"
-                  mode="widthFix"
-                />
-              </view>
+      </view>
+      <view class="rule-pup">
+        <ActivityPup :show="rulePupOptions.show" :bg-color="'rgba(250, 247, 246, 1)'" :is-bottom="true"
+          :custom-style="{ bottom: '-100%', borderRadius: '32rpx 32rpx 0px 0px' }"
+          :bg-style="{ background: 'rgba(0, 0, 0, 0.1)' }" @close="closePup">
+          <view>
+            <view class="cny-pup-header">
+              <image class="cny-pup-header-icon" mode="widthFix" src="@/assets/images/icons/logo-with-bg.svg" />
+              <text> 活动细则</text>
             </view>
-          </ActivityPup>
-        </view>
+            <view style="width: 100%;height: 60vh;" class="rule-content">
+              <image :src="ruleImg" mode="widthFix" />
+            </view>
+          </view>
+        </ActivityPup>
       </view>
     </view>
   </Pager>
@@ -385,7 +256,8 @@ import {
   hideCustomLoading,
   fixCMSPath,
   getUCenterInfo,
-  desensitizify
+  desensitizify,
+  makeShare
 } from "@/utils";
 import {
   getCnyInfo,
@@ -397,35 +269,37 @@ import {
   shuffleAndFixIndexToPosition
 } from "../../utils";
 export default {
-  name: "Club",
+  name: "CNY",
   components: {
     Pager, slotMachine,
     LoginGuideVue, GetNameAvator,
     loadCms, ActivityPup,
     Poster,
-},
+  },
   data() {
     return {
       pageOptions: {
         backgroundColor: "#B22526",
       },
-      avator:{
+      avator: {
         visible: false,
         position: "bottom",
+        hideNickName: true,
         theme: "white", // 主题  black | white
         needWxAuth: true, //是否使用微信授权
         afterHandler: "",
         afterHandlerData: {},
-        from:'Ucenter', //个人中心 Ucenter
-        formLabel:{
-          name:'姓名',
-          pic:'头像'
+        from: 'Ucenter', //个人中心 Ucenter
+        formLabel: {
+          name: '姓名',
+          pic: '头像'
         },
         formData: {
-          name:'',
+          name: '',
           pic: '',
         },
       },
+      confirmPic: true,
       /**
        * LoginGuide 配置选项
        */
@@ -437,31 +311,34 @@ export default {
         afterHandler: "",
         afterHandlerData: {},
       },
-      templateIds:['_f3R5iifkIaOpkzWB4Y5 SVcYX7bHwU3DyxxPKoi76wQ'],
+      templateIds: {},
       startDraw: false,
       winOrNot: false,
-      slotLength: 30,
-      rawSlotItems:[],
-      slotItems:[['http://oss.on-running.cn/crm/roger-lucky-draw/01.png'], ['http://oss.on-running.cn/crm/roger-lucky-draw/01.png'], ['http://oss.on-running.cn/crm/roger-lucky-draw/01.png'], ['http://oss.on-running.cn/crm/roger-lucky-draw/01.png']],
+      slotLength: 25,
+      slotTime: 8,
+      rawSlotItems: [],
+      firstItem: [],
+      slotItems: [[], [], []],
       qualifyNum: 0,
-      activityInfo:{},
+      activityInfo: {},
       activityStatus: 0,
-      pupOptions:{
+      pupOptions: {
         show: false
       },
-      recodPupOptions:{
+      recodPupOptions: {
         show: false
       },
-      rulePupOptions:{
+      rulePupOptions: {
         show: false
       },
       isMember: 0,
       ruleImg: '',
-      cnyPrizeList:[],
+      cnyPrizeList: [],
       cnyRecordList: {},
-      mobile:'',
+      mobile: '',
       countDownTime: '',
-      countDownTimer: null
+      countDownTimer: null,
+      isSubcribe: false
     };
   },
   computed: {
@@ -475,7 +352,7 @@ export default {
       option.title = title;
       return option;
     },
-    cnyImg(){
+    cnyImg() {
       return {
         cny_bottom: 'https://oss.on-running.cn/crm/roger-lucky-draw/cny_bottom_new.svg',
         cny_lucky: 'https://oss.on-running.cn/crm/roger-lucky-draw/cny_lucky.svg',
@@ -484,20 +361,49 @@ export default {
         cny_text_02: 'https://oss.on-running.cn/crm/roger-lucky-draw/cny_text_06.svg',
         cny_text_03: 'https://oss.on-running.cn/crm/roger-lucky-draw/cny_text_05.svg',
       }
+    },
+    /**
+     * 小程序`胶囊按钮`尺寸及位置
+     */
+    wxMenuButtonRect() {
+      return Taro.getMenuButtonBoundingClientRect();
+    },
+    /**
+     * `Header` 外观尺寸及背景色
+     */
+    headerHeight() {
+      const { top } = this.wxMenuButtonRect;
+      return `${Number(top) + 39}px`;
+    },
+    shareData() {
+      let share_title = '"费"来福运抽奖活动'
+      let args = ''
+      return {
+        title: share_title,
+        args,
+        page: `campaignPage/pages/campaignCNY24/index`
+      }
     }
+  },
+  onPullDownRefresh() {
+    wx.stopPullDownRefresh()
+  },
+  onReachBottom() {
+    return false
   },
   async mounted() {
     showCustomLoading();
     await this.$store.state.loginPromise;
-    this.isMember = Taro.getStorageSync('lw_loginStatus')
-    if(!this.isMember){
+    this.isMember = Taro.getStorageSync('lw_loginStatus') || Taro.getStorageSync('isUserMember')
+    if (!this.isMember) {
       this.loginGuideOptions.visible = true
-    }else{
+    } else {
       await getUCenterInfo()
       const userInfo = Taro.getStorageSync('userInfo')
-      if(!userInfo || !userInfo.avatarUrl){
+      if (!userInfo || !userInfo.avatarUrl) {
         this.avator.visible = true
-      }else{
+        this.confirmPic = false
+      } else {
         this.avator.formData = {
           name: userInfo.nickName,
           pic: userInfo.avatarUrl,
@@ -505,252 +411,311 @@ export default {
         this.mobile = userInfo.mobile
       }
     }
-    await this.getCnyInfo() 
-    setTimeout(()=>{
+    await this.getCnyInfo()
+    this.templateIds = this.$store.state.templateId[process.env.NODE_ENV].templateIds.CNY2024
+    setTimeout(() => {
       hideCustomLoading();
-    },2000)
+    }, 2000)
   },
   async onLoad() {
-    let {shopCode = "" } =
+    let { shopCode = "" } =
       Taro.getCurrentInstance().router.params;
     showCustomLoading();
     // this.codeUrl='http://on-running.oss-cn-shanghai.aliyuncs.com/cms_stage/images/74670e5b0201a9285b4801ab865b6109.jpg'
-    this.codeUrl=shopCode
-    Taro.hideShareMenu();
+    this.codeUrl = shopCode
+    //  Taro.hideShareMenu();
     Taro.loadFontFace({
       family: 'fusion-pixel-10px-monospaced-zh_hans',
-      source: 'url("https://oss.on-running.cn/static/wxmp/fusion-pixel-10px-monospaced-zh_hans.woff2")',
+      source: 'url("https://6f6e-on-running-4ghwjrhf73b078d7-1312905953.tcb.qcloud.la/icon-font/Fusion-Pixel-10px-Monospaced-zh_hans-Regular.woff2?sign=1bcae92621bffe60ce6d6706bf1d3f1c&t=1701655012")',
+      scopes: ['native', 'webview'],
+      complete(res) {
+        console.log('loadFontFace----complete----------', res)
+      }
     })
   },
   methods: {
+    noQualifyNum() {
+      if (this.qualifyNum < 1) {
+        Taro.showToast({ title: "暂未获得抽奖机会", icon: 'none' })
+      }
+    },
+    notStart() {
+      Taro.showToast({ title: "活动未开始，敬请期待", icon: 'none' })
+    },
+    toMore() {
+      Taro.navigateTo({ url: '/campaignPage/pages/landing/index?key=luckydraw_roger' })
+    },
     fixCMSPath,
     /**
      * 图片预览
      */
-     onPreviewImage() {
+    onPreviewImage() {
       const code = this.fixCMSPath(this.codeUrl, 1125)
       const imageSet = [code];
       if (code) {
         Taro.previewImage({ current: code, urls: imageSet });
       } else {
-        console.warn('@onPreviewImage::','二维码路径不存在');
+        console.warn('@onPreviewImage::', '二维码路径不存在');
       }
     },
-    onHideGuideClose(){
+    onHideGuideClose() {
       this.loginGuideOptions.visible = false
+      this.isMember = Taro.getStorageSync('lw_loginStatus') || Taro.getStorageSync('isUserMember')
     },
-    onLoginSuccess(){
+    onLoginSuccess() {
+      this.loginGuideOptions.visible = false
       const userInfo = Taro.getStorageSync('userInfo')
-      if(!userInfo || !userInfo.avatarUrl){
+      if (!userInfo || !userInfo.avatarUrl) {
         this.avator.visible = true
-      }else{
+        this.confirmPic = false
+      } else {
         this.avator.formData = {
           name: userInfo.nickName,
           pic: userInfo.avatarUrl,
         }
         this.mobile = userInfo.mobile
       }
+      this.isMember = Taro.getStorageSync('lw_loginStatus') || Taro.getStorageSync('isUserMember')
+      this.getCnyInfo()
     },
-    onGuestConfirm(){
-
+    onGuestConfirm() {
+      this.loginGuideOptions.visible = false
+      this.isMember = Taro.getStorageSync('lw_loginStatus') || Taro.getStorageSync('isUserMember')
     },
-    closeAvatorPup(){
+    closeAvatorPup(e) {
       this.avator.visible = false
+      if (e === 'update') {
+        this.confirmPic = true
+      }
     },
-    subscribe(){
+    subscribe() {
+      if (this.isSubcribe) {
+        return Taro.showToast({ title: "订阅成功，敬请期待", icon: 'none' });
+      }
+      const templateId = this.templateIds && this.templateIds.activityStart
       Taro.requestSubscribeMessage({
-        tmplIds: this.templateIds,
+        tmplIds: [templateId],
         success: async (sres) => {
-          const arr = []
-          let subscribeSuc = false
-          this.tempIds.map((item)=>{
-            if(sres[item.id] === 'accept'){
-              arr.push(item.index)
-              item.isSub = true
-              if(!subscribeSuc){
-                Taro.showToast({ title: "订阅成功", icon: 'none'});
-                subscribeSuc = true
-              }
-            }
-            return item
-          })
-          // await recordSubcribe({type: arr})
-          // this.$emit('recordsub')
+          console.log('sres---------', sres)
+          if (sres[templateId] === 'accept') {
+            cnyRecordSubcribe({ type: 6 })
+            this.isSubcribe = true
+            Taro.showToast({ title: "订阅成功", icon: 'none' });
+          }
         },
-        complete(sres){
-          if(sres.errMsg.includes('requestSubscribeMessage:fail')){
-            Taro.showToast({ title: "订阅失败", icon: 'none'});
+        complete(sres) {
+          if (sres.errMsg.includes('requestSubscribeMessage:fail')) {
+            Taro.showToast({ title: "订阅失败", icon: 'none' });
           }
         }
       })
     },
     // 抽奖
-    async drawLottery(){
-      wx.vibrateLong()
+    async drawLottery() {
+      wx.vibrateShort({
+        type: 'heavy'
+      })
       const res = await cnyDraw()
-      if(res.code === 200 && res.data && res.data.flag){
+      if (res.code === 200 && res.data && res.data.flag) {
         this.winOrNot = res.data.flag
+      } else {
+        this.winOrNot = false
       }
       this.slotItems = [
-          this.adaptSlotItems(this.rawSlotItems),
-          this.adaptSlotItems(this.rawSlotItems),
-          this.adaptSlotItems(this.rawSlotItems)
-        ]
+        this.adaptSlotItems(this.rawSlotItems, 0),
+        this.adaptSlotItems(this.rawSlotItems, 1),
+        this.adaptSlotItems(this.rawSlotItems, 2)
+      ]
       this.startDraw = true
       this.getQualify()
     },
     // 结束滚动展示中奖结果
-    endDraw(){
+    endDraw() {
       this.startDraw = false
       this.pupOptions.show = true
     },
-    async getCnyInfo(){
-     const res = await getCnyInfo();
-     if(res.code === 200){
-      const activityInfo = res.data?.activity_info
-      this.activityInfo = activityInfo
-      this.activityStatus = activityInfo.status
-      clearTimeout(this.countDownTimer)
-      if(activityInfo.status === 1){
-        this.countDownTimer = this.countDown(activityInfo)
-      }      
-      // 中奖列表
-      if(activityInfo.status === 3){
-        this.getCnyPrizeList()
+    async getCnyInfo() {
+      const res = await getCnyInfo();
+      if (res.code === 200) {
+        const activityInfo = res.data?.activity_info
+        this.activityInfo = activityInfo
+        this.activityStatus = activityInfo.status || 0
+        this.qualifyNum = res.data.left_qualify_num
+        this.isSubcribe = res.data.has_subscribe
+        clearTimeout(this.countDownTimer)
+        if (activityInfo.status === 2) {
+          this.countDownTimer = this.countDown(activityInfo)
+        }
+        // 中奖列表
+        if (activityInfo.status === 4) {
+          this.getCnyPrizeList()
+        }
+        this.ruleImg = activityInfo.lucky_draw_rule
+        if (activityInfo.image_list && activityInfo.image_list.length > 3) {
+          this.firstItem = activityInfo.image_list.slice(0, 3)
+        }
+
+        this.rawSlotItems = activityInfo.image_list.filter((item, index) => {
+          if (index > 2) {
+            item.image_url = this.fixCMSPath(item.image_url, 1125)
+            return item
+          }
+        })
+        this.slotItems = [
+          this.adaptSlotItems(this.rawSlotItems, 0),
+          this.adaptSlotItems(this.rawSlotItems, 1),
+          this.adaptSlotItems(this.rawSlotItems, 2)
+        ]
+        console.log(this.slotItems)
       }
-      this.ruleImg = activityInfo.lucky_draw_rule
-      this.rawSlotItems = activityInfo.image_list.map((item)=>{
-        item.image_url = this.fixCMSPath(item.image_url, 1125)
-        return item
-      })
-      this.slotItems = [
-        this.adaptSlotItems(this.rawSlotItems),
-        this.adaptSlotItems(this.rawSlotItems),
-        this.adaptSlotItems(this.rawSlotItems)
-      ]
-      console.log(this.slotItems)
-     }
     },
-    async getQualify(){
+    async getQualify() {
       const res = await getCnyQualify()
-      if(res.code === 200){
+      if (res.code === 200) {
         this.qualifyNum = res.data.left_qualify_num
       }
     },
     // shuffleArrayWithFixedItemAndNoAdjacentDuplicates
-    adaptSlotItems(rawSlotItems){
-        if(!rawSlotItems || rawSlotItems.length === 0){
-          return []
+    adaptSlotItems(rawSlotItems, itemIndex) {
+      if (!rawSlotItems || rawSlotItems.length === 0) {
+        return []
+      }
+      let winItem = null
+      winItem = rawSlotItems.filter((item, index) => {
+        item.index = index
+        return item.is_prize_image
+      })[0]
+      let slotItems = []
+      while (slotItems.length < this.slotLength) {
+        let slotItemsArr = []
+        if (winItem && this.winOrNot) {
+          slotItemsArr = shuffleAndFixIndexToPosition(rawSlotItems, winItem.index, rawSlotItems.length - 2)
+        } else {
+          slotItemsArr = shuffleAndFixIndexToPosition(rawSlotItems)
         }
-        let winItem = null
-        winItem = rawSlotItems.filter((item, index)=>{
-          item.index = index
-          return item.is_prize_image
-        })[0]
-        console.log('winItem----------', winItem)
-        let slotItems = []
-        while(slotItems.length < this.slotLength){
-          let slotItemsArr = []
-          if(winItem && this.winOrNot){
-            slotItemsArr = shuffleAndFixIndexToPosition(rawSlotItems, winItem.index, rawSlotItems.length - 2)
-          }else{
-            slotItemsArr = shuffleAndFixIndexToPosition(rawSlotItems)
-          }
-          slotItems = slotItems.concat(slotItemsArr)
-        }
-        const firstSlotItemsArr = shuffleAndFixIndexToPosition(rawSlotItems, winItem.index, 0)
-        slotItems = slotItems.slice(slotItems.length - this.slotLength, slotItems.length)
-        slotItems.splice(0,firstSlotItemsArr.length, ...firstSlotItemsArr)
-        return slotItems.map((item)=>{
-          return item.image_url
-        })
+        slotItems = slotItems.concat(slotItemsArr)
+      }
+      const firstSlotItemsArr = shuffleAndFixIndexToPosition(rawSlotItems, winItem.index, 0)
+      slotItems = slotItems.slice(slotItems.length - this.slotLength, slotItems.length)
+      slotItems.splice(0, firstSlotItemsArr.length, ...firstSlotItemsArr)
+      slotItems[0] = this.firstItem[itemIndex]
+      return slotItems.map((item) => {
+        return item.image_url
+      })
     },
-    closePup(){
+    closePup() {
       this.pupOptions.show = false
       this.recodPupOptions.show = false
       this.rulePupOptions.show = false
+      this.winOrNot = false
     },
-    toTop(){
+    toTop() {
       wx.pageScrollTo({
         scrollTop: 0,
         duration: 300
       })
     },
-    async  getCnyPrizeList(){
-     const res = await getCnyPrizeList()
-     if(res.code === 200){
-      this.cnyPrizeList = res.data
-     }
+    async getCnyPrizeList() {
+      const res = await getCnyPrizeList()
+      if (res.code === 200) {
+        this.cnyPrizeList = res.data
+      }
     },
-    async getCnyRecordList(){
-    const res = await getCnyRecordList()
-     if(res.code === 200){
-      this.cnyRecordList = res.data
-      this.recodPupOptions.show=true
-     }
+    async getCnyRecordList() {
+      const res = await getCnyRecordList()
+      if (res.code === 200) {
+        this.cnyRecordList = res.data
+        this.recodPupOptions.show = true
+      }
     },
-    desensitizify(data){
-      if(data){
+    desensitizify(data) {
+      if (data) {
         return desensitizify('mobile', data)
       }
     },
-    gotoBuy(){
+    gotoBuy() {
       wx.pageScrollTo({
         selector: '#cny-cms-content',
         duration: 300,
         offsetTop: -100
       })
     },
-    lookWinners(){
+    lookWinners() {
       wx.pageScrollTo({
         selector: '#look-winners',
         duration: 300,
         offsetTop: 100
       })
     },
-    countDown(activityInfo, isLoop){
-      if(!activityInfo){
+    countDown(activityInfo, isLoop) {
+      if (!activityInfo) {
         return ''
       }
-     
-      const {date_type, left_time} = activityInfo
-      if(date_type === 0){
+
+      const { date_type, left_time } = activityInfo
+      if (date_type === 0) {
         this.countDownTime = ` ${left_time} 天`
         return
       }
-      if(date_type === 1){
+      if (date_type === 1) {
         this.countDownTime = ` ${left_time} 小时`
-        return setTimeout(()=>{
+        return setTimeout(() => {
           this.getCnyInfo()
         }, 1800000)
       }
-      if(date_type === 2){
+      if (date_type === 2) {
         this.countDownTime = ` ${left_time} 分钟`
-        return setTimeout(()=>{
+        return setTimeout(() => {
           this.getCnyInfo()
         }, 60000)
       }
-      if(date_type === 3){
-        if(isLoop){
-          this.activityInfo.left_time --
+      if (date_type === 3) {
+        if (isLoop) {
+          this.activityInfo.left_time--
         }
-        if(this.activityInfo.left_time === 0){
+        if (this.activityInfo.left_time === 0) {
           this.getCnyInfo()
           return
         }
         this.countDownTime = ` ${this.activityInfo.left_time}  秒`
-        return setTimeout(()=>{
+        return setTimeout(() => {
           this.countDown(activityInfo)
         }, 500)
       }
+    },
+    toLogin() {
+      if (!this.isMember) {
+        this.loginGuideOptions.visible = true
+      }
     }
-  }
+  },
+  /**
+  * 页面分享设置
+  */
+  onShareAppMessage(evt) {
+    let share_image = this.activityInfo.share_card_image || ''
+    const promise = makeShare(this.shareData.args, this.shareData.page, this.shareData.title, share_image)
+    return {
+      promise
+    };
+  },
+  onShareTimeline() {
+    let share_image = this.activityInfo.share_moments_image || ''
+    const promise = makeShare(this.shareData.args, this.shareData.page, this.shareData.title, share_image)
+    return {
+      title: this.shareData.title,
+      query: this.shareData.args,
+      imageUrl: fixCMSPath(share_image),
+      promise
+    };
+  },
 };
 </script>
 
 <style lang="scss">
 @font-face {
-  font-family: "iconfont"; /* Project id 3549473 */
+  font-family: "iconfont";
+  /* Project id 3549473 */
   src: url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAABK4AAsAAAAAIyQAABJoAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHFQGYACIHAqvPKZVATYCJAOBJAtUAAQgBYRnB4N+G6cdFeOYFbBxACC+vUCy/z8nJ2MIlGzbNbuRIxNV0dz4TSyRiKgHuTYXtjeMRi6HSPHCsznZukqHL9t3Oak4TNZ/fZo+2NLjy4T5wHJPnKuGlTNG+fCUyLdDBHmwoZRQ0Nj/5vSZSf4/dEFaoGqkNEInFbouiUo9AuBY3leuMiiSJlDho0jbBDcf8ACjsIFn0Fo6sxuc2b3PB0jp6GhgaDnEdyWPqsZXqMq0BwAKuAbA8LTNf2iDFVOMnHCgm9OeWICNgl6YsYnRuARWbrAyaun/a1w1Rq2NHweswkWEkgABBASqS042AaNXT9SydxrW7k/1621YGBY7xx//dr2ufjIITCJLPiGnhHkDCAz8a0AAgf+qGxpjWsdLsBsz42soy8ulW5fGe4gijmX7da2fn0vtpQDgiN5YGLQiPzn6Sa7AuZQo5XSUDJAloAJySYmW6wBBTRL7CecnlJzOKYV46AXFQaJmFstZh1TunCgQp+nGgJq97HowIO9qWnBm8MufvWJn2XivXxjf0SCb3uxsZ9hrWWTzDdMbWUakDhh+sJXBXjkOvohPb/7c0wMrhOAX9LTxNu79feb5taZo5d68H24+dGxBAA4cHcux8eYKE8QpfBRsXqf0vgMYyl3cieJn6Fn62XJiMoxmZhdXH3i+VX0RnkUagjlcIi0sd9HicakxVKvbD+41SIwHzmHqPEBBTl6WF0QZzim3GjVr0iLEBvXq2H/n1ahWpVKFcmVKFCuSUVZRlSdfgUJZRVOlmCh82iLAFnoNB0QIAQVIA5CDNAF5SBuQhXQAHtJlaOL0wABOHwzgiABYiARwkAHAQPGALeIAligRsEZcwArxABuUTFM5GIAFQgFzlAaYoXQ64zIAmKBMwBhlA0YoFzBEeYABygf0UQGghwoBHVQEaKNiQAstApSgxYAyVAqoQHxAFZUBaqgcUEcVgAaqBDRRFT0cVw1AEToAmPJ36yx0AXZxPy8AX8usALl7eI4ZFRU48YLEQeHsD/bMGBKh3jPs5SqtyWH4RboRYhA5ZaxS/hGETPuTPCC0qrqZdg9rUT3TsFRkQZfBqR21fbWiwLB0UFqiWmvbjSS+WCxp0S8ueqaEhF8/S7M+RiTJTfumn+s14/Ot/m4G+emi5Tffd8zLbvWilGH913R699XIK62n5dXjohPXpDdOiU9eR0B626LACEZCpVIRHGlQ890DSjwQlU1EGIWRQyv2ScMQbJkhkgytOkhQIYHo0wI1EI3RrwUfEs3K92rwPgucQvkRNZ5SAMafJOZd+aR9KooJgiYaxo06TzaO7WEIKYylibj8/ejlvp4jlwYR6aB4YKxP1A9LVVMEXo37jimjzk6q7AnFyKhXJvZD+65gQjxl3YGjCWcog1GcCnZIyHXFdlqkULvbP6hS+JuCz0dJvFYqcVjMRIi4UihUSTbjuFKpW9dpyykZVAVZIocUOKWQuLuGkDZ7OndboVYde7OMyoOiQ6Ra1SuW8SU43gVtYzREL7BYpZIqFCIclyiVGtoykFjNJOUFnf05SiWxucavWrwz4hdt3hdZcfcwpAQtRNASpBA2JbQJDJh/T0kn7EnQj3HJJFM8KO0X9UkGigz+KxyI9DLe8KDcktQWXYHvTC+YZHxINDwhnRoVj0ym5ua3Ld3bvpqRSWLSH7epgF1K4mQPC7fGaHAzJX1Y4EidCRZvPyDd1w3sVyn4V4GHp6aPKFWupsjtwxURaRmjKqXweE4vBCqVlmj2K/CQwuIBpYovu36UI0pEUFGJnA3Ob5qbT6stAeYY8zQpVAyBxowBJUoNdW2VLZl52aEcimgLTVt4Mf9u9zLccw+3F31Wm6i+JLEH8UDRye1m4IHo+vjCa2HR0X31WaUJ3J480NQa14DYYVwJ52U2UO25zyk13oHizHb361dtD4PRDvt+ro1MBLwn93UMWNZwGJBEljXCS4OyTqUhLwn0uGWGVPqxs2jkbQdeqi+6lCcqEl90Zxe4dqXHVcYts3FAoMpt20nmdSefCE+EHAc0Upw2lDltluWQZoszTwmm6HEafRnyQIrxalXnmKFXEykInIwZ8fRFiSolMI7TYQBRIP9yLgS1S63lC6dSVJiKcL1oMnEpdUJSx9sZFACMw+PZZ5iI9EmU4sVdE9XC2mqYGEKwKmMWh5O8wuIURNez4ZgHh4R3EMcchHzdYPb74HEJ2m+mGDOBpUbtikZRzEiLOWLUITKYDKNoiqxrBQxBG4S5h1fIMN9rLUpDCqi5eZR8GOJLDgIDsmsZcZzXu6zqjqmktO0ACQ5XOy0PkXJF69xNiOZeDlcHiamUEWaDosN7fvifOUq4VnptJ/RPeJ8A4CEYTJwmlnHXk0l/SJXHBfczpCoAyZdctoIJ/14IlnuSqkzAUh5t9yPMjE2pCNeRI0riNtUGvE9wwKZEJu6VHjK0cLmyvB1A75SVwaCBS9YwE4YOl3zTvxy303rDBjObfOz2hVbI5PKsGIjRD8zporQF9lH67A6nXfYbivqviLbCnYnOHG2EguK4UrlM2g6Wo2RdtRFTSKaygxATOtZ4Uo6Qne711TVg9YKclNTm1S0TWcBtkg6xNWYUR3aSjNHepZZIO4ZNRg54dVjRBsP+T1oXBUatwy4EYUdHywxK2Ygne5XbF95fsH+sr8emgLKP2h8xFPJPDE687B9yDSGpsKmUwXlkW2WuZG7YuUHHsO6eoatOriLH7OnQ6awwjqea+KjgwB+XWwJBvaDBlfsPenHongleRxIDvecDh54cBgC1xCyNG+rVmBU6MgQNoW9J4xKB4CbzxfqGundvPr4DFp+XJlWJWPWgauA+yisrqypzFG8BvJuPePM2CgkraQ6Vl8rDMWiu56Xx5jsReEre/RUTyYICmKvkzlCmDRY0G9QIaqqrBdWgSmY3PPFQ3rNBhmsYU/2vBCmfLg9mDWWJwtKhwcyNrBy6CC4qXp056GcMWcMqMrl1xLKEPwHNTTOZ9IgtOSYoOvzORKWtCM6x2eIASMevhfBByO0eEnAQ5pAXAhiSoTK1AoEQGo+AIBFqF0FQjqqKKECFVB0dpMlkOxAAkT6isYmxsbBsfGzdjcipiY+tGp/ZxvR/G1R4vvxaN6fOPiPJs0JP8CS8PsYgMqpCELDKpEcVtTD/TG1e7mw2WROWuBzUPJl+cmxOUT7I0AgpRhGYFG4WUZKVPttNT+KA1rZots9Rj24UYV79eHZnpgniiJgwOVDjVKaHBzOZZKUnK9mLNl8fDPNZpKSmL2KMwWr1LAqfxm+w+4p8F9i3eHqKB4vpQQUiwLduBW8NZLdajur0D5w+naPNW6NV29LSKJB/PwdoAERAI6GsP5ZwrKgcKi8SH0oks/xgf9iPZbFEV18/AkG2M01/FiAXeHomJnpmJiaFmZ4c9WZwZCdd/2NEM/6LHl0YGzIy2eM2SnfLnps9z5PD8fRC/VNDzRK8Ej3pHK8c9xy3kBE31G2E7pYzN4fiGq1u+BwBeXTIvPo00A10JqsDm4VZTrmNhsSEjMbEi+3sZB5TVUc5cKYZ0xwG40lo6MWqTV4edTj60sSaMJ9g8p5Nl1o33/jCFn3vLLp9twpKOhzboKQcmWuNWX34ZT3RkW+yAqrPhZfZNLqAvlXjCY4pLBqXy6WskVxK5gsi2WoVNHk1wOXm4lvMW8XA8swtMHanGDY+g3nUuKSmvmR9JDzRoWhCLpcrE7QdJowjNAR6SUNo7W0IhFBfQgjU1pandD20ARFNpAgH4QoRDcIpARANkr3yHQDqMHuDoaBhUjBpKHjIILOUvMk9+LH92WZvfaANVpsuvmNA3z2Ldp9NdUWtDs1UHix3rzdfwhs3kX9CoamQtqQAXWm73BXYm6dNT28dWt1jbl4ldTh43aRlhtUysXYNpN12NtE8r5xxuXr2bJs2tGZtQ8xa34CGym8ltczU/zuCGgJ81zL+T2UWYN/mf9gY8zc3lv+e+oBFvRvwT3As9++Y1LtU1gPq+4XhHfoGgURvb93zjyS6iYyhBcRAA/3ExJp2QrZKrJT/l1m/55OF4PkundnUgWb1Pb44lVlb8q3SSNk9A6zA5CyMtb7+9ZXx/q6xs25mHyB+zTbRwpppmf3cZvTYs3po6/QFvW69c9dIf/1FuvZ52NqqnyM1N5POndPrBrAQ8UwcjyTbAACwWjLCAtHtp4azqNQlMqFCJKOJaL2NDggvg2lciUI00AuJIPXByhTC+6cl+MOWVuS9ZnxAWs8mDvCrybELLy6MtGXadbLJEeRJvrfdjhlX6l3swYuK939f7to+p901S+3PjqfwvIv4cbXEfAYvZh43dFF5ML0UTi6nNZIs0jKCy//q87i8GIY/ez7Xy4uba6Sl56ppHGZBZkQEU4IL7NbWzQmbW+0wfFC3XcqP5wN6zpEjalubsKq7N410sO6X9YOCj+az5jOfXXvLaKjwleuZEO1HvRcuFYaVMxYvZpSHzZKsQzMWh5XPVtQDgbAuOD8gNzcgP/iFknrogNzg/BfsyoD6FSuytprdpFEfGlOp07RQUB7P1IrYRtvWC/XGPUVEaJVGMarUVsF5gYF5dRaQF1RnVC0DgYVQrX6H1XYBKP+EwalXVrOWPlo+lrNWucU+5o/vXvfo8rh+97G5zwCU8Nz80d0bHss9btx9ZP48AcqmvnhuOWO13GrGsi8PQGAkfLfA24Zw11g+m+6YNJxgbZ1x/Q0z3j0yKZy+e2euu1PCeCCsY6JvVT11u3KBW3ROmO9B09FPuzJ6ygOFHNQ7bl50MhWmFaRsR+dFeccjqUh7LJRIvxz6yXTYKiXc9TFrSWzM5qXiGDYa7cZy4S0HWC/PxBVkW5uud21yFbg2XjRrTMhjX3/BrILkHgI1VLf1LGw3a6nCA2GBpHS6qankGLeW9Gth7QQGNbMbP0/OupwUO7/94+IREZ7T4MvFYt3CHaeu5BfVw5f2MMg/znTOMp6yfZ+Qg2Idu5jdjEPMLvBKlrAyLm5lJ8lK71R3UGIZHbRiUfrauRvM6+LiGszWz12Dnzx179TJKMYFWxmnaCdw/lyjXawtl0erGSpFkP3fqTc8MC2tJRoYjMvP6pN/+sz/xFY95P59xFRuisjlWXpyeOhl0UVU97gBLkxP9/4A9kpKde3XXf+YTDuUQkexexBkNhkWFR29Ty8jPCJTN03NclrPcpbm3opI4i7d1NTU+DJ49J6X07qd4Vd5EpYT2+Q9uBkJSMmAR/90qPgX/n8gJ/ChmRZs8p6ALJfNTwPL3jeq2un7771NwngZElPayMi9A1KnvhYD4NojCkgKomiDJFpv5DIXtp/n9ZtNh2qK3NHza0Qxife0l9JHbbmKF6sSHKZFlw5hudddfjA94RPENKNekZru/VCBN+aKo+pjKCtoFx4I0aeQIz9apCTm1csoQ6irgpb910VYDbsRuB2tDhx0qgiK+IZJwKz+g+Y3722K0ydJurR3ISNWf3NftKJkO6zZBONj/o74/ymc0h0h/9lvA6p/bHiULij3vRsQsuyUMR0l602gYaMzOg/xK2H3c9cFQ1sUmwh3ejM2MxyCxGamGZiwmmtYPpqnQDscu/MBaoLFI6X14IUArjeYN8vWIBtfiNgaWbyVMYh3suaEd93HBwX3+CjrMT7vYHbwgoYDRCacA9ZOJvFG1W28VfYNO53rA/ZwfYwP2r5whOt/fN5bGuorWHd4YCqCYXT9zpUgnJhm4mh/YZ4JtK72H2otqHa+fVFueo+M2kcvdZ2fzJJLKqN7N7swJBI3qSwxWDuYTc+LRdI53AYZ914rgmF0/S4etwThtHIrfnm/MM8ESiT+8Vo9ignOv8tZKIF4zzJpoY4o6zo/GeOTC7GyxtG9W/BIP/XiJr24xPAjtEMHcXpe+CtLVLY1bxvPKPa4WyTvX8sdDSGNmsmsnkagh25vi93hZMqMOQuWrFibw4YtMjv2HDhy4syFKzfu5vJAQQUNCrzrYA0mep/28X/GakW4G0FXV5XyXmT163Q9DFCVTdeXfNobdyT5UjNPAKJO+Lyx9EwxsdM6+KOiWOxg3J2WzvukL8DLcvqukKH60yqUidCfTOsvvkgAw+3W8y9lhV0qRJeqtJpKdXH2Ggg5gp6Rsq+tt+HAALKT+RR1g2WER2heujCIljxYU2dNqGe0uuZZlA2TQDz+y/leT/5hMNGjwklOE46DO+SPmSQVL6H5o1CHdwR2MqT6tvBZRs5xFn+A6ztJQdAwPLyM8ftsVBgbmpeFs7/Na/7Y3w5vxN8U8amirGp1gTtsghF73AMAAA==') format('woff2');
 }
 
@@ -936,7 +901,8 @@ export default {
 
 
 $cny-border: 2px solid #D2D2D2;
-.cny-container{
+
+.cny-container {
   font-family: 'fusion-pixel-10px-monospaced-zh_hans';
   width: 720rpx;
   box-sizing: border-box;
@@ -948,19 +914,25 @@ $cny-border: 2px solid #D2D2D2;
   border-right: $cny-border;
   margin-top: 40rpx;
 }
-.cny-content-top{
+
+.cny-content-top {
   display: flex;
   justify-content: space-between;
   border-top: $cny-border;
-  margin-top: 0rpx ;
+  margin-top: 0rpx;
   position: relative;
   overflow: hidden;
-  .cny-content-top-left{
+
+  .cny-content-top-left {
     width: 430rpx;
     display: flex;
     flex-direction: column;
     position: relative;
-    .text-1{
+    justify-content: space-between;
+    box-sizing: border-box;
+    border-right: 2rpx solid #D2D2D2;
+
+    .text-1 {
       height: 240rpx;
       width: 100%;
       font-size: 100rpx;
@@ -969,112 +941,141 @@ $cny-border: 2px solid #D2D2D2;
       justify-content: center;
       align-items: center;
       color: #D2D2D2;
-      border-right: 2rpx solid #D2D2D2;
-      border-bottom: 2rpx solid #D2D2D2;
-      padding: 0 10rpx;
+      padding: 40rpx 30rpx;
     }
-    .text-2{
+
+    .text-2 {
       height: 96rpx;
       width: 100%;
-      border-right: 2rpx solid #D2D2D2;
       border-bottom: 2rpx solid #D2D2D2;
+      border-top: 2rpx solid #D2D2D2;
       position: relative;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 0 10rpx;
-      image{
-        width:100%;
+      padding: 0 30rpx;
+
+      image {
+        width: 100%;
       }
     }
 
   }
-  .cny-content-top-right{
+
+  .cny-content-top-right {
     width: 290rpx;
     position: relative;
-    .cny-content-top-right-1{
+    height: 336rpx;
+    display: flex;
+    justify-content: space-between;
+    overflow: hidden;
+    flex-direction: column;
+    box-sizing: border-box;
+
+    .no-login-shadow {
       width: 100%;
+      height: 100%;
+      position: absolute;
+      z-index: 3;
+    }
+
+    .cny-content-top-right-1 {
+      width: 100%;
+      height: 142rpx;
       display: flex;
       overflow: hidden;
-      .lottery-chance{
+
+      .lottery-chance {
         width: 144rpx;
-        height:144rpx;
+        height: 144rpx;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         color: #F0C38C;
-        .lottery-chance-num{
+
+        .lottery-chance-num {
           font-size: 72rpx;
         }
-        .lottery-chance-text{
+
+        .lottery-chance-text {
           font-size: 24rpx;
         }
       }
-      .cny-user-photo{
+
+      .cny-user-photo {
         width: 144rpx;
-        height:144rpx;
+        height: 144rpx;
         position: relative;
         overflow: hidden;
         display: flex;
         justify-content: center;
         align-items: center;
         border-right: $cny-border;
-        image{
+
+        image {
           width: 144rpx;
-          height:144rpx;
+          height: 144rpx;
           display: block;
         }
-        .icon-cny_avator{
+
+        .icon-cny_avator {
           font-size: 100rpx;
           color: #D2D2D2;
         }
       }
     }
-    .cny-content-top-right-2{
-      height: 96rpx;
+
+    .cny-content-top-right-2 {
+      height: 100rpx;
       border-top: $cny-border;
-      border-bottom: $cny-border;
       display: flex;
       justify-content: center;
       align-items: center;
       color: #F0C38C;
       font-size: 24rpx;
       font-weight: 400;
-      .icon-cny_arrow{
+
+      .icon-cny_arrow {
         font-size: 26rpx;
-        margin-left:20rpx;
+        margin-left: 20rpx;
       }
     }
-    .cny-content-top-right-3{
+
+    .cny-content-top-right-3 {
       height: 96rpx;
       border-bottom: $cny-border;
+      border-top: $cny-border;
       display: flex;
       justify-content: center;
       align-items: center;
       color: #F0C38C;
       font-size: 24rpx;
       font-weight: 400;
-      .icon-cny_call_on{
+
+      .icon-cny_call_on {
         font-size: 40rpx;
-        margin-left:20rpx;
+        margin-left: 20rpx;
       }
     }
-    
+
   }
 }
-.cny-content-time-line{
+
+.cny-content-time-line {
   width: 100%;
   border-top: $cny-border;
   display: flex;
   overflow: hidden;
   border-bottom: $cny-border;
-  .cny-content-time-line-left{
+
+  .cny-content-time-line-left {
     width: 418rpx;
     height: 280px;
     position: relative;
     overflow: hidden;
-    view{
+
+    view {
       height: 70rpx;
       width: 100%;
       display: flex;
@@ -1084,20 +1085,23 @@ $cny-border: 2px solid #D2D2D2;
       color: #D2D2D2;
       font-size: 24rpx;
       padding: 0 20rpx;
-      &.cny-content-bottom-left-text-last{
+
+      &.cny-content-bottom-left-text-last {
         color: #F0C38C;
         border-bottom: none;
         display: flex;
         justify-content: center;
         align-items: center;
-        .icon-cny_bookmark{
+
+        .icon-cny_bookmark {
           font-size: 36rpx;
           margin-left: 20rpx;
         }
       }
     }
   }
-  .cny-content-time-line-right{
+
+  .cny-content-time-line-right {
     width: 302rpx;
     height: 280rpx;
     border-left: $cny-border;
@@ -1107,7 +1111,8 @@ $cny-border: 2px solid #D2D2D2;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    .cny-content-bottom-right-text{
+
+    .cny-content-bottom-right-text {
       height: 68rpx;
       display: flex;
       justify-content: center;
@@ -1115,7 +1120,8 @@ $cny-border: 2px solid #D2D2D2;
       font-size: 24rpx;
       color: #F0C38C;
     }
-    .image-container{
+
+    .image-container {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -1123,30 +1129,34 @@ $cny-border: 2px solid #D2D2D2;
       height: 212rpx;
       overflow: hidden;
     }
-    
+
   }
 }
-.cny-content--time-line-bottom{
+
+.cny-content--time-line-bottom {
   display: flex;
   justify-content: space-between;
-  width:100%;
+  width: 100%;
   height: 180rpx;
   padding: 20rpx;
-  padding-right:0 ;
+  padding-right: 0;
   align-items: center;
+
   // border-bottom: $cny-border;
-  .cny-content-bottom-bottom-left{
+  .cny-content-bottom-bottom-left {
     display: flex;
     flex-direction: column;
     font-size: 48rpx;
     color: #D2D2D2;
     width: 500rpx;
     justify-content: center;
-    &.more{
+
+    &.more {
       color: #F0C38C;
     }
   }
-  .cny-content-bottom-bottom-right{
+
+  .cny-content-bottom-bottom-right {
     width: 200rpx;
     height: 180rpx;
     overflow: hidden;
@@ -1155,23 +1165,25 @@ $cny-border: 2px solid #D2D2D2;
     border-left: $cny-border;
     display: flex;
     justify-content: center;
-    &.gold{
+
+    &.gold {
       color: #F0C38C;
-      border-left:none;
+      border-left: none;
       transform: rotate(-90deg);
     }
   }
 }
-.cny-lottery-btn-container{
+
+.cny-lottery-btn-container {
   width: 100%;
   height: 200rpx;
   border-top: $cny-border;
   display: flex;
   justify-content: center;
   align-items: center;
-  .cny-btn{
-    background: linear-gradient(90deg, rgba(198, 13, 13, 0.74) -23.45%, rgba(255, 162, 22, 0) 36.62%, rgba(255, 197, 86, 0.74) 73.78%, rgba(255, 227, 78, 0) 115.86%),
-                linear-gradient(0deg, #F0DA8C, #F0DA8C);
+
+  .cny-btn {
+    background: #F0C38C;
     width: auto;
     height: 96rpx;
     display: flex;
@@ -1181,15 +1193,16 @@ $cny-border: 2px solid #D2D2D2;
     align-items: center;
     color: #B22526;
     font-size: 40rpx;
-    &.btn-grey{
-     color: #D2D2D2;
-     border: 4px solid #D2D2D2;
-     background: none;
-     opacity: .5;
-     margin: -2px;
-     box-sizing: border-box;
+
+    &.btn-grey {
+      color: #D2D2D2;
+      border: 2px solid #D2D2D2;
+      background: none;
+      margin: -2px;
+      box-sizing: border-box;
     }
-    .cny-btn-log-icon{
+
+    .cny-btn-log-icon {
       width: 66px;
       height: 44rpx;
       margin-left: 10rpx;
@@ -1197,7 +1210,8 @@ $cny-border: 2px solid #D2D2D2;
     }
   }
 }
-.cny-content-f-signature{
+
+.cny-content-f-signature {
   height: 160px;
   width: 100%;
   display: flex;
@@ -1206,43 +1220,62 @@ $cny-border: 2px solid #D2D2D2;
   color: #F0C38C;
   font-size: 60rpx;
   border-bottom: $cny-border;
-  perspective: 1000rpx; /* 为了开启 3D 效果 */
+  perspective: 1000rpx;
+  /* 为了开启 3D 效果 */
 }
+
 .cny-electronic-screen-wrapper {
-    width: max-content; /* 让内容尽可能宽，以便能无限循环滚动 */
-    white-space: nowrap; /* 让内容水平排列 */
-    position: absolute; /* 绝对定位 */
-    left: 0;
-    animation: scrollLeft 18s linear infinite; /* 调用动画 */
-    overflow: hidden;
-    display: flex;
+  width: max-content;
+  /* 让内容尽可能宽，以便能无限循环滚动 */
+  white-space: nowrap;
+  /* 让内容水平排列 */
+  position: static;
+  /* 绝对定位 */
+  left: 0;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+
+  &.animate-run {
+    position: absolute;
+    animation: scrollLeft 18s linear infinite;
+    /* 调用动画 */
     justify-content: space-between;
+  }
 }
+
 .cny-electronic-screen-content {
-    display: block; /* 内容水平排列 */
-    transform-style: preserve-3d; /* 保持 3D 效果 */
-    overflow: hidden;
-    position: relative;
-    padding-right: 20rpx;
-    letter-spacing: 2rpx;
+  display: block;
+  /* 内容水平排列 */
+  transform-style: preserve-3d;
+  /* 保持 3D 效果 */
+  overflow: hidden;
+  position: relative;
+  padding-right: 60rpx;
+  letter-spacing: 2rpx;
 }
 
 @keyframes scrollLeft {
-    0% {
-        transform: translateX(0); /* 开始位置 */
-    }
-    100% {
-        transform: translateX(-50%); /* 结束位置，这里是两份内容的宽度 */
-    }
+  0% {
+    transform: translateX(0);
+    /* 开始位置 */
+  }
+
+  100% {
+    transform: translateX(-50%);
+    /* 结束位置，这里是两份内容的宽度 */
+  }
 }
-.cny-content-bottom-top{
+
+.cny-content-bottom-top {
   width: 100%;
   height: 300rpx;
   display: flex;
   justify-content: center;
   align-items: center;
-  .come-back{
-    background: linear-gradient(0deg, #B22526, #B22526),linear-gradient(0deg, #F0C38C, #F0C38C);
+
+  .come-back {
+    background: linear-gradient(0deg, #B22526, #B22526), linear-gradient(0deg, #F0C38C, #F0C38C);
     width: 248rpx;
     height: 96rpx;
     display: flex;
@@ -1251,33 +1284,43 @@ $cny-border: 2px solid #D2D2D2;
     color: #F0C38C;
     font-size: 40rpx;
     border: 4px solid rgba(240, 195, 140, 1);
-    .come-back-icon{
-       font-size: 20rpx;
-       margin-left: 10rpx;
-       transform: rotate(-90deg);
+
+    .come-back-icon {
+      font-size: 20rpx;
+      margin-left: 10rpx;
+      transform: rotate(-90deg);
     }
   }
 }
-.cny-content-bottom-bottom{
+
+.cny-content-bottom-bottom {
   height: 180rpx;
   width: 100%;
   overflow: hidden;
   position: relative;
-  image{
+
+  image {
     width: 100%;
   }
 }
-.cny-cms-content{
-  .product_slider-wrapper{
+
+.cny-cms-content {
+  .product_slider-wrapper {
     background: none !important;
   }
 }
-.parting-line-container{
+
+.parting-line-container {
   width: 100%;
   overflow: hidden;
   position: relative;
   border-top: $cny-border;
-  .line-1{
+
+  .line-1 {
+    &.lengthen {
+      height: 60rpx;
+    }
+
     height: 30rpx;
     width: 720rpx;
     box-sizing: border-box;
@@ -1286,81 +1329,96 @@ $cny-border: 2px solid #D2D2D2;
     margin: 0 15rpx;
   }
 }
-.cny-pup-header{
+
+.cny-pup-header {
   display: flex;
   height: 48rpx;
-  width:300rpx;
+  width: 300rpx;
   font-size: 28rpx;
   align-items: center;
-  .cny-pup-header-icon{
+
+  .cny-pup-header-icon {
     width: 48rpx;
     margin-right: 20rpx;
   }
 
 }
-.rule-content{
-  margin-top:60rpx ;
+
+.rule-content {
+  margin-top: 60rpx;
   overflow: hidden;
   overflow-y: auto;
   position: relative;
   width: 100%;
-  image{
-    width:100%;
+
+  image {
+    width: 100%;
 
   }
 }
-.cny-winners-list-container{
+
+.cny-winners-list-container {
   width: 100%;
   overflow: hidden;
   position: relative;
-  .cny-winners-list-title{
+
+  .cny-winners-list-title {
     width: 100%;
     height: 260rpx;
     border-bottom: $cny-border;
     position: relative;
     display: flex;
-    .cny-winners-list-title-left{
+
+    .cny-winners-list-title-left {
       width: 200rpx;
       border-right: $cny-border;
       height: 100%;
     }
-    .cny-winners-list-title-right{
+
+    .cny-winners-list-title-right {
       width: 520rpx;
       height: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
-      image{
+
+      image {
         width: 400rpx;
       }
     }
   }
-  .cny-winners-list-content{
+
+  .cny-winners-list-content {
     width: 100%;
-    height: 750rpx;
+    height: 600rpx;
     position: relative;
     border-bottom: $cny-border;
     display: flex;
-    .cny-winners-list-content-left{
+
+    .cny-winners-list-content-left {
       width: 200rpx;
       border-right: $cny-border;
       height: 100%;
     }
-    .cny-winners-list-content-right{
+
+    .cny-winners-list-content-right {
       width: 520rpx;
       height: 100%;
-      .cny-winners-list{
+
+      .cny-winners-list {
         padding-left: 100rpx;
         padding-top: 100rpx;
         width: 100%;
         overflow: hidden;
         position: relative;
-        .cny-winners-title{
+
+        .cny-winners-title {
           color: #F0C38C;
           font-size: 48rpx;
           font-weight: 400;
         }
-        .cny-winners-items{
+
+        .cny-winners-items {
           margin-top: 40rpx;
           color: #D2D2D2;
           font-size: 26rpx;
@@ -1369,45 +1427,60 @@ $cny-border: 2px solid #D2D2D2;
     }
   }
 }
-.cny-record-user-info{
+
+.cny-record-user-info {
   margin-top: 30rpx;
   margin-bottom: 10rpx;
 }
-.cny-record-item-list{
+
+.cny-record-item-list {
   margin-top: 20rpx;
-  .record-item{
-  border-bottom: 1px solid #D2D2D2;
-  height: 88rpx;
-  font-size: 28rpx;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
+
+  .record-item {
+    border-bottom: 1px solid #D2D2D2;
+    height: 88rpx;
+    font-size: 28rpx;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
 }
-}
-.cny-page-container{
-  &.fix{
-    height: calc(100vh - 174rpx);
+
+.cny-page-container {
+  &.fix {
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
     overflow: hidden;
-    .cny-page-content{
+
+    .cny-page-content {
       pointer-events: none;
     }
   }
 }
-.no-login-text{
+
+.no-login-text {
   position: absolute;
   left: 0;
   bottom: 0;
   width: 100%;
-  height: 96rpx;
+  height: 102rpx;
   z-index: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   border-bottom: $cny-border;
+  border-top: $cny-border;
   background: #B22526;
-  padding: 0 20rpx;
-  image{
-    width:100%
+  padding: 0 30rpx;
+
+  image {
+    width: 100%
   }
+}
+
+.record_list_no {
+  margin-top: 30rpx;
 }
 </style>

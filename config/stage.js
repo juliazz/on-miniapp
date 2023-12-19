@@ -9,7 +9,7 @@ module.exports = {
     NODE_ENV: '"stage"'
   },
   defineConstants: {
-    $appid: JSON.stringify('wx2431275480358c4b'),
+    $appid: JSON.stringify('wx926eadc0f6fb1fbb'),
     $srId: JSON.stringify('bid4d69c99b9b348b4'),
     // OnRunning Frontend API 域名
     $ON_API_HOST: JSON.stringify('https://stage-crm.on-running.cn'),

@@ -7,7 +7,7 @@
 
 ## 环境切换
  stage 
- appid wx2431275480358c4b
+ appid wx926eadc0f6fb1fbb
  OnRunning Frontend API 域名
  https://stage-crm.on-running.cn
 

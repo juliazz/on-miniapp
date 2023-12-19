@@ -5,7 +5,7 @@
 </template>
 <script>
 import Pager from '@/components/common/Pager.vue';
-import CMSLayout from '@/components/CMSLayout.vue';
+import CMSLayout from '../../components/CMSLayout.vue';
 import Taro from '@tarojs/taro';
 import mixins from '@/utils/mixins';
 import { loadCMSConfig, makeShare,fixCMSPath, getUCenterInfo ,makeBind, showCustomLoading, hideCustomLoading ,Vict} from '@/utils';
@@ -31,6 +31,7 @@ export default {
   },
   created() {},
   async onLoad(options) {
+    
     // await getUCenterInfo()
     this.$initParams = options;
     const { frame , sid, key,channel} = options;
@@ -52,9 +53,11 @@ export default {
   async onShow(options) {
     showCustomLoading();
     await this.$store.state.loginPromise;
-    // await getUCenterInfo();
+    await getUCenterInfo();
     await this.loadSource(this.pageKey);
-
+    // setTimeout(()=>{
+    //   Vict.scrollToComponView('image_navigation-wrapper',true)
+    // },1000)
     hideCustomLoading();
   },
   /**
@@ -69,7 +72,9 @@ export default {
     let args = `key=${key || frame}`
     let title = share_title || "On昂跑官方体验中心";
     let page = `pages/landing/index`
-    const promise =  makeShare(args, page, title, share_image)
+    const promise =  makeShare(args, page, title, share_image,{
+      share_method:'分享到朋友圈'
+    })
     return {
       title,
       query:args,
@@ -89,6 +94,7 @@ export default {
     console.log('分享图片路径----->',share_image)
     const promise = makeShare(args, page, title, share_image)
     return {
+      title,
       promise
     };
   },
